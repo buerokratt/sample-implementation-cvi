@@ -8,7 +8,7 @@ import {
 } from '@tanstack/react-query';
 import { CookiesProvider } from 'react-cookie';
 import App from './App';
-import './styles/src/lib/scss/main.scss';
+import './styles/scss/main.scss';
 
 // **** Query client ****
 // Query client part is not directly raleted to layout so it is optional

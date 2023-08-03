@@ -10,7 +10,7 @@ import './main-navigation.scss';
 interface MenuItem {
   id?: string;
   label: TranslatedLabel;
-  path: string | null;
+  path?: string;
   target?: '_blank' | '_self';
   children?: MenuItem[];
 }
@@ -70,9 +70,8 @@ const MainNavigation: FC<{items: MenuItem[]}> = ({items}) => {
   });
   **/
 
+  /** Remove this hook when using items filtering functionality above*/
   useEffect(() => {setMenuItems(items);}, []);
-
-  
 
   const location = useLocation();
   const [navCollapsed, setNavCollapsed] = useState(false);
@@ -112,6 +111,7 @@ const MainNavigation: FC<{items: MenuItem[]}> = ({items}) => {
 
   if (!menuItems) return null;
 
+  /** Use translations (button label 'Sulge') on dev/prod version */
   return (
     <nav className={clsx('nav', { 'nav--collapsed': navCollapsed })}>
       <button className='nav__menu-toggle' onClick={() => setNavCollapsed(!navCollapsed)}>

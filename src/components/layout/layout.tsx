@@ -1,11 +1,11 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { Outlet } from 'react-router-dom';
 import MainNavigation from 'components/main-navigation/main-navigation.tsx'
 import './layout.scss';
 
 const Layout: FC = () => {
   /** Main navigation START */
-  /** Impement logic to load/request main navifation items */
+  /** Impement logic to load/request main navigation items */
   const navmenu: any = [
     {
         "id": "info",
