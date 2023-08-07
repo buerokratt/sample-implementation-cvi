@@ -1,0 +1,33 @@
+@mixin cvi-tab-group($base: &) {
+
+  @at-root {
+    #{$base}__list {
+      display: flex;
+      margin-bottom: -1px;
+      list-style-type: none;
+    }
+    #{$base}__tab-btn {
+      padding: get-spacing('haapsalu');
+      font-size: get-font-size(100);
+      color: get-color(sapphire-blue-20);
+      border: 1px solid transparent;
+      cursor: pointer;
+
+      &.active {
+        background-color: get-color(white);
+        border-top-left-radius: var(--cvi-radius-s);
+        border-top-right-radius: var(--cvi-radius-s);
+        color: get-color(sapphire-blue-10);
+        border-color: get-color(black-coral-2);
+        border-bottom-color: transparent;
+      }
+    }
+
+    #{$base}__tab-content {
+      background-color: get-color(white);
+      padding: get-spacing('haapsalu');
+      border: 1px solid get-color(black-coral-2);
+      border-radius: var(--cvi-radius-s);
+    }
+  }
+}
