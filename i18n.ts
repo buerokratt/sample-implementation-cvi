@@ -5,22 +5,23 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import commonEN from './src/components/AdminHeader/translations/en/common.json';
 import commonET from './src/components/AdminHeader/translations/et/common.json';
 
-i18n
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .init({
-    debug: import.meta.env.NODE_ENV === 'development',
-    fallbackLng: 'et',
-    supportedLngs: ['et'],
-    resources: {
-      en: {
-        common: commonEN,
-      },
-      et: {
-        common: commonET,
-      },
-    },
-    defaultNS: 'common',
-  });
+let i18n = undefined
+  //   i18n
+  // .use(LanguageDetector)
+  // .use(initReactI18next)
+  // .init({
+  //   debug: import.meta.env.NODE_ENV === 'development',
+  //   fallbackLng: 'et',
+  //   supportedLngs: ['et'],
+  //   resources: {
+  //     en: {
+  //       common: commonEN,
+  //     },
+  //     et: {
+  //       common: commonET,
+  //     },
+  //   },
+  //   defaultNS: 'common',
+  // });
 
 export default i18n;
