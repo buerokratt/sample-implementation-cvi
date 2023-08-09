@@ -8,6 +8,14 @@ import path from 'path';
 export default defineConfig({
   envPrefix: 'REACT_APP_',
   plugins: [react(), tsconfigPaths(), svgr()],
+  server: {
+    watch: {
+      usePolling: true,
+    },
+    host: true,
+    strictPort: true,
+    port: 5173,
+  },
   base: '',
   build: {
     outDir: './build',
