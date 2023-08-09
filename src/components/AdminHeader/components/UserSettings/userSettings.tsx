@@ -1,7 +1,10 @@
 import { FC,useState,useEffect,useMemo } from 'react';
-import Drawer from "../Drawer";
-import Section from "../Section";
-import Track from "../Track";
+import {
+    Drawer,
+    Section,
+    Track,
+    SwitchBox
+} from '../';
 import {AUTHORITY} from "../../types/authorities";
 import useUserInfoStore from "../../store/store";
 import { useTranslation } from 'react-i18next';
@@ -15,7 +18,6 @@ import * as API_CONF from '../../services/api-conf';
 import apis from '../../services/apis';
 import {SUBSCRIPTION_INTERVAL} from "../../consts/consts";
 import {UserProfileSettings} from "../../types/userProfileSettings";
-import SwitchBox from "../SwitchBox";
 
 const UserSettings: FC = () => {
     const { userInfo } = useUserInfoStore();
@@ -128,15 +130,15 @@ const UserSettings: FC = () => {
         <>
     <Drawer
         title={userInfo.displayName}
-        onClose={() => setUserDrawerOpen(false)}
+        onClick={() => setUserDrawerOpen(!userDrawerOpen)}
         style={{ width: 400 }}
     >
         <Section>
             <Track gap={8} direction="vertical" align="left">
                 {[
                     {
-                        label: t('settings.users.displayName') + ' test',
-                        value: userInfo.displayName + 'kek ',
+                        label: t('settings.users.displayName'),
+                        value: userInfo.displayName,
                     },
                     {
                         label: t('settings.users.userRoles'),

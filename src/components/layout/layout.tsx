@@ -7,7 +7,7 @@ const Layout: FC = () => {
 
   return (
     <div className='layout'>
-      <div id='placeholder_for_main_navigation'>Main navigation</div>
+      <div id='placeholder_for_main_navigation'></div>
       <div className='layout__wrapper'>
         <div id='placeholder_for_header'> <AdminHeader/></div>
         <main className='layout__main'>

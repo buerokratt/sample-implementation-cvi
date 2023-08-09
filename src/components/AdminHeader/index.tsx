@@ -69,7 +69,6 @@ const Header: FC = () => {
   }, []);
 
   const getMessages = async () => {
-    console.log(userInfo)
     const { data: res } = await apis(API_CONF.DEV_V2_BASE_URL).get(API_CONF.GET_USER_PROFILE_SETTINGS, {
       params: {
         // TODO: Use actual id from userInfo once it starts using real data

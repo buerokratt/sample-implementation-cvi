@@ -9,8 +9,10 @@ import {
 import { CookiesProvider } from 'react-cookie';
 import App from './App';
 import './styles/main.scss';
-import apis from './components/AdminHeader/services/apis';
+import '../i18n';
+import apis, {ax} from './components/AdminHeader/services/apis';
 import * as API_CONF from './components/AdminHeader/services/api-conf';
+import * as mocks from "./mocks/mockHandlers";
 
 // **** Query client ****
 // Query client part is not directly raleted to layout so it is optional
@@ -20,9 +22,12 @@ import * as API_CONF from './components/AdminHeader/services/api-conf';
 //   return queryKey;
 // };
 
+mocks;
+
 const defaultQueryFn: QueryFunction | undefined = async ({ queryKey }) => {
   if (queryKey.includes('prod')) {
-    const { data } = await apis(API_CONF.PROD_KEY).get(queryKey[0] as string);
+    // ax is mocked api call used for mocking, should be replaced by correct call like in next api call
+    const { data } = await ax.get(queryKey[0] as string);
     return data;
   }
   if (queryKey[1] === 'prod-2') {
