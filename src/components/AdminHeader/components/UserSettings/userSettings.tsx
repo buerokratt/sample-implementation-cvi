@@ -1,4 +1,4 @@
-import { FC,useState,useEffect,useMemo } from 'react';
+import {FC, useState, useEffect, useMemo, PropsWithChildren} from 'react';
 import {
     Drawer,
     Section,
@@ -19,7 +19,11 @@ import apis from '../../services/apis';
 import {SUBSCRIPTION_INTERVAL} from "../../consts/consts";
 import {UserProfileSettings} from "../../types/userProfileSettings";
 
-const UserSettings: FC = () => {
+type UserSettingsProps = {
+    stateUpdate: () => void
+}
+
+const UserSettings: FC<PropsWithChildren<UserSettingsProps>> = ({stateUpdate}) => {
     const { userInfo } = useUserInfoStore();
     const [userDrawerOpen, setUserDrawerOpen] = useState(false);
     const [activeChatsList, setActiveChatsList] = useState<Chat[]>([]);
@@ -130,7 +134,7 @@ const UserSettings: FC = () => {
         <>
     <Drawer
         title={userInfo.displayName}
-        onClick={() => setUserDrawerOpen(!userDrawerOpen)}
+        onClose={() => {stateUpdate()}}
         style={{ width: 400 }}
     >
         <Section>

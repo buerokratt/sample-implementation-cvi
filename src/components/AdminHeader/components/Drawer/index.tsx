@@ -1,4 +1,4 @@
-import { CSSProperties, FC, PropsWithChildren, useEffect, useRef } from 'react';
+import {CSSProperties, FC, PropsWithChildren, useEffect, useRef, useState} from 'react';
 import { MdOutlineClose } from 'react-icons/md';
 import autoAnimate from '@formkit/auto-animate';
 
@@ -7,7 +7,7 @@ import './Drawer.scss';
 
 type DrawerProps = {
   title: string;
-  onClose: () => true;
+  onClose: () => void;
   style?: CSSProperties;
 }
 
@@ -17,7 +17,6 @@ const Drawer: FC<PropsWithChildren<DrawerProps>> = ({ title, onClose, children, 
     ref.current && autoAnimate(ref.current);
     const handleKeyup = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        console.log('hit')
         onClose();
       }
     };
@@ -27,17 +26,17 @@ const Drawer: FC<PropsWithChildren<DrawerProps>> = ({ title, onClose, children, 
   }, [onClose]);
 
   return (
-    <div className='drawer' style={style}>
-      <div className='drawer__header'>
-        <h2 className='h3 drawer__title'>{title}</h2>
-        <button className='drawer__close' onClick={onClose}>
-          <Icon icon={<MdOutlineClose />} size='medium' />
-        </button>
+      <div className='drawer' style={style}>
+        <div className='drawer__header'>
+          <h2 className='h3 drawer__title'>{title}</h2>
+          <button className='drawer__close' onClick={onClose}>
+            <Icon icon={<MdOutlineClose />} size='medium' />
+          </button>
+        </div>
+        <div className='drawer__body'>
+          {children}
+        </div>
       </div>
-      <div className='drawer__body'>
-        {children}
-      </div>
-    </div>
   );
 };
 

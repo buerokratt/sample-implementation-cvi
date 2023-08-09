@@ -366,7 +366,8 @@ const Header: FC = () => {
       )}
 
       {userInfo && userProfileSettings && userDrawerOpen && (
-          <UserSettings />
+          <UserSettings stateUpdate={() => {setUserDrawerOpen(false)}}
+          />
       )}
     </>
   );
