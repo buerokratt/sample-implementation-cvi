@@ -1,0 +1,37 @@
+@mixin cvi-tooltip($base: &) {
+
+  @at-root {
+
+    #{$base}__content,
+    #{$base}__arrow {
+      // Why we don't move position: fixed to the root element? Because we need the arrow to be positioned independently in the viewport - it must be at the same x coordinate as the reference element
+      position: fixed;
+    }
+    #{$base}__content {
+      border-radius: var(--cvi-radius-s);
+      background-color: get-color(white);
+      color: get-color(black-coral-18);
+      box-shadow: var(--cvi-shadow-beta);
+      padding: var(--cvi-spacing-rapla) var(--cvi-spacing-elva);
+      max-width: 400px;
+      min-width: 125px;
+      font-size: get-font-size(80);
+      z-index: var(--cvi-tooltip-zindex, #{get-z-index('tooltip', 'root')});
+
+      @include cvi-breakpoint-down(sm) {
+        max-width: 90vw;
+      }
+    }
+
+    #{$base}__arrow {
+      // If --cvi-tooltip-zindex is not set, --arrow-configurable-index is not set too
+      --arrow-configurable-index: calc(var(--cvi-tooltip-zindex) + 1);
+
+      background-color: get-color(white);
+      transform: rotate(45deg);
+      width: 15px;
+      height: 15px;
+      z-index: var(--arrow-configurable-index, #{get-z-index('tooltip', 'root') + 1});
+    }
+  }
+}

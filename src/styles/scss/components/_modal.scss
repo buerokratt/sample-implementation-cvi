@@ -1,0 +1,63 @@
+@mixin cvi-modal($base: &) {
+
+  @at-root {
+    #{$base}, #{$base}__backdrop {
+      @include cvi-breakpoint-up(sm) {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    #{$base}__backdrop {
+      @include cvi-breakpoint-down(sm) {
+        display: none;
+      }
+      @include cvi-breakpoint-up(sm) {
+        background-color: rgba(var(--cvi-color-rgb-black-coral-18) / .6);
+        z-index: get-z-index('modal', '__backdrop');
+      }
+    }
+
+    #{$base}__dialog {
+      background-color: get-color(white);
+      z-index: get-z-index('modal', '__dialog');
+      padding: get-spacing('kuressaare');
+      color: get-color(black-coral-18);
+
+      @include cvi-breakpoint-down(sm) {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+      @include cvi-breakpoint-up(sm) {
+        border-radius: var(--cvi-radius-m);
+        position: relative;
+        margin-block: get-spacing('narva');
+        margin-inline: auto;
+        max-width: 768px;
+      }
+    }
+
+    #{$base}__close {
+      position: absolute;
+      top: get-spacing('viljandi');
+      right: get-spacing('viljandi');
+    }
+
+    #{$base}__title {
+      font-size: get-font-size(250);
+      padding-right: get-spacing('viljandi');
+      padding-bottom: get-spacing('elva');
+    }
+
+    #{$base}__footer {
+      padding-top: get-spacing('kuressaare');
+    }
+  }
+
+}

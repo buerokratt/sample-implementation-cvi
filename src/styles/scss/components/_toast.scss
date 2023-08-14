@@ -1,0 +1,106 @@
+@mixin cvi-toast($base: &) {
+  --comment: 'A toast aka floating notification';
+
+  position: relative;
+  width: 300px;
+  overflow: hidden;
+  padding: var(--cvi-spacing-haapsalu);
+  margin-bottom: var(--cvi-spacing-paldiski);
+  border-radius: var(--cvi-radius-m);
+  color: var(--cvi-color-black-coral-18);
+  cursor: pointer;
+  display: block;
+
+  &:hover {
+    box-shadow: var(--cvi-shadow-alpha);
+  }
+
+  @at-root {
+    #{$base}__icon-wrapper {
+      fill: get-color(black-coral-18);
+      display: block;
+    }
+
+    #{$base}__icon {
+      display: block;
+      width: 16px;
+      height: 16px;
+    }
+
+    #{$base}--appearance-success {
+      background-color: var(--cvi-color-sea-green-0);
+      border: 1px solid var(--cvi-color-sea-green-10);
+
+      & #{$base}__progress-bar {
+        background-color: var(--cvi-color-sea-green-10);
+      }
+    }
+
+    #{$base}--appearance-info {
+      background-color: var(--cvi-color-sapphire-blue-1);
+      border: 1px solid var(--cvi-color-sapphire-blue-10);
+
+      & #{$base}__progress-bar {
+        background-color: var(--cvi-color-sapphire-blue-10);
+      }
+    }
+
+    #{$base}--appearance-warning {
+      background-color: var(--cvi-color-dark-tangerine-1);
+      border: 1px solid var(--cvi-color-dark-tangerine-11);
+
+      & #{$base}__progress-bar {
+        background-color: var(--cvi-color-dark-tangerine-11);
+      }
+    }
+
+    #{$base}--appearance-error {
+      background-color: var(--cvi-color-jasper-0);
+      border: 1px solid var(--cvi-color-jasper-10);
+
+      & #{$base}__progress-bar {
+        background-color: var(--cvi-color-jasper-10);
+      }
+    }
+
+    #{$base}__title {
+      display: flex;
+      align-items: center;
+    }
+
+    #{$base}__title-text {
+      font-size: get-font-size(200);
+      margin-left: 10px;
+    }
+
+    #{$base}__close-button {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      cursor: pointer;
+    }
+
+    #{$base}__close-button-icon {
+      fill: get-color(black-coral-18);
+      display: block;
+      width: 16px;
+      height: 16px;
+    }
+
+    #{$base}__close-button-inner {
+      display: block;
+    }
+
+    #{$base}__message {
+      margin-top: var(--cvi-spacing-elva);
+    }
+
+    #{$base}__progress-bar {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      height: 4px;
+      opacity: 0.4;
+    }
+  }
+}
