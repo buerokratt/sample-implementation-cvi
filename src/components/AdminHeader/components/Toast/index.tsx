@@ -10,7 +10,7 @@ import {
 import clsx from 'clsx';
 
 import Icon from '../Icon';
-import type { ToastType } from '../../../../cvi-components/context/ToastContext';
+import type { ToastType } from './ToastContext';
 import './Toast.scss';
 
 type ToastProps = {

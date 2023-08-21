@@ -6,17 +6,21 @@ import { AxiosError } from 'axios';
 import { useIdleTimer } from 'react-idle-timer';
 import { MdOutlineExpandMore } from 'react-icons/md';
 import { useCookies } from 'react-cookie';
+import {
+  Switch,
+  Dialog
+} from "./components";
 
 import UserSettings from "./components/UserSettings/userSettings";
 import { ToastContext } from '../../cvi-components/context/ToastContext';
 import useUserInfoStore from './store/store';
 import { Chat, CHAT_STATUS } from './types/chat';
 import {USER_IDLE_STATUS_TIMEOUT, STATUS_COLORS, SUBSCRIPTION_INTERVAL} from './consts/consts';
-import Dialog from './components/Dialog';
-import Button from './components/Button';
-import Track from './components/track';
-import Icon from './components/icon';
-import Switch from './components/Switch';
+import {
+  TrackComponent,
+  ButtonComponent,
+  IconComponent
+} from '@exirain/cvi-components/';
 
 import * as API_CONF from './services/api-conf';
 import apis from "./services/apis";
@@ -265,13 +269,13 @@ const Header: FC = () => {
   return (
     <>
       <header className="header">
-        <Track justify="between">
+        <TrackComponent justify="between">
            <Logo height={50} />
 
           {userInfo && (
-            <Track gap={32}>
-              <Track gap={16}>
-                <p
+            <TrackComponent gap={32}>
+              <TrackComponent gap={16}>
+                <label
                   style={{
                     color: '#5D6071',
                     fontSize: 14,
@@ -281,7 +285,7 @@ const Header: FC = () => {
                   <strong>{unansweredChats}</strong> {t('chat.unanswered')}
                   {' '}
                   <strong>{forwardedChats}</strong> {t('chat.forwarded')}
-                </p>
+                </label>
                 <Switch
                   onCheckedChange={handleCsaStatusChange}
                   checked={csaActive}
@@ -292,7 +296,7 @@ const Header: FC = () => {
                   onLabel={t('global.present') || ''}
                   offLabel={t('global.away') || ''}
                 />
-              </Track>
+              </TrackComponent>
               <span
                 style={{
                   display: 'block',
@@ -301,33 +305,37 @@ const Header: FC = () => {
                   backgroundColor: '#DBDFE2',
                 }}
               ></span>
-              <Button
-                appearance="text"
+              <ButtonComponent
+                appearance="button"
                 onClick={() => setUserDrawerOpen(!userDrawerOpen)}
               >
-                <span
-                  style={{
-                    display: 'block',
-                    width: 16,
-                    height: 16,
-                    borderRadius: '50%',
-                    backgroundColor: STATUS_COLORS[csaStatus],
-                    marginRight: 8,
-                  }}
-                ></span>
-                {userInfo.displayName}
-                <Icon icon={<MdOutlineExpandMore />} />
-              </Button>
-              <Button
+                <TrackComponent>
+                  <span
+                      style={{
+                        display: 'block',
+                        width: 16,
+                        // verticalAlign: 'bottom',
+                        height: 16,
+                        borderRadius: '50%',
+                        backgroundColor: STATUS_COLORS[csaStatus],
+                        marginRight: 8,
+                      }}
+                  ></span>
+                  {userInfo.displayName}
+                  <IconComponent icon={<MdOutlineExpandMore />} />
+                </TrackComponent>
+              </ButtonComponent>
+              <span className={'btn btn--text'} style={{ textDecoration: 'underline' }}>
+              <ButtonComponent
                 appearance="text"
-                style={{ textDecoration: 'underline' }}
                 onClick={() => logoutMutation.mutate()}
               >
                 {t('global.logout')}
-              </Button>
-            </Track>
+              </ButtonComponent>
+                </span>
+            </TrackComponent>
           )}
-        </Track>
+        </TrackComponent>
       </header>
 
       {showStatusConfirmationModal && (
@@ -335,15 +343,15 @@ const Header: FC = () => {
           onClose={() => setShowStatusConfirmationModal((value) => !value)}
           footer={
             <>
-              <Button
+              <ButtonComponent
                 appearance="secondary"
                 onClick={() =>
                   setShowStatusConfirmationModal((value) => !value)
                 }
               >
                 {t('global.cancel')}
-              </Button>
-              <Button
+              </ButtonComponent>
+              <ButtonComponent
                 appearance="primary"
                 onClick={() => {
                   handleCsaStatusChange(true);
@@ -351,7 +359,7 @@ const Header: FC = () => {
                 }}
               >
                 {t('global.yes')}
-              </Button>
+              </ButtonComponent>
             </>
           }
         >

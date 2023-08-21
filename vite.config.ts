@@ -26,6 +26,8 @@ export default defineConfig({
     alias: {
       '~@fontsource': path.resolve(__dirname, 'node_modules/@fontsource'),
       '@': `${path.resolve(__dirname, './src')}`,
+      '@exirain/cvi-components': path.resolve(__dirname, 'node_modules/@exirain/cvi-components/src/index.ts'),
+      '@exirain/header': path.resolve(__dirname, 'node_modules/@exirain/header/src/index.ts'),
     },
   },
 });

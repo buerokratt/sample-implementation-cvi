@@ -2,9 +2,15 @@ import {FC, useState, useEffect, useMemo, PropsWithChildren} from 'react';
 import {
     Drawer,
     Section,
-    Track,
+    // Track,
     SwitchBox
 } from '../';
+// import Track from "../../../../cvi-components/track/track";
+// import Section  from '../../../../cvi-components/section/section';
+// import Track from '@egov/cvi-react/';
+// import { Section } from '@egov/cvi-react/';
+
+import { TrackComponent } from '@exirain/cvi-components/';
 import {AUTHORITY} from "../../types/authorities";
 import useUserInfoStore from "../../store/store";
 import { useTranslation } from 'react-i18next';
@@ -138,7 +144,7 @@ const UserSettings: FC<PropsWithChildren<UserSettingsProps>> = ({stateUpdate}) =
         style={{ width: 400 }}
     >
         <Section>
-            <Track gap={8} direction="vertical" align="left">
+            <TrackComponent gap={8} direction="vertical" align="left">
                 {[
                     {
                         label: t('settings.users.displayName'),
@@ -152,12 +158,12 @@ const UserSettings: FC<PropsWithChildren<UserSettingsProps>> = ({stateUpdate}) =
                     },
                     { label: t('settings.users.email'), value: userInfo.email },
                 ].map((meta, index) => (
-                    <Track key={`${meta.label}-${index}`} gap={24} align="left">
+                    <TrackComponent key={`${meta.label}-${index}`} gap={24} align="left">
                         <p style={{ flex: '0 0 120px' }}>{meta.label}:</p>
                         <p>{meta.value}</p>
-                    </Track>
+                    </TrackComponent>
                 ))}
-            </Track>
+            </TrackComponent>
         </Section>
         {[
             AUTHORITY.ADMINISTRATOR,
@@ -166,8 +172,8 @@ const UserSettings: FC<PropsWithChildren<UserSettingsProps>> = ({stateUpdate}) =
         ].some((auth) => userInfo.authorities.includes(auth)) && (
             <>
                 <Section>
-                    <Track gap={8} direction="vertical" align="left">
-                        <p className="h6">{t('settings.users.autoCorrector')}</p>
+                    <TrackComponent gap={8} direction="vertical" align="left">
+                        <p className="h6" style={{fontWeight: 'bold'}}>{t('settings.users.autoCorrector')}</p>
                         <SwitchBox
                             name="useAutocorrect"
                             label={t('settings.users.useAutocorrect')}
@@ -176,11 +182,11 @@ const UserSettings: FC<PropsWithChildren<UserSettingsProps>> = ({stateUpdate}) =
                                 handleUserProfileSettingsChange('useAutocorrect', checked)
                             }
                         />
-                    </Track>
+                    </TrackComponent>
                 </Section>
                 <Section>
-                    <Track gap={8} direction="vertical" align="left">
-                        <p className="h6">{t('settings.users.emailNotifications')}</p>
+                    <TrackComponent gap={8} direction="vertical" align="left">
+                        <p className="h6" style={{fontWeight: 'bold'}}>{t('settings.users.emailNotifications')}</p>
                         <SwitchBox
                             name="forwardedChatEmailNotifications"
                             label={t('settings.users.newForwardedChat')}
@@ -205,11 +211,11 @@ const UserSettings: FC<PropsWithChildren<UserSettingsProps>> = ({stateUpdate}) =
                                 )
                             }
                         />
-                    </Track>
+                    </TrackComponent>
                 </Section>
                 <Section>
-                    <Track gap={8} direction="vertical" align="left">
-                        <p className="h6">{t('settings.users.soundNotifications')}</p>
+                    <TrackComponent gap={8} direction="vertical" align="left">
+                        <p className="h6" style={{fontWeight: 'bold'}}>{t('settings.users.soundNotifications')}</p>
                         <SwitchBox
                             name="forwardedChatSoundNotifications"
                             label={t('settings.users.newForwardedChat')}
@@ -234,11 +240,11 @@ const UserSettings: FC<PropsWithChildren<UserSettingsProps>> = ({stateUpdate}) =
                                 )
                             }
                         />
-                    </Track>
+                    </TrackComponent>
                 </Section>
                 <Section>
-                    <Track gap={8} direction="vertical" align="left">
-                        <p className="h6">{t('settings.users.popupNotifications')}</p>
+                    <TrackComponent gap={8} direction="vertical" align="left">
+                        <p className="h6" style={{fontWeight: 'bold'}}>{t('settings.users.popupNotifications')}</p>
                         <SwitchBox
                             name="forwardedChatPopupNotifications"
                             label={t('settings.users.newForwardedChat')}
@@ -263,7 +269,7 @@ const UserSettings: FC<PropsWithChildren<UserSettingsProps>> = ({stateUpdate}) =
                                 )
                             }
                         />
-                    </Track>
+                    </TrackComponent>
                 </Section>
             </>
         )}

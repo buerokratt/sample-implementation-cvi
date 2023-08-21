@@ -28,7 +28,7 @@ const Drawer: FC<PropsWithChildren<DrawerProps>> = ({ title, onClose, children, 
   return (
       <div className='drawer' style={style}>
         <div className='drawer__header'>
-          <h2 className='h3 drawer__title'>{title}</h2>
+          <h2 className='h3 drawer__title' style={{ fontSize: 24}}>{title}</h2>
           <button className='drawer__close' onClick={onClose}>
             <Icon icon={<MdOutlineClose />} size='medium' />
           </button>

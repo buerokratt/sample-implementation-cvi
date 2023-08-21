@@ -27,13 +27,16 @@ mocks;
 const defaultQueryFn: QueryFunction | undefined = async ({ queryKey }) => {
   if (queryKey.includes('prod')) {
     // ax is mocked api call used for mocking, should be replaced by correct call like in next api call
+    console.log(queryKey[0] as string)
     const { data } = await ax.get(queryKey[0] as string);
     return data;
   }
   if (queryKey[1] === 'prod-2') {
+    console.log('prod 2 is triggered')
     const { data } = await apis(API_CONF.DEV_V2_BASE_URL).get(queryKey[0] as string);
     return data?.response;
   }
+  console.log('default is triggered')
   const { data } = await apis(API_CONF.DEV_BASE_URL).get(queryKey[0] as string);
   return data;
 };
