@@ -36,56 +36,70 @@
       "et": "Treening",
       "en": "Training"
     },
-    "path": "#",
+    "path": "/training",
     "children": [
       {
         "label": {
           "et": "Treening",
           "en": "Training"
         },
-        "path": "#",
+        "path": "/training",
         "children": [
           {
             "label": {
               "et": "Teemad",
-              "en": "themes"
+              "en": "Themes"
             },
-            "path": "#"
+            "path": "/training/intents"
+          },
+          {
+            "label": {
+              "et": "Avalikud teemad",
+              "en": "Public themes"
+            },
+            "path": "/training/training/common-intents"
+          },
+          {
+            "label": {
+              "et": "Teemade järeltreenimine",
+              "en": "Post training themes"
+            },
+            "path": "/training/training/intents-followup-training"
           },
           {
             "label": {
               "et": "Vastused",
               "en": "Answers"
             },
-            "path": "#"
+            "path": "/training/training/responses"
           },
           {
             "label": {
-              "et": "Kasutaja lood",
+              "et": "Kasutuslood",
               "en": "User Stories"
             },
-            "path": "#"
+            "path": "/training/training/stories"
           },
           {
             "label": {
               "et": "Konfiguratsioon",
               "en": "Configuration"
             },
-            "path": "#"
+            "path": "/training/training/configuration"
           },
           {
             "label": {
               "et": "Vormid",
               "en": "Forms"
             },
-            "path": "#"
+            "path": "/training/training/forms"
           },
           {
             "label": {
-              "et": "Pilud",
+              "et": "Mälukohad",
               "en": "Slots"
             },
-            "path": "#"
+            "path": "/training/training/slots"
           }
         ]
       },
@@ -94,21 +108,21 @@
           "et": "Ajaloolised vestlused",
           "en": "Historical conversations"
         },
-        "path": "#",
+        "path": "/training/history",
         "children": [
           {
             "label": {
               "et": "Ajalugu",
               "en": "History"
             },
-            "path": "#"
+            "path": "/training/history/history"
           },
           {
             "label": {
               "et": "Pöördumised",
               "en": "Appeals"
             },
-            "path": "#"
+            "path": "/training/history/appeal"
           }
         ]
       },
@@ -117,28 +131,28 @@
           "et": "Mudelipank ja analüütika",
           "en": "Modelbank and analytics"
         },
-        "path": "#",
+        "path": "/training/analytics",
         "children": [
           {
             "label": {
               "et": "Teemade ülevaade",
               "en": "Overview of topics"
             },
-            "path": "#"
+            "path": "/training/analytics/overview"
           },
           {
             "label": {
               "et": "Mudelite võrdlus",
               "en": "Comparison of models"
             },
-            "path": "#"
+            "path": "/training/analytics/models"
           },
           {
             "label": {
               "et": "Testlood",
               "en": "testTracks"
             },
-            "path": "#"
+            "path": "/training/analytics/testcases"
           }
         ]
       },
@@ -147,7 +161,7 @@
           "et": "Treeni uus mudel",
           "en": "Train new model"
         },
-        "path": "#"
+        "path": "/training/train-new-model"
       }
     ]
   },
@@ -200,6 +214,44 @@
           "en": "Reports"
         },
         "path": "/analytics/reports"
+      }
+    ]
+  },
+  {
+    "id": "services",
+    "label": {
+      "et": "Haldus",
+      "en": "Services"
+    },
+    "path": "/services",
+    "children": [
+      {
+        "label": {
+          "et": "Ülevaade",
+          "en": "Overview"
+        },
+        "path": "/services/overview"
+      },
+      {
+        "label": {
+          "et": "Uus haldus",
+          "en": "New Service"
+        },
+        "path": "/services/newService"
+      },
+      {
+        "label": {
+          "et": "Järeltreening",
+          "en": "Followup Training"
+        },
+        "path": "/services/followupTraining"
+      },
+      {
+        "label": {
+          "et": "Faulty Services",
+          "en": "Faulty Services"
+        },
+        "path": "/services/faultyServices"
       }
     ]
   },

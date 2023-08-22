@@ -1,7 +1,7 @@
 import React, { FC, MouseEvent, useEffect, useState } from 'react';
 
 import { NavLink, useLocation } from 'react-router-dom';
-import { MdClose, MdKeyboardArrowDown } from 'react-icons/md';
+import {MdClose, MdKeyboardArrowDown, MdMiscellaneousServices} from 'react-icons/md';
 import clsx from 'clsx';
 import { MdOutlineForum, MdOutlineAdb, MdOutlineEqualizer, MdSettings, MdOutlineMonitorWeight } from 'react-icons/md';
 import  Icon from './components/icons/icon/icon';
@@ -23,7 +23,7 @@ interface TranslatedLabel {
 }
 
 const MainNavigation: FC<{items: MenuItem[]}> = ({items}) => {
-    if(items.size === 0) {
+    if(items.length === 0) {
         items = menuStructure;
     }
     const { t } = useTranslation();
@@ -40,6 +40,10 @@ const MainNavigation: FC<{items: MenuItem[]}> = ({items}) => {
         {
             id: 'analytics',
             icon: <MdOutlineEqualizer />,
+        },
+        {
+            id: "services",
+            icon: <MdMiscellaneousServices />,
         },
         {
             id: 'settings',

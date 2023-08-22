@@ -1,12 +1,12 @@
-import Button from './Button';
-import Icon from './Icon';
-import Track from './Track';
-import SwitchBox from './SwitchBox';
-import Switch from './Switch';
-import Toast from './Toast';
-import Drawer from './Drawer';
-import Dialog from './Dialog';
-import Section from './Section';
+import Button from './Button/index';
+import Icon from './Icon/index';
+import Track from './Track/index';
+import SwitchBox from './SwitchBox/index';
+import Switch from './Switch/index';
+import Toast from './Toast/index';
+import Drawer from './Drawer/index';
+import Dialog from './Dialog/index';
+import Section from './Section/index';
 
 export {
     Button,

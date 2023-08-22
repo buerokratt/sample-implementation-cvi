@@ -1,7 +1,14 @@
 import axios, {AxiosError} from 'axios';
 
+let baseUrl = '';
+if(import.meta.env.REACT_APP_MOCK_ENABLED === 'true') {
+    baseUrl = '/api';
+} else {
+    baseUrl = import.meta.env.BASE_URL + import.meta.env.REACT_APP_BASE_API_PATH;
+}
+
 const instance = axios.create({
-    baseURL: "api/",
+    baseURL: baseUrl,
     headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',

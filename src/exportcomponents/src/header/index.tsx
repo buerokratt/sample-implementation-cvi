@@ -41,9 +41,9 @@ type UserStoreStateProps = {
   user: StoreState;
 }
 const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user}) => {
+  const mockEnabled = import.meta.env.REACT_APP_MOCK_ENABLED === 'true';
   const { t } = useTranslation();
   const { userInfo } = user;
-  console.log(userInfo)
   const toast = useToast();
   const [__, setSecondsUntilStatusPopup] = useState(300); // 5 minutes in seconds
   const [statusPopupTimerHasStarted, setStatusPopupTimerHasStarted] =
@@ -83,18 +83,26 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user}) => {
     });
     if (res.response) setUserProfileSettings(res.response);
   };
-  //This is temporal mock so button can be triggered
-  // const { data: customerSupportActivity } = useQuery<CustomerSupportActivity>({
-  //   queryKey: [API_CONF.GET_CUSTOMER_SUPPORT_ACTIVITY],
-  //   onSuccess(res: any) {
-  //     const activity = res.data.get_customer_support_activity[0];
-  //     setCsaStatus(activity.status);
-  //     setCsaActive(activity.active === 'true');
-  //   },
-  // });
-  const { data: customerSupportActivity } = useQuery<CustomerSupportActivity>({
-    queryKey: [API_CONF.GET_CUSTOMER_SUPPORT_ACTIVITY],
-  });
+
+  const csaData = () => {
+    if(mockEnabled) {
+      console.log('csa true')
+      return useQuery<CustomerSupportActivity>({
+        queryKey: [API_CONF.GET_CUSTOMER_SUPPORT_ACTIVITY],
+      });
+    } else {
+      console.log('csa false')
+      return useQuery<CustomerSupportActivity>({
+        queryKey: [API_CONF.GET_CUSTOMER_SUPPORT_ACTIVITY],
+        onSuccess(res: any) {
+          const activity = res.data.get_customer_support_activity[0];
+          setCsaStatus(activity.status);
+          setCsaActive(activity.active === 'true');
+        },
+      });
+    }
+  }
+  const { data: customerSupportActivity } = csaData();
   const [activeChatsList, setActiveChatsList] = useState<Chat[]>([]);
 
   useQuery<Chat[]>({
