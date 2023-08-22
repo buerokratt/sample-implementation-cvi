@@ -10,8 +10,9 @@ import { CookiesProvider } from 'react-cookie';
 import App from './App';
 import './styles/main.scss';
 import '../i18n';
-import apis, {ax} from './components/AdminHeader/services/apis';
-import * as API_CONF from './components/AdminHeader/services/api-conf';
+import apis from './exportcomponents/src/header/services//apis';
+import { mockApi } from "./exportcomponents/src/header/services/mock-apis";
+import * as API_CONF from './exportcomponents/src/header/services/api-conf';
 import * as mocks from "./mocks/mockHandlers";
 
 // **** Query client ****
@@ -26,18 +27,11 @@ mocks;
 
 const defaultQueryFn: QueryFunction | undefined = async ({ queryKey }) => {
   if (queryKey.includes('prod')) {
-    // ax is mocked api call used for mocking, should be replaced by correct call like in next api call
-    console.log(queryKey[0] as string)
-    const { data } = await ax.get(queryKey[0] as string);
+    // Mock api call used for mocking, should be replaced by correct call like in next api call
+    const { data } = await mockApi.get(queryKey[0] as string);
     return data;
   }
-  if (queryKey[1] === 'prod-2') {
-    console.log('prod 2 is triggered')
-    const { data } = await apis(API_CONF.DEV_V2_BASE_URL).get(queryKey[0] as string);
-    return data?.response;
-  }
-  console.log('default is triggered')
-  const { data } = await apis(API_CONF.DEV_BASE_URL).get(queryKey[0] as string);
+  const { data } = await mockApi.get(queryKey[0] as string);
   return data;
 };
 

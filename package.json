@@ -10,8 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@exirain/cvi-components": "^0.1.5",
-    "@exirain/cvi-styles": "^1.10.1",
     "@fontsource/roboto": "^4.5.8",
     "@formkit/auto-animate": "^0.7.0",
     "@radix-ui/react-accessible-icon": "^1.0.3",
