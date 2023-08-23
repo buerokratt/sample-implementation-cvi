@@ -178,42 +178,42 @@
           "et": "Ülevaade",
           "en": "Overview"
         },
-        "path": "/analytics/overview"
+        "path": "/overview"
       },
       {
         "label": {
           "et": "Vestlused",
           "en": "Chats"
         },
-        "path": "/analytics/chats"
+        "path": "/chats"
       },
       {
         "label": {
           "et": "Bürokratt",
           "en": "Burokratt"
         },
-        "path": "/analytics/burokratt"
+        "path": "/burokratt"
       },
       {
         "label": {
           "et": "Tagasiside",
           "en": "Feedback"
         },
-        "path": "/analytics/feedback"
+        "path": "/feedback"
       },
       {
         "label": {
           "et": "Nõustajad",
           "en": "Advisors"
         },
-        "path": "/analytics/advisors"
+        "path": "/advisors"
       },
       {
         "label": {
           "et": "Avaandmed",
           "en": "Reports"
         },
-        "path": "/analytics/reports"
+        "path": "/reports"
       }
     ]
   },
