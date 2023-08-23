@@ -1,0 +1,17 @@
+@mixin cvi-labeled-icon($base: &) {
+  --comment: 'An SVG icon with a mandatory label';
+
+  fill: get-color(sapphire-blue-10);
+
+  @at-root {
+    #{$base}__content {
+      overflow-wrap: break-word;
+      min-width: 0;
+    }
+
+    #{$base}__icon-wrapper {
+      display: flex;
+      align-items: baseline;
+    }
+  }
+}

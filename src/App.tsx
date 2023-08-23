@@ -6,7 +6,6 @@ import useUserInfoStore from "./exportcomponents/src/header/store/store";
 import {useQuery} from "@tanstack/react-query";
 import {UserInfo} from "./exportcomponents/src/header/types/userInfo";
 
-
 const App: FC = () => {
     // fetching initial person information
     const store = useUserInfoStore();
@@ -23,6 +22,7 @@ const App: FC = () => {
         <Route element={<Layout />}>
           <Route index element={<Navigate to="/info/welcome" />} />
           <Route path="/info/welcome" element={<WelcomePage />} />
+          <Route path="/component/mainnavigation" element={<MainNavigationPage />} />
         </Route>
       </Routes>
   );

@@ -1,0 +1,88 @@
+@mixin cvi-button($base: &) {
+  --comment: 'A regular button';
+
+  display: inline-block;
+
+  @at-root {
+    #{$base}__button {
+      padding: 6px get-spacing('viljandi');
+      border-radius: var(--cvi-radius-pill);
+      text-align: center;
+      width: 100%;
+      font-size: get-font-size(100);
+      line-height: get-line-height(500);
+
+      &:disabled {
+        cursor: default;
+      }
+
+      #{$base}--appearance-primary & {
+        color: get-color(white);
+        background-color: get-color(sapphire-blue-10);
+        border: var(--cvi-border-width) solid get-color(sapphire-blue-10);
+
+        &:hover {
+          background-color: get-color(sapphire-blue-13);
+          border-color: get-color(sapphire-blue-13);
+        }
+
+        &:focus {
+          box-shadow: var(--cvi-shadow-focus);
+        }
+
+        &:disabled {
+          color: get-color(black-coral-10);
+          background-color: get-color(black-coral-1);
+          border-color: get-color(black-coral-1);
+        }
+      }
+
+      #{$base}--appearance-secondary & {
+        color: get-color(black-coral-20);
+        background-color: get-color(white);
+        border: var(--cvi-border-width) solid get-color(black-coral-10);
+
+        &:hover {
+          border-color: get-color(black-coral-1);
+        }
+
+        &:focus {
+          border-color: var(--cvi-color-focus);
+        }
+
+        &:disabled {
+          background-color: get-color(black-coral-0);
+          border-color: get-color(black-coral-1);
+        }
+      }
+      #{$base}--appearance-text & {
+        padding: 0;
+        color: get-color(sapphire-blue-10);
+        fill: get-color(sapphire-blue-10);
+        text-decoration: underline;
+        border: var(--cvi-border-width) solid transparent;
+        border-radius: var(--cvi-radius-xs);
+
+        &:hover {
+          text-decoration: none;
+        }
+
+        &:focus {
+          border: var(--cvi-border-focus);
+        }
+
+        &:disabled {
+          color: get-color(black-coral-10);
+          fill: get-color(black-coral-10);
+          text-decoration: line-through;
+          cursor: not-allowed;
+        }
+      }
+
+      #{$base}--size-s:not(#{$base}--appearance-text) & {
+        padding-inline: get-spacing('valga');
+        padding-block: get-spacing('loksa');
+      }
+    }
+  }
+}
