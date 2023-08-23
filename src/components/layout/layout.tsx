@@ -3,7 +3,6 @@ import { Outlet } from 'react-router-dom';
 import './layout.scss';
 import { useQuery } from '@tanstack/react-query';
 import { Header, MainNavigation } from "../../exportcomponents/src/index";
-// import MainNavigation from "../MainMenu/main-navigation";
 import useUserInfoStore from "../../exportcomponents/src/header/store/store";
 
 const Layout: FC = () => {

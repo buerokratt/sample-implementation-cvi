@@ -86,12 +86,10 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user}) => {
 
   const csaData = () => {
     if(mockEnabled) {
-      console.log('csa true')
       return useQuery<CustomerSupportActivity>({
         queryKey: [API_CONF.GET_CUSTOMER_SUPPORT_ACTIVITY],
       });
     } else {
-      console.log('csa false')
       return useQuery<CustomerSupportActivity>({
         queryKey: [API_CONF.GET_CUSTOMER_SUPPORT_ACTIVITY],
         onSuccess(res: any) {
