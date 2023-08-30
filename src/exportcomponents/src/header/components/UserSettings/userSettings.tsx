@@ -15,28 +15,45 @@ import { AxiosError } from 'axios';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import chatSound from '../../assets/chatSound.mp3';
 import * as API_CONF from '../../services/api-conf';
-import api from '../../services/apis';
+import api from '../../services/api';
 import {SUBSCRIPTION_INTERVAL} from "../../consts/consts";
 import {UserProfileSettings} from "../../types/userProfileSettings";
 import {StoreState} from "../../types/storeState";
 
 type UserSettingsProps = {
+    baseUrlV2: string;
     stateUpdate: () => void;
     user: StoreState;
 }
 
-const UserSettings: FC<PropsWithChildren<UserSettingsProps>> = ({stateUpdate, user}) => {
+const UserSettings: FC<PropsWithChildren<UserSettingsProps>> = ({stateUpdate, user,baseUrlV2}) => {
     const { userInfo } = user;
     const [userDrawerOpen, setUserDrawerOpen] = useState(false);
     const [activeChatsList, setActiveChatsList] = useState<Chat[]>([]);
     const queryClient = useQueryClient();
     const audio = useMemo(() => new Audio(chatSound), []);
     const { t } = useTranslation();
+    const [userProfileSettings, setUserProfileSettings] =
+        useState<UserProfileSettings>({
+            userId: 1,
+            forwardedChatPopupNotifications: false,
+            forwardedChatSoundNotifications: true,
+            forwardedChatEmailNotifications: false,
+            newChatPopupNotifications: false,
+            newChatSoundNotifications: true,
+            newChatEmailNotifications: false,
+            useAutocorrect: true,
+        });
+
+    useEffect(() => {
+        getMessages();
+    }, []);
     const getMessages = async () => {
-        const { data: res } = await api.get(API_CONF.GET_USER_PROFILE_SETTINGS, {
+        const { data: res } = await api(baseUrlV2).get(API_CONF.GET_USER_PROFILE_SETTINGS, {
+
             params: {
                 // TODO: Use actual id from userInfo once it starts using real data
-                userId: 1,
+                userId: userInfo?.idCode,
             },
         });
         if (res.response) setUserProfileSettings(res.response);
@@ -65,7 +82,7 @@ const UserSettings: FC<PropsWithChildren<UserSettingsProps>> = ({stateUpdate, us
 
     const userProfileSettingsMutation = useMutation({
         mutationFn: async (data: UserProfileSettings) => {
-            await api.post(API_CONF.SET_USER_PROFILE_SETTINGS, data);
+            await api(baseUrlV2).post(API_CONF.SET_USER_PROFILE_SETTINGS, data);
             setUserProfileSettings(data);
         },
         onError: async (error: AxiosError) => {
@@ -116,21 +133,7 @@ const UserSettings: FC<PropsWithChildren<UserSettingsProps>> = ({stateUpdate, us
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [unansweredChats]);
 
-    const [userProfileSettings, setUserProfileSettings] =
-        useState<UserProfileSettings>({
-            userId: 1,
-            forwardedChatPopupNotifications: false,
-            forwardedChatSoundNotifications: true,
-            forwardedChatEmailNotifications: false,
-            newChatPopupNotifications: false,
-            newChatSoundNotifications: true,
-            newChatEmailNotifications: false,
-            useAutocorrect: true,
-        });
 
-    useEffect(() => {
-        getMessages();
-    }, []);
 
     return (
         <>

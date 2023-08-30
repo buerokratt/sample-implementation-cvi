@@ -220,7 +220,7 @@
   {
     "id": "services",
     "label": {
-      "et": "Haldus",
+      "et": "Teenused",
       "en": "Services"
     },
     "path": "/services",
@@ -230,28 +230,28 @@
           "et": "Ülevaade",
           "en": "Overview"
         },
-        "path": "/services/overview"
+        "path": "/overview"
       },
       {
         "label": {
-          "et": "Uus haldus",
+          "et": "Uus teenus",
           "en": "New Service"
         },
-        "path": "/services/newService"
+        "path": "/newService"
       },
       {
         "label": {
-          "et": "Järeltreening",
+          "et": "Teemade järeltreenimine",
           "en": "Followup Training"
         },
-        "path": "/services/followupTraining"
+        "path": "/followupTraining"
       },
       {
         "label": {
-          "et": "Faulty Services",
+          "et": "Probleemsed teenused",
           "en": "Faulty Services"
         },
-        "path": "/services/faultyServices"
+        "path": "/faultyServices"
       }
     ]
   },
@@ -333,7 +333,7 @@
     "children": [
       {
         "label": {
-          "et": "Tööaeg",
+          "et": "Aktiivaeg",
           "en": "Working hours"
         },
         "path": "/monitoring/uptime"

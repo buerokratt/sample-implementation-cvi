@@ -20,7 +20,7 @@ import { Chat, CHAT_STATUS } from './types/chat';
 import {USER_IDLE_STATUS_TIMEOUT, STATUS_COLORS, SUBSCRIPTION_INTERVAL} from './consts/consts';
 
 import * as API_CONF from './services/api-conf';
-import api from "./services/apis";
+import api from './services/api';
 
 import './Header.scss';
 import { ReactComponent as Logo } from './assets/logo.svg';
@@ -38,10 +38,13 @@ type CustomerSupportActivityDTO = {
 };
 
 type UserStoreStateProps = {
+  analticsUrl: string;
+  baseUrl: string;
+  baseUrlV2: string;
   user: StoreState;
+
 }
-const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user}) => {
-  const mockEnabled = import.meta.env.REACT_APP_MOCK_ENABLED === 'true';
+const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user,baseUrl,baseUrlV2, analticsUrl}) => {
   const { t } = useTranslation();
   const { userInfo } = user;
   const toast = useToast();
@@ -75,36 +78,27 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user}) => {
   }, []);
 
   const getMessages = async () => {
-    const { data: res } = await api.get(API_CONF.GET_USER_PROFILE_SETTINGS, {
+    const { data: res } = await api(analticsUrl).get(API_CONF.GET_USER_PROFILE_SETTINGS, {
       params: {
         // TODO: Use actual id from userInfo once it starts using real data
-        userId: 1,
+        userId: userInfo?.idCode,
       },
     });
     if (res.response) setUserProfileSettings(res.response);
   };
 
-  const csaData = () => {
-    if(mockEnabled) {
-      return useQuery<CustomerSupportActivity>({
-        queryKey: [API_CONF.GET_CUSTOMER_SUPPORT_ACTIVITY],
-      });
-    } else {
-      return useQuery<CustomerSupportActivity>({
-        queryKey: [API_CONF.GET_CUSTOMER_SUPPORT_ACTIVITY],
-        onSuccess(res: any) {
-          const activity = res.data.get_customer_support_activity[0];
-          setCsaStatus(activity.status);
-          setCsaActive(activity.active === 'true');
-        },
-      });
-    }
-  }
-  const { data: customerSupportActivity } = csaData();
+  const { data: customerSupportActivity } = useQuery<CustomerSupportActivity>({
+    queryKey: [API_CONF.GET_CUSTOMER_SUPPORT_ACTIVITY, 'prod'],
+    onSuccess(res: any) {
+      const activity = res.data.get_customer_support_activity[0];
+      setCsaStatus(activity.status);
+      setCsaActive(activity.active === 'true');
+    },
+  });
   const [activeChatsList, setActiveChatsList] = useState<Chat[]>([]);
 
   useQuery<Chat[]>({
-    queryKey: [API_CONF.GET_ALL_ACTIVE_CHATS],
+    queryKey: [API_CONF.GET_ALL_ACTIVE_CHATS, 'prod'],
     onSuccess(res: any) {
       setActiveChatsList(res.data.get_all_active_chats);
     },
@@ -162,7 +156,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user}) => {
   }, [forwardedChats]);
 
   const customerSupportActivityMutation = useMutation({
-    mutationFn: (data: CustomerSupportActivityDTO) => api.post(API_CONF.SET_CUSTOMER_SUPPORT_ACTIVITY, {
+    mutationFn: (data: CustomerSupportActivityDTO) => api(baseUrl).post(API_CONF.SET_CUSTOMER_SUPPORT_ACTIVITY, {
       customerSupportId: data.customerSupportId,
       customerSupportActive: data.customerSupportActive,
       customerSupportStatus: data.customerSupportStatus
@@ -173,7 +167,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user}) => {
     onError: async (error: AxiosError) => {
       await queryClient.invalidateQueries([
         API_CONF.GET_CUSTOMER_SUPPORT_ACTIVITY,
-        // API_CONF.PROD_KEY,
+        'prod',
       ]);
       toast.open({
         type: 'error',
@@ -192,7 +186,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user}) => {
     mutationFn: async () => {
       const {
         data: { data },
-      } = await api.post(API_CONF.CUSTOM_JWT_EXTEND, {});
+      } = await api(baseUrl).post(API_CONF.CUSTOM_JWT_EXTEND, {});
       if (data.custom_jwt_extend === null) return;
       setNewCookie(data.custom_jwt_extend);
     },
@@ -202,7 +196,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user}) => {
   });
 
   const logoutMutation = useMutation({
-    mutationFn: () => api.post(API_CONF.LOGOUT),
+    mutationFn: () => api(baseUrl).post(API_CONF.LOGOUT),
     onSuccess(_) {
       window.location.href = API_CONF.LOGIN_LINK;
     },
@@ -388,6 +382,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user}) => {
       {userInfo && userProfileSettings && userDrawerOpen && (
           <UserSettings
               stateUpdate={() => {setUserDrawerOpen(false)}}
+              baseUrlV2={analticsUrl}
               user={user}
           />
       )}

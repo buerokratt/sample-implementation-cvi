@@ -10,10 +10,10 @@ import { CookiesProvider } from 'react-cookie';
 import App from './App';
 import './styles/main.scss';
 import '../i18n';
-import apis from './exportcomponents/src/header/services//apis';
 import { mockApi } from "./exportcomponents/src/header/services/mock-apis";
 import * as API_CONF from './exportcomponents/src/header/services/api-conf';
 import * as mocks from "./mocks/mockHandlers";
+import auth from "./exportcomponents/src/header/services/auth";
 
 // **** Query client ****
 // Query client part is not directly raleted to layout so it is optional
@@ -29,6 +29,10 @@ const defaultQueryFn: QueryFunction | undefined = async ({ queryKey }) => {
   if (queryKey.includes('prod')) {
     // Mock api call used for mocking, should be replaced by correct call like in next api call
     const { data } = await mockApi.get(queryKey[0] as string);
+    return data;
+  }
+  if(queryKey[1] === 'auth') {
+    const { data } = await auth.get(queryKey[0] as string);
     return data;
   }
   const { data } = await mockApi.get(queryKey[0] as string);

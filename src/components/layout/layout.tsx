@@ -35,7 +35,12 @@ const Layout: FC = () => {
     <div className='layout'>
       <div id='placeholder_for_main_navigation'><MainNavigation items={[]}/></div>
       <div className='layout__wrapper'>
-        <div id='placeholder_for_header'> <Header user={useUserInfoStore.getState()}/></div>
+        <div id='placeholder_for_header'> <Header
+            user={useUserInfoStore.getState()}
+            baseUrl={"http://localhost:4003"}
+            baseUrlV2={"http://localhost:5003"}
+            analyticsUrl={"http://localhost:6003"}
+        /></div>
         <main className='layout__main'>
           <Outlet />
         </main>

@@ -1,5 +1,6 @@
 import { SseResponse } from '../model/sse-response-model';
-import * as API_CONF from './api-conf';
+
+const ruuterUrl = import.meta.env.REACT_APP_RUUTER_V1_PRIVATE_API_URL;
 
 interface SseInstance {
   onMessage: <T>(handleData: (data: T) => void) => void;
@@ -7,8 +8,7 @@ interface SseInstance {
 }
 
 const sse = (url: string): SseInstance => {
-  const requestUrl = API_CONF.SSE_URL + '/' + API_CONF.SSE_PATH + '/' + url;
-  const eventSource = new EventSource(requestUrl, { withCredentials: true });
+  const eventSource = new EventSource(`${ruuterUrl}/sse/${url}`, { withCredentials: true });
 
   const onMessage = <T>(handleData: (data: T) => void) => {
     eventSource.onmessage = (event: MessageEvent) => {

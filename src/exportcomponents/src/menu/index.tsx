@@ -58,7 +58,7 @@ const MainNavigation: FC<{items: MenuItem[]}> = ({items}) => {
 
 
     const { data } = useQuery({
-        queryKey: ['cs-get-user-role'],
+        queryKey: ['cs-get-user-role', 'prod'],
         onSuccess: (res: any) => {
             const filteredItems = items.filter((item) => {
                 const role = res.data.get_user[0].authorities[0]
