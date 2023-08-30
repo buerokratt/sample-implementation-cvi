@@ -1,0 +1,80 @@
+@use '../tools/spacing';
+@use '../tools/color';
+@use '../tools/typography';
+
+@mixin cvi-textfield($base: &) {
+  $min-width: 200px;
+  $single-line--max-width: 300px;
+  $multiple-lines--max-width: 670px;
+  $text-control-padding-inline-end: spacing.get-spacing('elva');
+  $suffix-icon-width: 16px;
+
+  --comment: 'A form text control';
+
+  display: block;
+
+  &--type-single-line {
+    #{$base}__text-control {
+      min-width: var(--cvi-textfield--single-line--min-width, #{$min-width});
+      max-width: var(--cvi-textfield--single-line--max-width, #{$single-line--max-width});
+      width: 100%;
+      height: 40px;
+    }
+  }
+
+  &--type-multiple-lines {
+    // without display: flex aligning to bottom in cvi-track won't work
+    display: flex;
+    flex-direction: column;
+    #{$base}__text-control {
+      width: 100%;
+      min-width: $min-width;
+      max-width: var(--cvi-textfield--multiple-lines--max-width, #{$multiple-lines--max-width});
+      padding: spacing.get-spacing('paldiski');
+      resize: vertical;
+    }
+  }
+
+  &--has-suffix-icon {
+    position: relative;
+    #{$base}__text-control {
+      padding-inline-end: calc(#{$text-control-padding-inline-end} * 2 + #{$suffix-icon-width});
+    }
+  }
+
+  @at-root {
+    #{$base}__text-control {
+      background-color: color.get-color(white);
+      border: 1px solid color.get-color(black-coral-5);
+      border-radius: var(--cvi-radius-s);
+      font-size: typography.get-font-size(100);
+      padding-inline-start: spacing.get-spacing('paldiski');
+
+      &:focus {
+        outline: var(--cvi-border-focus);
+        border-color: transparent;
+      }
+
+      #{$base}--is-disabled & {
+        background-color: color.get-color(black-coral-0);
+        border: 1px solid color.get-color(black-coral-5);
+      }
+
+      #{$base}--no-resize & {
+        resize: none;
+      }
+    }
+    #{$base}__suffix-icon-wrapper {
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline-end: 0;
+      padding-inline-end: $text-control-padding-inline-end;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      fill: color.get-color(sapphire-blue-10);
+      pointer-events: none;
+    }
+  }
+}
