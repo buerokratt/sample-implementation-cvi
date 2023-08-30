@@ -11,7 +11,6 @@ import App from './App';
 import './styles/main.scss';
 import '../i18n';
 import { mockApi } from "./exportcomponents/src/header/services/mock-apis";
-import * as API_CONF from './exportcomponents/src/header/services/api-conf';
 import * as mocks from "./mocks/mockHandlers";
 import auth from "./exportcomponents/src/header/services/auth";
 
@@ -25,14 +24,14 @@ import auth from "./exportcomponents/src/header/services/auth";
 
 mocks;
 
+// All defined queries currently using mockApi file, but actuall application must api file with real api calls
 const defaultQueryFn: QueryFunction | undefined = async ({ queryKey }) => {
   if (queryKey.includes('prod')) {
-    // Mock api call used for mocking, should be replaced by correct call like in next api call
     const { data } = await mockApi.get(queryKey[0] as string);
     return data;
   }
   if(queryKey[1] === 'auth') {
-    const { data } = await auth.get(queryKey[0] as string);
+    const { data } = await mockApi.get(queryKey[0] as string);
     return data;
   }
   const { data } = await mockApi.get(queryKey[0] as string);

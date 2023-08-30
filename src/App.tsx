@@ -5,6 +5,7 @@ import WelcomePage from './pages/info/welcome';
 import useUserInfoStore from "./exportcomponents/src/header/store/store";
 import {useQuery} from "@tanstack/react-query";
 import {UserInfo} from "./exportcomponents/src/header/types/userInfo";
+import MainNavigationPage from "./pages/component/main-navigation";
 
 const App: FC = () => {
     // fetching initial person information
@@ -33,6 +34,7 @@ const App: FC = () => {
         <Route element={<Layout />}>
           <Route index element={<Navigate to="/info/welcome" />} />
           <Route path="/info/welcome" element={<WelcomePage />} />
+          <Route path="/**" element={<WelcomePage />} />
           <Route path="/component/mainnavigation" element={<MainNavigationPage />} />
         </Route>
       </Routes>

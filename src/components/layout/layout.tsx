@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import MainNavigation from 'components/main-navigation/main-navigation.tsx'
+// import MainNavigation from 'components/main-navigation/main-navigation.tsx'
 import './layout.scss';
 import { useQuery } from '@tanstack/react-query';
 import { Header, MainNavigation } from "../../exportcomponents/src/index";
