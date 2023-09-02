@@ -8,6 +8,7 @@ import {UserInfo} from "./exportcomponents/src/header/types/userInfo";
 import MainNavigationPage from "./pages/component/main-navigation";
 
 const App: FC = () => {
+    console.log(import.meta.env.REACT_APP_BASE_URL)
     // fetching initial person information
     const store = useUserInfoStore();
     // const { data: userInfo } = useQuery<{

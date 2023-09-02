@@ -33,7 +33,7 @@ const Layout: FC = () => {
 
     return (
     <div className='layout'>
-      <div id='placeholder_for_main_navigation'><MainNavigation items={[]}/></div>
+      <div id='placeholder_for_main_navigation'><MainNavigation baseUrl={import.meta.env.REACT_APP_REDIRECT_BASE_URL} items={[]}/></div>
       <div className='layout__wrapper'>
         <div id='placeholder_for_header'> <Header
             user={useUserInfoStore.getState()}

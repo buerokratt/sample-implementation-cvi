@@ -2,6 +2,25 @@
 
 All changes to this project will be documented in this file.
 
+## [0.0.16] - 01-09-2023
+
+- Updated menu paths
+
+## [0.0.15] - 01-09-2023
+
+- Removed mock handlers export
+
+## [0.0.14] - 01-09-2023
+
+- Added renavigation(loads other app instead of withing current app) to menu structure
+- Fix the url propogation for ..-user-profile-settings
+
+## [0.0.13] - 30-08-2023
+
+- Initial stable release
+- Updated menu paths
+- Updated menu path duplication checking
+
 ## [0.0.12] - 29-08-2023
 
 - Updated menu translations

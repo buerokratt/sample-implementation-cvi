@@ -10,7 +10,7 @@ import { CookiesProvider } from 'react-cookie';
 import App from './App';
 import './styles/main.scss';
 import '../i18n';
-import { mockApi } from "./exportcomponents/src/header/services/mock-apis";
+import { mockApi } from "./components/services/mock-apis";
 import * as mocks from "./mocks/mockHandlers";
 import auth from "./exportcomponents/src/header/services/auth";
 

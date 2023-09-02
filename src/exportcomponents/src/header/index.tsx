@@ -382,7 +382,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user,baseUrl,baseUr
       {userInfo && userProfileSettings && userDrawerOpen && (
           <UserSettings
               stateUpdate={() => {setUserDrawerOpen(false)}}
-              baseUrlV2={analticsUrl}
+              baseUrlV2={baseUrlV2}
               user={user}
           />
       )}

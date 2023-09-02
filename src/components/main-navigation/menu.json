@@ -12,21 +12,21 @@
           "et": "Vastamata",
           "en": "Unanswered"
         },
-        "path": "/chat/chat/unanswered"
+        "path": "/chat/unanswered"
       },
       {
         "label": {
           "et": "Aktiivsed",
           "en": "Active"
         },
-        "path": "/chat/chat/active"
+        "path": "/chat/active"
       },
       {
         "label": {
           "et": "Ajalugu",
           "en": "History"
         },
-        "path": "/chat/chat/history"
+        "path": "/chat/history"
       }
     ]
   },
@@ -50,7 +50,7 @@
               "et": "Teemad",
               "en": "Themes"
             },
-            "path": "/training/training/intents"
+            "path": "/training/intents"
           },
           {
             "label": {
@@ -171,14 +171,14 @@
       "et": "Analüütika",
       "en": "Analytics"
     },
-    "path": "/analytics",
+    "path": "#",
     "children": [
       {
         "label": {
           "et": "Ülevaade",
           "en": "Overview"
         },
-        "path": "/analytics/overview"
+        "path": "/info/welcome"
       },
       {
         "label": {
@@ -230,28 +230,28 @@
           "et": "Ülevaade",
           "en": "Overview"
         },
-        "path": "/services/overview"
+        "path": "/overview"
       },
       {
         "label": {
           "et": "Uus teenus",
           "en": "New Service"
         },
-        "path": "/services/newService"
+        "path": "/newService"
       },
       {
         "label": {
           "et": "Teemade järeltreenimine",
           "en": "Followup Training"
         },
-        "path": "/services/followupTraining"
+        "path": "/followupTraining"
       },
       {
         "label": {
           "et": "Probleemsed teenused",
           "en": "Faulty Services"
         },
-        "path": "/services/faultyServices"
+        "path": "/faultyServices"
       }
     ]
   },
@@ -268,42 +268,42 @@
           "et": "Kasutajad",
           "en": "Users"
         },
-        "path": "/chat/settings/users"
+        "path": "/settings/users"
       },
       {
         "label": {
           "et": "Vestlusbot",
           "en": "Chatbot"
         },
-        "path": "/chat/settings/chatbot",
+        "path": "/settings/chatbot",
         "children": [
           {
             "label": {
               "et": "Seaded",
               "en": "Settings"
             },
-            "path": "/chat/settings/chatbot/settings"
+            "path": "/settings/chatbot/settings"
           },
           {
             "label": {
               "et": "Tervitussõnum",
               "en": "Welcome message"
             },
-            "path": "/chat/settings/chatbot/welcome-message"
+            "path": "/settings/chatbot/welcome-message"
           },
           {
             "label": {
               "et": "Välimus ja käitumine",
               "en": "Appearance and behavior"
             },
-            "path": "/chat/settings/chatbot/appearance"
+            "path": "/settings/chatbot/appearance"
           },
           {
             "label": {
               "et": "Erakorralised teated",
               "en": "Emergency notices"
             },
-            "path": "/chat/settings/chatbot/emergency-notices"
+            "path": "/settings/chatbot/emergency-notices"
           }
         ]
       },
@@ -312,14 +312,14 @@
           "et": "Asutuse tööaeg",
           "en": "Office opening hours"
         },
-        "path": "/chat/settings/working-time"
+        "path": "/settings/working-time"
       },
       {
         "label": {
           "et": "Sessiooni pikkus",
           "en": "Session length"
         },
-        "path": "/chat/settings/session-length"
+        "path": "/settings/session-length"
       }
     ]
   },
@@ -336,7 +336,7 @@
           "et": "Aktiivaeg",
           "en": "Working hours"
         },
-        "path": "/chat/monitoring/uptime"
+        "path": "/monitoring/uptime"
       }
     ]
   }

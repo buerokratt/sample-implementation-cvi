@@ -22,7 +22,7 @@ interface TranslatedLabel {
     [lang: string] : string;
 }
 
-const MainNavigation: FC<{items: MenuItem[]}> = ({items}) => {
+const MainNavigation: FC<{items: MenuItem[], baseUrl: string}> = ({items, baseUrl}) => {
     if(items.length === 0) {
         items = menuStructure;
     }
@@ -86,13 +86,14 @@ const MainNavigation: FC<{items: MenuItem[]}> = ({items}) => {
     };
 
     const renderMenuTree = (menuItems: MenuItem[]) => {
+        const currentApp = location.pathname;
         return menuItems.map((menuItem) => (
             <li key={menuItem.label['et']}>
                 {!!menuItem.children ? (
                     <>
                         <button
                             className={clsx('nav__toggle', { 'nav__toggle--icon': !!menuItem.id })}
-                            aria-expanded={menuItem.path && location.pathname.includes(menuItem.path) ? 'true' : 'false'}
+                            aria-expanded={menuItem.path && checkRouting(location.pathname, menuItem.path) ? 'true' : 'false'}
                             onClick={handleNavToggle}
                         >
                             {menuItem.id && (
@@ -107,11 +108,15 @@ const MainNavigation: FC<{items: MenuItem[]}> = ({items}) => {
                         </ul>
                     </>
                 ) : (
-                    <NavLink to={menuItem.path || '#'}>{menuItem.label['et']}</NavLink>
+                    <NavLink to={checkRouting(location.pathname, menuItem.path) ? (menuItem.path || '#') : baseUrl + menuItem.path}>{menuItem.label['et']}</NavLink>
                 )}
             </li>),
         );
     };
+
+    const checkRouting = (location, path) => {
+        return location.split('/')[1] === path.split('/')[1]
+    }
 
     if (!menuItems) return null;
 

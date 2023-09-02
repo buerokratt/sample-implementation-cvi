@@ -1,4 +1,4 @@
-import { api } from '../exportcomponents/src/header/services/mock-apis';
+import { api } from '../components/services/mock-apis';
 import * as API_CONF from '../exportcomponents/src/header/services/api-conf';
 import {CUSTOM_JWT_INFO} from '../exportcomponents/src/header/services/api-conf';
 
