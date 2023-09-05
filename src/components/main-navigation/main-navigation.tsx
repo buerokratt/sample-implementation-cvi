@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import { MdOutlineForum, MdOutlineAdb, MdOutlineEqualizer, MdSettings, MdOutlineMonitorWeight } from 'react-icons/md';
 import  IconComponent from '../icons/icon/icon.tsx';
 import './main-navigation.scss';
+import menu from './menu.json';
 
 interface MenuItem {
   id?: string;
@@ -71,7 +72,7 @@ const MainNavigation: FC<{items: MenuItem[]}> = ({items}) => {
   **/
 
   /** Remove this hook when using items filtering functionality above*/
-  useEffect(() => {setMenuItems(items);}, []);
+  useEffect(() => {setMenuItems(menu);}, []);
 
   const location = useLocation();
   const [navCollapsed, setNavCollapsed] = useState(false);
@@ -88,7 +89,7 @@ const MainNavigation: FC<{items: MenuItem[]}> = ({items}) => {
           <>
             <button
               className={clsx('nav__toggle', { 'nav__toggle--icon': !!menuItem.id })}
-              aria-expanded={menuItem.path && location.pathname.includes(menuItem.path) ? 'true' : 'false'}
+              aria-expanded={menuItem.path && checkMenuPath(location.pathname, menuItem.path) ? 'true' : 'false'}
               onClick={handleNavToggle}
             >
               {menuItem.id && (
@@ -108,6 +109,13 @@ const MainNavigation: FC<{items: MenuItem[]}> = ({items}) => {
       </li>),
     );
   };
+
+  const checkMenuPath = (location, path) => {
+    // return location.split('/')[1] === path.split('/')[1];
+    console.log('location ' + location)
+    console.log('path ' + path)
+    return location.includes(path);
+  }
 
   if (!menuItems) return null;
 
