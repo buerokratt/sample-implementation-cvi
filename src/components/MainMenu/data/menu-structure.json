@@ -1,0 +1,291 @@
+[
+  {
+    "id": "conversations",
+    "label": {
+      "et": "Vestlused",
+      "en": "Conversations"
+    },
+    "path": "/chat",
+    "children": [
+      {
+        "label": {
+          "et": "Vastamata",
+          "en": "Unanswered"
+        },
+        "path": "/chat/unanswered"
+      },
+      {
+        "label": {
+          "et": "Aktiivsed",
+          "en": "Active"
+        },
+        "path": "/chat/active"
+      },
+      {
+        "label": {
+          "et": "Ajalugu",
+          "en": "History"
+        },
+        "path": "/chat/history"
+      }
+    ]
+  },
+  {
+    "id": "training",
+    "label": {
+      "et": "Treening",
+      "en": "Training"
+    },
+    "path": "#",
+    "children": [
+      {
+        "label": {
+          "et": "Treening",
+          "en": "Training"
+        },
+        "path": "#",
+        "children": [
+          {
+            "label": {
+              "et": "Teemad",
+              "en": "themes"
+            },
+            "path": "#"
+          },
+          {
+            "label": {
+              "et": "Vastused",
+              "en": "Answers"
+            },
+            "path": "#"
+          },
+          {
+            "label": {
+              "et": "Kasutaja lood",
+              "en": "User Stories"
+            },
+            "path": "#"
+          },
+          {
+            "label": {
+              "et": "Konfiguratsioon",
+              "en": "Configuration"
+            },
+            "path": "#"
+          },
+          {
+            "label": {
+              "et": "Vormid",
+              "en": "Forms"
+            },
+            "path": "#"
+          },
+          {
+            "label": {
+              "et": "Pilud",
+              "en": "Slots"
+            },
+            "path": "#"
+          }
+        ]
+      },
+      {
+        "label": {
+          "et": "Ajaloolised vestlused",
+          "en": "Historical conversations"
+        },
+        "path": "#",
+        "children": [
+          {
+            "label": {
+              "et": "Ajalugu",
+              "en": "History"
+            },
+            "path": "#"
+          },
+          {
+            "label": {
+              "et": "Pöördumised",
+              "en": "Appeals"
+            },
+            "path": "#"
+          }
+        ]
+      },
+      {
+        "label": {
+          "et": "Mudelipank ja analüütika",
+          "en": "Modelbank and analytics"
+        },
+        "path": "#",
+        "children": [
+          {
+            "label": {
+              "et": "Teemade ülevaade",
+              "en": "Overview of topics"
+            },
+            "path": "#"
+          },
+          {
+            "label": {
+              "et": "Mudelite võrdlus",
+              "en": "Comparison of models"
+            },
+            "path": "#"
+          },
+          {
+            "label": {
+              "et": "Testlood",
+              "en": "testTracks"
+            },
+            "path": "#"
+          }
+        ]
+      },
+      {
+        "label": {
+          "et": "Treeni uus mudel",
+          "en": "Train new model"
+        },
+        "path": "#"
+      }
+    ]
+  },
+  {
+    "id": "analytics",
+    "label": {
+      "et": "Analüütika",
+      "en": "Analytics"
+    },
+    "path": "/analytics",
+    "children": [
+      {
+        "label": {
+          "et": "Ülevaade",
+          "en": "Overview"
+        },
+        "path": "#"
+      },
+      {
+        "label": {
+          "et": "Vestlused",
+          "en": "Chats"
+        },
+        "path": "#"
+      },
+      {
+        "label": {
+          "et": "Bürokratt",
+          "en": "Burokratt"
+        },
+        "path": "#"
+      },
+      {
+        "label": {
+          "et": "Tagasiside",
+          "en": "Feedback"
+        },
+        "path": "#"
+      },
+      {
+        "label": {
+          "et": "Nõustajad",
+          "en": "Advisors"
+        },
+        "path": "#"
+      },
+      {
+        "label": {
+          "et": "Avaandmed",
+          "en": "Reports"
+        },
+        "path": "#"
+      }
+    ]
+  },
+  {
+    "id": "settings",
+    "label": {
+      "et": "Haldus",
+      "en": "Administration"
+    },
+    "path": "/settings",
+    "children": [
+      {
+        "label": {
+          "et": "Kasutajad",
+          "en": "Users"
+        },
+        "path": "/settings/users"
+      },
+      {
+        "label": {
+          "et": "Vestlusbot",
+          "en": "Chatbot"
+        },
+        "path": "/settings/chatbot",
+        "children": [
+          {
+            "label": {
+              "et": "Seaded",
+              "en": "Settings"
+            },
+            "path": "/settings/chatbot/settings"
+          },
+          {
+            "label": {
+              "et": "Tervitussõnum",
+              "en": "Welcome message"
+            },
+            "path": "/settings/chatbot/welcome-message"
+          },
+          {
+            "label": {
+              "et": "Välimus ja käitumine",
+              "en": "Appearance and behavior"
+            },
+            "path": "/settings/chatbot/appearance"
+          },
+          {
+            "label": {
+              "et": "Erakorralised teated",
+              "en": "Emergency notices"
+            },
+            "path": "/settings/chatbot/emergency-notices"
+          }
+        ]
+      },
+      {
+        "label": {
+          "et": "Asutuse tööaeg",
+          "en": "Office opening hours"
+        },
+        "path": "/settings/working-time"
+      },
+      {
+        "label": {
+          "et": "Sessiooni pikkus",
+          "en": "Session length"
+        },
+        "path": "/settings/session-length"
+      }
+    ]
+  },
+  {
+    "id": "monitoring",
+    "label": {
+      "et": "Seire",
+      "en": "Monitoring"
+    },
+    "path": "/monitoring",
+    "children": [
+      {
+        "label": {
+          "et": "Tööaeg",
+          "en": "Working hours"
+        },
+        "path": "/monitoring/uptime"
+      }
+    ]
+  }
+]
