@@ -1,4 +1,6 @@
-export interface UserInfo {
+import { UserInfo } from "./userInfo"
+
+/*export interface UserInfo {
   JWTCreated: string;
   JWTExpirationTimestamp: string;
   firstName: string;
@@ -12,7 +14,7 @@ export interface UserInfo {
   idCode: string;
   email: string;
 }
-
+*/
 export interface StoreState {
   userInfo: UserInfo | null;
   setUserInfo: (data: UserInfo) => void;

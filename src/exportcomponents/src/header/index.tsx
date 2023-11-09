@@ -73,26 +73,20 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user,baseUrl,baseUr
       useAutocorrect: true,
     });
 
-  useEffect(() => {
+  /*useEffect(() => {
     getMessages();
   }, []);
-
-  const getMessages = async () => {
-    const { data: res } = await api(analticsUrl).get(API_CONF.GET_USER_PROFILE_SETTINGS, {
-      params: {
-        // TODO: Use actual id from userInfo once it starts using real data
-        userId: userInfo?.idCode,
-      },
-    });
-    if (res.response) setUserProfileSettings(res.response);
-  };
+*/
+  const {data} = useQuery<UserProfileSettings>({
+    queryKey: [API_CONF.GET_USER_PROFILE_SETTINGS, 'prod'],
+    onSuccess: (res: any) => setUserProfileSettings(res)
+  });
 
   const { data: customerSupportActivity } = useQuery<CustomerSupportActivity>({
     queryKey: [API_CONF.GET_CUSTOMER_SUPPORT_ACTIVITY, 'prod'],
     onSuccess(res: any) {
-      const activity = res.data.get_customer_support_activity[0];
-      setCsaStatus(activity.status);
-      setCsaActive(activity.active === 'true');
+      setCsaStatus(res.status);
+      setCsaActive(res.active === 'true');
     },
   });
   const [activeChatsList, setActiveChatsList] = useState<Chat[]>([]);
@@ -100,7 +94,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user,baseUrl,baseUr
   useQuery<Chat[]>({
     queryKey: [API_CONF.GET_ALL_ACTIVE_CHATS, 'prod'],
     onSuccess(res: any) {
-      setActiveChatsList(res.data.get_all_active_chats);
+      setActiveChatsList(res.data);
     },
   });
   const customJwtCookieKey = 'customJwtCookie';

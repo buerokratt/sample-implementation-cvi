@@ -34,8 +34,12 @@ const App: FC = () => {
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<Navigate to="/info/welcome" />} />
-          <Route path="/info/welcome" element={<WelcomePage />} />
-          <Route path="/**" element={<WelcomePage />} />
+          <Route path="/info/*" element={<WelcomePage />} />
+          <Route path="/training/*" element={<WelcomePage />} />
+          <Route path="/chat/*" element={<WelcomePage />} />
+          <Route path="/unanswered/*" element={<WelcomePage />} />
+          <Route path="/active/*" element={<WelcomePage />} />
+          <Route path="/analytics/*" element={<WelcomePage />} />
           <Route path="/component/mainnavigation" element={<MainNavigationPage />} />
         </Route>
       </Routes>

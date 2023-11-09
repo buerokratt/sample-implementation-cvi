@@ -37,17 +37,16 @@ To publish npm newely created package:
     * If you want to use local package, put created package to the root of react app and add depenency like "@exirain/header": "file:exirain-header-0.0.5.tgz" (use proper version)
 ### Using MainNavigation component
   * In Layout component you need to provide fetching and caching the `menu.json` file, code snippet would be:  
-```
-     const CACHE_NAME = 'mainmenu-cache';  
+    const CACHE_NAME = 'mainmenu-cache';  
      const [MainMenuItems, setMainMenuItems] = useState([])   
      const  {data, isLoading, status}  = useQuery({   
      queryKey: [import.meta.env.REACT_APP_MENU_URL + import.meta.env.REACT_APP_MENU_PATH],   
      onSuccess: (res: any) => {   
-        try {  
-         setMainMenuItems(res);  
-         localStorage.setItem(CACHE_NAME, JSON.stringify(res));  
-        } catch (e) {  
-            console.log(e);  
+     try {  
+        setMainMenuItems(res);  
+        localStorage.setItem(CACHE_NAME, JSON.stringify(res));  
+     } catch (e) {  
+        console.log(e);  
      }},  
      onError: (error: any) => {  
         setMainMenuItems(getCache());  
@@ -57,28 +56,20 @@ To publish npm newely created package:
         const cache = localStorage.getItem(CACHE_NAME) || '{}';  
         return JSON.parse(cache);  
      }
-```
-  * Then pass this MainMenu items to menu component `<MainNavigation baseUrl={baseUlr} items={MainMenuItems}/>`
+  * Then pass this MainMenu items to menu component `<MainNavigation items={MainMenuItems}/>`
     * If you want to use only local file provided by package then pass empty array instead `[]`
-    * baseUlr is url for menu navigation when switching to different modules.
 ### Using Header component
 * Example of using header component  
-```
   <Header  
     baseUrlV2={import.meta.env.REACT_APP_RUUTER_V2_PRIVATE_API_URL}  
     baseUrl={import.meta.env.REACT_APP_RUUTER_V1_PRIVATE_API_URL}  
     analticsUrl={import.meta.env.REACT_APP_RUUTER_V2_ANALYTICS_API_URL}  
-    user={useUserInfoStore.getState()}  
+  user={useUserInfoStore.getState()}  
   />
-```
 * Make sure all these variables are set in .env file or docker-compose file
-  * user is user information from JWT request
-  * all url are special urls delegated for api to be configurable according to application usage
 * Using user store is critical for header to function since it contains information about user that would be shown in Header
   * User store script in examples folder
-  * You must fetch initial data in App.tsx file and then delegate it to header for displaying(JWT request)
-  * Provide proper query client configs in main/index.tsx as done in other projects(https://github.com/buerokratt/Analytics-Module)
-  * For local development make sure to use mocks and env variable REACT_APP_LOCAL=true
+  * You must fetch initial data in App.tsx file and then delegate it to header for displaying
 
 ### Implemented examples:
 * https://github.com/buerokratt/Training-Module

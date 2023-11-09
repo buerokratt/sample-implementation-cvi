@@ -19,7 +19,7 @@
           "et": "Aktiivsed",
           "en": "Active"
         },
-        "path": "/chat/active"
+        "path": "/active"
       },
       {
         "label": {
@@ -171,7 +171,7 @@
       "et": "Analüütika",
       "en": "Analytics"
     },
-    "path": "#",
+    "path": "/analytics",
     "children": [
       {
         "label": {

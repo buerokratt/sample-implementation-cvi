@@ -12,13 +12,14 @@ import {Chat, CHAT_STATUS} from "../../types/chat";
 import toast from "../Toast";
 import { Subscription, interval } from 'rxjs';
 import { AxiosError } from 'axios';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import chatSound from '../../assets/chatSound.mp3';
 import * as API_CONF from '../../services/api-conf';
 import api from '../../services/api';
 import {SUBSCRIPTION_INTERVAL} from "../../consts/consts";
 import {UserProfileSettings} from "../../types/userProfileSettings";
 import {StoreState} from "../../types/storeState";
+import {queryKey} from "@tanstack/react-query/build/lib/__tests__/utils";
 
 type UserSettingsProps = {
     baseUrlV2: string;
@@ -45,19 +46,10 @@ const UserSettings: FC<PropsWithChildren<UserSettingsProps>> = ({stateUpdate, us
             useAutocorrect: true,
         });
 
-    useEffect(() => {
-        getMessages();
-    }, []);
-    const getMessages = async () => {
-        const { data: res } = await api(baseUrlV2).get(API_CONF.GET_USER_PROFILE_SETTINGS, {
-
-            params: {
-                // TODO: Use actual id from userInfo once it starts using real data
-                userId: userInfo?.idCode,
-            },
-        });
-        if (res.response) setUserProfileSettings(res.response);
-    };
+    const {data} = useQuery<UserProfileSettings>({
+        queryKey: [API_CONF.GET_USER_PROFILE_SETTINGS, 'prod'],
+        onSuccess: (res: any) => setUserProfileSettings(res)
+    });
 
     const forwardedChats = useMemo(
         () =>
