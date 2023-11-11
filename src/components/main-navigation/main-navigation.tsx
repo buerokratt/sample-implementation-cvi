@@ -111,12 +111,12 @@ const MainNavigation: FC<{items: MenuItem[]}> = ({items}) => {
   };
 
   const urlLocation = window.location.pathname;
-  console.log(urlLocation);
+  // console.log(urlLocation);
   const checkMenuPath = (menuItem) => {
       const result = isSameRoot(menuItem) && location.pathname.includes(menuItem.path);
-      if(!result) {
-        console.log(menuItem.path);
-      }
+      // if(!result) {
+      //   console.log(menuItem.path);
+      // }
       return result;
   }
 

@@ -22,7 +22,7 @@ interface TranslatedLabel {
     [lang: string] : string;
 }
 
-const MainNavigation: FC<{items: MenuItem[], serviceId: string[]}> = ( {items, serviceId}) => {
+const MainNavigation: FC<{items: MenuItem[], serviceId: string[], basePath: string}> = ( {items, serviceId, basePath}) => {
   if(!items.isArray || items.length === 0) {
     items = menuStructure;
   }
@@ -99,7 +99,7 @@ const MainNavigation: FC<{items: MenuItem[], serviceId: string[]}> = ( {items, s
           <>
             <button
               className={clsx('nav__toggle', { 'nav__toggle--icon': !!menuItem.id })}
-              aria-expanded={menuItem.path && (menuItem.path.includes(useLocation.pathname)) ? 'true' : 'false'}
+              aria-expanded={menuItem.path && (isSameRoot(menuItem)) ? 'true' : 'false'}
               onClick={handleNavToggle}
             >
               { menuItem.id &&  (
@@ -123,6 +123,11 @@ const MainNavigation: FC<{items: MenuItem[], serviceId: string[]}> = ( {items, s
       </li>),
     );
   };
+
+  const isSameRoot = (menuItem) => {
+    const withSameMenu = menuItem.children.some(item => item.path.includes(location.pathname))
+    return (menuItem.path.includes(basePath));
+  }
 
 
   if (!menuItems) return null;

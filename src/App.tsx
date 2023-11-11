@@ -18,18 +18,18 @@ const App: FC = () => {
     //     onSuccess: (data: { data: { custom_jwt_userinfo: UserInfo } }) =>
     //         store.setUserInfo(data.data.custom_jwt_userinfo),
     // });
-    // const { data: userInfo } = useQuery<UserInfo>({
-    //     queryKey: ['mock-response', 'auth'],
-    //     onSuccess: (data) => store.setUserInfo(data),
-    // });
-
     const { data: userInfo } = useQuery<UserInfo>({
-        queryKey: ['steps/tim/mock-response', 'auth'],
-        onSuccess: (data) => {
-            console.log(data.response.body.displayName)
-            store.setUserInfo(data.response.body)
-        },
+        queryKey: ['mock-response', 'auth'],
+        onSuccess: (data) => store.setUserInfo(data),
     });
+
+    // const { data: userInfo } = useQuery<{response: {body: UserInfo}}>({
+    //     queryKey: ['steps/tim/mock-response', 'auth'],
+    //     onSuccess: (data) => {
+    //         console.log(data.response.body.displayName)
+    //         store.setUserInfo(data.response.body)
+    //     },
+    // });
   return (
       <Routes>
         <Route element={<Layout />}>

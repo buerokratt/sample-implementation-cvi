@@ -13,6 +13,7 @@ import '../i18n';
 import { mockApi } from "./components/services/mock-apis";
 import * as mocks from "./mocks/mockHandlers";
 import auth from "./exportcomponents/src/header/services/auth";
+import apiDev from "./exportcomponents/src/header/services/api-dev.ts";
 
 // **** Query client ****
 // Query client part is not directly raleted to layout so it is optional
@@ -26,6 +27,7 @@ mocks;
 
 // All defined queries currently using mockApi file, but actuall application must api file with real api calls
 const defaultQueryFn: QueryFunction | undefined = async ({ queryKey }) => {
+  console.log(queryKey)
   if (queryKey.includes('prod')) {
     const { data } = await mockApi.get(queryKey[0] as string);
     return data;
