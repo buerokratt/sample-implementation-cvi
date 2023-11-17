@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import React, {FC, PropsWithChildren, useEffect, useMemo, useState} from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
@@ -29,6 +29,7 @@ import chatSound from './assets/chatSound.mp3';
 import { interval } from 'rxjs';
 import { AUTHORITY } from './types/authorities';
 import { useCookies } from 'react-cookie';
+import {UserInfo} from "./types/userInfo.ts";
 
 type CustomerSupportActivity = {
   idCode: string;
@@ -48,9 +49,13 @@ const statusColors: Record<string, string> = {
   offline: '#D73E3E',
 };
 
-const Header: FC = () => {
+type UserStoreStateProps = {
+  user: UserInfo;
+}
+
+const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user}) => {
   const { t } = useTranslation();
-  const userInfo = useStore(state => state.userInfo);
+  const userInfo = user;
   const toast = useToast();
   const [__, setSecondsUntilStatusPopup] = useState(300); // 5 minutes in seconds
   const [statusPopupTimerHasStarted, setStatusPopupTimerHasStarted] =

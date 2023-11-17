@@ -40,16 +40,14 @@ const Layout: FC = () => {
     return (
     <div className='layout'>
       <div id='placeholder_for_main_navigation'>
-          <MainNavigation serviceId={import.meta.env.REACT_APP_SERVICE_ID.split(',')} items={MainMenuItems} basePath={"chat"}/>
+          <MainNavigation serviceId={import.meta.env.REACT_APP_SERVICE_ID.split(',')} items={MainMenuItems} />
           {/*<MainNavigation items={items}/>*/}
       </div>
       <div className='layout__wrapper'>
         <div id='placeholder_for_header'>
             <Header
-            user={useUserInfoStore.getState()}
-            baseUrl={"http://localhost:4003"}
-            baseUrlV2={"http://localhost:5003"}
-            analticsUrl={"http://localhost:6003"}/>
+            user={useUserInfoStore.getState().userInfo}
+            />
         </div>
         <main className='layout__main'>
           <Outlet />
