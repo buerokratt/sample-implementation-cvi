@@ -2,7 +2,6 @@
 @import '../../styles/tools/color';
 @import '../../styles/settings/variables/other';
 @import '../../styles/settings/variables/typography';
-@import '../../styles/settings/variables/typography';
 
 .btn {
   $self: &;
@@ -11,8 +10,7 @@
   align-items: center;
   background: none;
   border: 0;
-  //color: get-color(black-coral-0);
-  color: var(--veera-color-sapphire-blue-10);;
+  color: get-color(black-coral-0);
   cursor: pointer;
   font: inherit;
   gap: get-spacing(rapla);

@@ -1,6 +1,6 @@
 {
   "name": "@exirain/header",
-  "version": "0.0.26",
+  "version": "0.0.28",
   "description": "Generic header that would be injected as dependency for all projects",
   "main": "index.js",
   "scripts": {},

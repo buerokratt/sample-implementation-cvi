@@ -54,9 +54,25 @@ export const getUserRole =
 
 export const getProfieSettings =
     api
-        .onGet("cs-get-user-profile-settings?userId=1")
+        .onGet("cs-get-user-profile-settings?userId=*")
         .reply(200, {
             response: null
+        })
+
+export const getUserProfileSettings =
+    api
+        .onPost("cs-get-user-profile-settings")
+        .reply(200,{
+            "response": {
+                "userId'": 1,
+                "forwardedChatPopupNotifications": true,
+                "forwardedChatSoundNotifications": true,
+                "forwardedChatEmailNotifications": true,
+                "newChatPopupNotifications": true,
+                "newChatSoundNotifications": true,
+                "newChatEmailNotifications": true,
+                "useAutocorrect": false
+            }
         })
 
 export const setProfileSettings =
