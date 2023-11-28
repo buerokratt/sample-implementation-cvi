@@ -23,10 +23,12 @@ export default defineConfig({
       '~@fontsource': path.resolve(__dirname, 'node_modules/@fontsource'),
     },
   },
-  css: {
-    modules: {
-      scopeBehaviour: 'local',
-    }
+    css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@import "@/styles/main.scss";`,
+      },
+    },
   },
 
   // Configuration for building your library.

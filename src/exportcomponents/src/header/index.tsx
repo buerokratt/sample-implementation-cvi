@@ -1,35 +1,41 @@
-import React, {FC, useEffect, useMemo, useState, useContext, PropsWithChildren} from 'react';
+import React, {FC, PropsWithChildren, useEffect, useMemo, useState} from 'react';
 import { useTranslation } from 'react-i18next';
-import { Subscription, interval } from 'rxjs';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useIdleTimer } from 'react-idle-timer';
 import { MdOutlineExpandMore } from 'react-icons/md';
-import { useCookies } from 'react-cookie';
+
 import {
-  Switch,
-  Dialog,
   Track,
   Button,
-  Icon
-} from "./components";
-
-import UserSettings from "./components/UserSettings/userSettings";
-import { ToastContext } from './components/Toast/ToastContext';
-import { Chat, CHAT_STATUS } from './types/chat';
-import {USER_IDLE_STATUS_TIMEOUT, STATUS_COLORS, SUBSCRIPTION_INTERVAL} from './consts/consts';
-
-import * as API_CONF from './services/api-conf';
-import api from './services/api';
-
+  Icon,
+  Drawer,
+  Section,
+  SwitchBox,
+  Switch,
+  Dialog,
+} from './components';
+import useStore from './store/store.ts';
+// @ts-ignore
+import { ReactComponent as BykLogo } from './assets/logo.svg';
+import { UserProfileSettings } from './types/userProfileSettings';
+import { Chat as ChatType } from './types/chat';
+import { useToast } from './hooks/useToast';
+import { USER_IDLE_STATUS_TIMEOUT } from './consts/consts.ts';
+import apiDev from './services/api-dev';
+import apiDevV2 from './services/api-dev-v2';
 import './Header.scss';
-import { ReactComponent as Logo } from './assets/logo.svg';
 import chatSound from './assets/chatSound.mp3';
-import {CustomerSupportActivity} from "./types/customerSupportActivity";
-import {UserProfileSettings} from "./types/userProfileSettings";
-import {StoreState} from "./types/storeState";
+import { interval } from 'rxjs';
+import { AUTHORITY } from './types/authorities';
+import { useCookies } from 'react-cookie';
+import {UserInfo} from "./types/userInfo.ts";
 
-const useToast = () => useContext(ToastContext);
+type CustomerSupportActivity = {
+  idCode: string;
+  active: true;
+  status: string;
+};
 
 type CustomerSupportActivityDTO = {
   customerSupportActive: boolean;
@@ -37,136 +43,202 @@ type CustomerSupportActivityDTO = {
   customerSupportId: string;
 };
 
-type UserStoreStateProps = {
-  analticsUrl: string;
-  baseUrl: string;
-  baseUrlV2: string;
-  user: StoreState;
+const statusColors: Record<string, string> = {
+  idle: '#FFB511',
+  online: '#308653',
+  offline: '#D73E3E',
+};
 
+type UserStoreStateProps = {
+  user: UserInfo;
 }
-const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user,baseUrl,baseUrlV2, analticsUrl}) => {
+
+const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user}) => {
   const { t } = useTranslation();
-  const { userInfo } = user;
+  const userInfo = user;
   const toast = useToast();
   const [__, setSecondsUntilStatusPopup] = useState(300); // 5 minutes in seconds
   const [statusPopupTimerHasStarted, setStatusPopupTimerHasStarted] =
-    useState(false);
+      useState(false);
   const [showStatusConfirmationModal, setShowStatusConfirmationModal] =
-    useState(false);
+      useState(false);
 
   const queryClient = useQueryClient();
   const [userDrawerOpen, setUserDrawerOpen] = useState(false);
   const [csaStatus, setCsaStatus] = useState<'idle' | 'offline' | 'online'>(
-    'online'
+      'online'
   );
   const audio = useMemo(() => new Audio(chatSound), []);
-  const [csaActive, setCsaActive] = useState<boolean>(false);
+  const chatCsaActive = useStore(state => state.chatCsaActive);
   const [userProfileSettings, setUserProfileSettings] =
-    useState<UserProfileSettings>({
-      userId: 1,
-      forwardedChatPopupNotifications: false,
-      forwardedChatSoundNotifications: true,
-      forwardedChatEmailNotifications: false,
-      newChatPopupNotifications: false,
-      newChatSoundNotifications: true,
-      newChatEmailNotifications: false,
-      useAutocorrect: true,
-    });
+      useState<UserProfileSettings>({
+        userId: 1,
+        forwardedChatPopupNotifications: true,
+        forwardedChatSoundNotifications: true,
+        forwardedChatEmailNotifications: false,
+        newChatPopupNotifications: false,
+        newChatSoundNotifications: true,
+        newChatEmailNotifications: false,
+        useAutocorrect: true,
+      });
+  const customJwtCookieKey = 'customJwtCookie';
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const expirationTimeStamp = localStorage.getItem('exp');
+      if (
+          expirationTimeStamp !== 'null' &&
+          expirationTimeStamp !== null &&
+          expirationTimeStamp !== undefined
+      ) {
+        const expirationDate = new Date(parseInt(expirationTimeStamp) ?? '');
+        const currentDate = new Date(Date.now());
+        if (expirationDate < currentDate) {
+          localStorage.removeItem('exp');
+          window.location.href =
+              import.meta.env.REACT_APP_CUSTOMER_SERVICE_LOGIN;
+        } else {
+        }
+      }
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [userInfo]);
 
   useEffect(() => {
     getMessages();
-  }, []);
+  }, [userInfo?.idCode]);
 
   const getMessages = async () => {
-    const { data: res } = await api(analticsUrl).get(API_CONF.GET_USER_PROFILE_SETTINGS, {
-      params: {
-        // TODO: Use actual id from userInfo once it starts using real data
-        userId: userInfo?.idCode,
-      },
+    const { data: res } = await apiDevV2.post('cs-get-user-profile-settings', {
+      userId: userInfo?.idCode ?? '',
     });
-    if (res.response) setUserProfileSettings(res.response);
-  };
 
+    if (res.response && res.response != 'error: not found')
+      setUserProfileSettings(res.response[0]);
+  };
   const { data: customerSupportActivity } = useQuery<CustomerSupportActivity>({
-    queryKey: [API_CONF.GET_CUSTOMER_SUPPORT_ACTIVITY, 'prod'],
+    queryKey: ['cs-get-customer-support-activity', 'prod'],
     onSuccess(res: any) {
       const activity = res.data.get_customer_support_activity[0];
       setCsaStatus(activity.status);
-      setCsaActive(activity.active === 'true');
+      useStore.getState().setChatCsaActive(activity.active === 'true');
     },
   });
-  const [activeChatsList, setActiveChatsList] = useState<Chat[]>([]);
 
-  useQuery<Chat[]>({
-    queryKey: [API_CONF.GET_ALL_ACTIVE_CHATS, 'prod'],
+  useQuery<ChatType[]>({
+    queryKey: ['cs-get-all-active-chats', 'prod'],
     onSuccess(res: any) {
-      setActiveChatsList(res.data.get_all_active_chats);
+      useStore.getState().setActiveChats(res.data.get_all_active_chats);
     },
   });
-  const customJwtCookieKey = 'customJwtCookie';
+
   const [_, setCookie] = useCookies([customJwtCookieKey]);
+  const unansweredChatsLength = useStore(state => state.unansweredChatsLength());
+  const forwardedChatsLength = useStore(state => state.forwordedChatsLength());
 
-  const unansweredChats = useMemo(
-    () =>
-      activeChatsList
-        ? activeChatsList.filter((c) => c.customerSupportId === '').length
-        : 0,
-    [activeChatsList]
-  );
-  const forwardedChats = useMemo(
-    () =>
-      activeChatsList
-        ? activeChatsList.filter(
-          (c) =>
-            c.status === CHAT_STATUS.REDIRECTED &&
-            c.customerSupportId === userInfo?.idCode
-        ).length
-        : 0,
-    [activeChatsList]
-  );
+  const handleNewMessage = () => {
+    if (unansweredChatsLength <= 0){
+      return;
+    }
 
-  useEffect(() => {
-    let subscription: Subscription;
-    if (forwardedChats > 0) {
-      if (userProfileSettings.forwardedChatSoundNotifications) audio.play();
-      if (userProfileSettings.forwardedChatEmailNotifications)
-        if (userProfileSettings.forwardedChatPopupNotifications) {
-          // TODO send email notification
-          toast.open({
-            type: 'info',
-            title: t('global.notification'),
-            message: t('settings.users.newForwardedChat'),
-          });
-        }
-      subscription = interval(SUBSCRIPTION_INTERVAL).subscribe(() => {
-        if (userProfileSettings.forwardedChatSoundNotifications) audio.play();
-        if (userProfileSettings.forwardedChatPopupNotifications) {
-          toast.open({
-            type: 'info',
-            title: t('global.notification'),
-            message: t('settings.users.newForwardedChat'),
-          });
-        }
+    if (userProfileSettings.newChatSoundNotifications) {
+      audio.play();
+    }
+    if(userProfileSettings.newChatEmailNotifications) {
+      // TODO send email notification
+    }
+    if (userProfileSettings.newChatPopupNotifications) {
+      toast.open({
+        type: 'info',
+        title: t('global.notification'),
+        message: t('settings.users.newUnansweredChat'),
       });
     }
+  }
+
+  useEffect(() => {
+    handleNewMessage();
+
+    const subscription = interval(2 * 60 * 1000).subscribe(()=>handleNewMessage());
     return () => {
-      if (subscription) subscription.unsubscribe();
+      subscription?.unsubscribe();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [forwardedChats]);
+  }, [unansweredChatsLength, userProfileSettings]);
+
+  const handleForwordMessage = () => {
+    if (forwardedChatsLength <= 0) {
+      return;
+    }
+
+    if (userProfileSettings.forwardedChatSoundNotifications) {
+      audio.play();
+    }
+    if (userProfileSettings.forwardedChatEmailNotifications){
+      // TODO send email notification
+    }
+    if (userProfileSettings.forwardedChatPopupNotifications) {
+      toast.open({
+        type: 'info',
+        title: t('global.notification'),
+        message: t('settings.users.newForwardedChat'),
+      });
+    }
+  }
+
+  useEffect(() => {
+    handleForwordMessage();
+
+    const subscription = interval(2 * 60 * 1000).subscribe(()=>handleForwordMessage);
+    return () => {
+      subscription?.unsubscribe();
+    };
+  }, [forwardedChatsLength, userProfileSettings]);
+
+  const userProfileSettingsMutation = useMutation({
+    mutationFn: async (data: UserProfileSettings) => {
+      await apiDevV2.post('cs-set-user-profile-settings', {
+        userId: userInfo?.idCode ?? '',
+        forwardedChatPopupNotifications: data.forwardedChatPopupNotifications,
+        forwardedChatSoundNotifications: data.forwardedChatSoundNotifications,
+        forwardedChatEmailNotifications: data.newChatEmailNotifications,
+        newChatPopupNotifications: data.newChatPopupNotifications,
+        newChatSoundNotifications: data.newChatSoundNotifications,
+        newChatEmailNotifications: data.newChatEmailNotifications,
+        useAutocorrect: data.useAutocorrect,
+      });
+      setUserProfileSettings(data);
+    },
+    onError: async (error: AxiosError) => {
+      await queryClient.invalidateQueries(['cs-get-user-profile-settings']);
+      toast.open({
+        type: 'error',
+        title: t('global.notificationError'),
+        message: error.message,
+      });
+    },
+  });
+
+  const unClaimAllAssignedChats = useMutation({
+    mutationFn: async () => {
+      await apiDev.post('cs-unclaim-all-assigned-chats', {
+        userId: userInfo?.idCode ?? '',
+      });
+    },
+  });
 
   const customerSupportActivityMutation = useMutation({
-    mutationFn: (data: CustomerSupportActivityDTO) => api(baseUrl).post(API_CONF.SET_CUSTOMER_SUPPORT_ACTIVITY, {
-      customerSupportId: data.customerSupportId,
-      customerSupportActive: data.customerSupportActive,
-      customerSupportStatus: data.customerSupportStatus
-    }),
+    mutationFn: (data: CustomerSupportActivityDTO) =>
+        apiDev.post('cs-set-customer-support-activity', {
+          customerSupportId: data.customerSupportId,
+          customerSupportActive: data.customerSupportActive,
+          customerSupportStatus: data.customerSupportStatus,
+        }),
     onSuccess: () => {
-      if (csaStatus === 'online') extendUserSessionMutation.mutate()
+      if (csaStatus === 'online') extendUserSessionMutation.mutate();
     },
     onError: async (error: AxiosError) => {
       await queryClient.invalidateQueries([
-        API_CONF.GET_CUSTOMER_SUPPORT_ACTIVITY,
+        'cs-get-customer-support-activity',
         'prod',
       ]);
       toast.open({
@@ -186,19 +258,17 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user,baseUrl,baseUr
     mutationFn: async () => {
       const {
         data: { data },
-      } = await api(baseUrl).post(API_CONF.CUSTOM_JWT_EXTEND, {});
+      } = await apiDev.post('cs-custom-jwt-extend', {});
       if (data.custom_jwt_extend === null) return;
       setNewCookie(data.custom_jwt_extend);
     },
-    onError: (error: AxiosError) => {
-      console.log('E: ', error);
-    },
+    onError: (error: AxiosError) => {},
   });
 
   const logoutMutation = useMutation({
-    mutationFn: () => api(baseUrl).post(API_CONF.LOGOUT),
+    mutationFn: () => apiDev.post('cs-logout'),
     onSuccess(_) {
-      window.location.href = API_CONF.LOGIN_LINK;
+      window.location.href = import.meta.env.REACT_APP_CUSTOMER_SERVICE_LOGIN;
     },
     onError: async (error: AxiosError) => {
       toast.open({
@@ -215,7 +285,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user,baseUrl,baseUr
 
     setCsaStatus('idle');
     customerSupportActivityMutation.mutate({
-      customerSupportActive: csaActive,
+      customerSupportActive: chatCsaActive,
       customerSupportId: customerSupportActivity.idCode,
       customerSupportStatus: 'idle',
     });
@@ -230,7 +300,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user,baseUrl,baseUr
 
     setCsaStatus('online');
     customerSupportActivityMutation.mutate({
-      customerSupportActive: csaActive,
+      customerSupportActive: chatCsaActive,
       customerSupportId: customerSupportActivity.idCode,
       customerSupportStatus: 'online',
     });
@@ -243,8 +313,20 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user,baseUrl,baseUr
     throttle: 500,
   });
 
+  const handleUserProfileSettingsChange = (key: string, checked: boolean) => {
+    if (!userProfileSettings) return;
+    const newSettings = {
+      ...userProfileSettings,
+      [key]: checked,
+    };
+    userProfileSettingsMutation.mutate(newSettings);
+  };
+
   const handleCsaStatusChange = (checked: boolean) => {
-    setCsaActive(checked);
+    if (checked === false) unClaimAllAssignedChats.mutate();
+
+    useStore.getState().setChatCsaActive(checked);
+    setCsaStatus(checked === true ? 'online' : 'offline');
     customerSupportActivityMutation.mutate({
       customerSupportActive: checked,
       customerSupportStatus: checked === true ? 'online' : 'offline',
@@ -273,120 +355,257 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user,baseUrl,baseUr
   };
 
   return (
-    <>
-      <header className="header">
-        <Track justify="between">
-           <Logo height={50} />
-
-          {userInfo && (
-            <Track gap={32}>
-              <Track gap={16}>
-                <label
-                  style={{
-                    color: '#5D6071',
-                    fontSize: 14,
-                    textTransform: 'lowercase',
-                  }}
-                >
-                  <strong>{unansweredChats}</strong> {t('chat.unanswered')}
-                  {' '}
-                  <strong>{forwardedChats}</strong> {t('chat.forwarded')}
-                </label>
-                <Switch
-                  onCheckedChange={handleCsaStatusChange}
-                  checked={csaActive}
-                  label={t('global.csaStatus')}
-                  hideLabel
-                  name="csaStatus"
-                  onColor="#308653"
-                  onLabel={t('global.present') || ''}
-                  offLabel={t('global.away') || ''}
-                />
-              </Track>
-              <span
-                style={{
-                  display: 'block',
-                  width: 2,
-                  height: 30,
-                  backgroundColor: '#DBDFE2',
-                }}
-              ></span>
-              <Button
-                appearance="text"
-                onClick={() => setUserDrawerOpen(!userDrawerOpen)}
-              >
-                <Track>
+      <>
+        <header className="header">
+          <Track justify="between">
+            <BykLogo height={50} />
+            {userInfo && (
+                <Track gap={32}>
+                  <Track gap={16}>
+                    <p
+                        style={{
+                          color: '#5D6071',
+                          fontSize: 14,
+                          textTransform: 'lowercase',
+                        }}
+                    >
+                      <strong>{unansweredChatsLength}</strong> {t('chat.unanswered')}{' '}
+                      <strong>{forwardedChatsLength}</strong> {t('chat.forwarded')}
+                    </p>
+                    <Switch
+                        onCheckedChange={handleCsaStatusChange}
+                        checked={chatCsaActive}
+                        label={t('global.csaStatus')}
+                        hideLabel
+                        name="csaStatus"
+                        onColor="#308653"
+                        onLabel={t('global.present') || ''}
+                        offLabel={t('global.away') || ''}
+                    />
+                  </Track>
                   <span
                       style={{
                         display: 'block',
-                        width: 16,
-                        // verticalAlign: 'bottom',
-                        height: 16,
-                        borderRadius: '50%',
-                        backgroundColor: STATUS_COLORS[csaStatus],
-                        marginRight: 8,
+                        width: 2,
+                        height: 30,
+                        backgroundColor: '#DBDFE2',
                       }}
                   ></span>
-                  {userInfo.displayName}
-                  <Icon icon={<MdOutlineExpandMore />} />
+                  <Button
+                      appearance="text"
+                      onClick={() => setUserDrawerOpen(!userDrawerOpen)}
+                  >
+                <span
+                    style={{
+                      display: 'block',
+                      width: 16,
+                      height: 16,
+                      borderRadius: '50%',
+                      backgroundColor: statusColors[csaStatus],
+                      marginRight: 8,
+                    }}
+                ></span>
+                    {userInfo.displayName}
+                    <Icon icon={<MdOutlineExpandMore />} />
+                  </Button>
+                  <Button
+                      appearance="text"
+                      style={{ textDecoration: 'underline' }}
+                      onClick={() => {
+                        customerSupportActivityMutation.mutate({
+                          customerSupportActive: false,
+                          customerSupportStatus: 'offline',
+                          customerSupportId: userInfo.idCode,
+                        });
+                        localStorage.removeItem('exp');
+                        logoutMutation.mutate();
+                      }}
+                  >
+                    {t('global.logout')}
+                  </Button>
                 </Track>
-              </Button>
-              <span className={'btn btn--text'} style={{ textDecoration: 'underline' }}>
-              <Button
-                appearance="text"
-                onClick={() => logoutMutation.mutate()}
-              >
-                {t('global.logout')}
-              </Button>
-                </span>
-            </Track>
-          )}
-        </Track>
-      </header>
+            )}
+          </Track>
+        </header>
 
-      {showStatusConfirmationModal && (
-        <Dialog
-          onClose={() => setShowStatusConfirmationModal((value) => !value)}
-          footer={
-            <>
-              <Button
-                appearance="secondary"
-                onClick={() =>
-                  setShowStatusConfirmationModal((value) => !value)
+        {showStatusConfirmationModal && (
+            <Dialog
+                onClose={() => setShowStatusConfirmationModal((value) => !value)}
+                footer={
+                  <>
+                    <Button
+                        appearance="secondary"
+                        onClick={() =>
+                            setShowStatusConfirmationModal((value) => !value)
+                        }
+                    >
+                      {t('global.cancel')}
+                    </Button>
+                    <Button
+                        appearance="primary"
+                        onClick={() => {
+                          handleCsaStatusChange(true);
+                          setShowStatusConfirmationModal((value) => !value);
+                        }}
+                    >
+                      {t('global.yes')}
+                    </Button>
+                  </>
                 }
-              >
-                {t('global.cancel')}
-              </Button>
-              <Button
-                appearance="primary"
-                onClick={() => {
-                  handleCsaStatusChange(true);
-                  setShowStatusConfirmationModal((value) => !value);
-                }}
-              >
-                {t('global.yes')}
-              </Button>
-            </>
-          }
-        >
-          <div className="dialog__body">
-            <h1
-              style={{ fontSize: '24px', fontWeight: '400', color: '#09090B' }}
             >
-              {t('global.statusChangeQuestion')}
-            </h1>
-          </div>
-        </Dialog>
-      )}
+              <div className="dialog__body">
+                <h1
+                    style={{ fontSize: '24px', fontWeight: '400', color: '#09090B' }}
+                >
+                  {t('global.statusChangeQuestion')}
+                </h1>
+              </div>
+            </Dialog>
+        )}
 
-      {userInfo && userProfileSettings && userDrawerOpen && (
-          <UserSettings
-              stateUpdate={() => {setUserDrawerOpen(false)}}
-              baseUrlV2={baseUrlV2}
-              user={user}
-          />
-      )}
-    </>
+        {userInfo && userProfileSettings && userDrawerOpen && (
+            <Drawer
+                title={userInfo.displayName}
+                onClose={() => setUserDrawerOpen(false)}
+                style={{ width: 400 }}
+            >
+              <Section>
+                <Track gap={8} direction="vertical" align="left">
+                  {[
+                    {
+                      label: t('settings.users.displayName'),
+                      value: userInfo.displayName,
+                    },
+                    {
+                      label: t('settings.users.userRoles'),
+                      value: userInfo.authorities
+                          .map((r) => t(`roles.${r}`))
+                          .join(', '),
+                    },
+                    {
+                      label: t('settings.users.userTitle'),
+                      value: userInfo.csaTitle?.replaceAll(' ', '\xa0'),
+                    },
+                    { label: t('settings.users.email'), value: userInfo.csaEmail },
+                  ].map((meta, index) => (
+                      <Track key={`${meta.label}-${index}`} gap={24} align="left">
+                        <p style={{ flex: '0 0 120px' }}>{meta.label}:</p>
+                        <p>{meta.value}</p>
+                      </Track>
+                  ))}
+                </Track>
+              </Section>
+              {[
+                AUTHORITY.ADMINISTRATOR,
+                AUTHORITY.CUSTOMER_SUPPORT_AGENT,
+                AUTHORITY.SERVICE_MANAGER,
+              ].some((auth) => userInfo.authorities.includes(auth)) && (
+                  <>
+                    <Section>
+                      <Track gap={8} direction="vertical" align="left">
+                        <p className="h6">{t('settings.users.autoCorrector')}</p>
+                        <SwitchBox
+                            name="useAutocorrect"
+                            label={t('settings.users.useAutocorrect')}
+                            checked={userProfileSettings.useAutocorrect}
+                            onCheckedChange={(checked) =>
+                                handleUserProfileSettingsChange('useAutocorrect', checked)
+                            }
+                        />
+                      </Track>
+                    </Section>
+                    <Section>
+                      <Track gap={8} direction="vertical" align="left">
+                        <p className="h6">{t('settings.users.emailNotifications')}</p>
+                        <SwitchBox
+                            name="forwardedChatEmailNotifications"
+                            label={t('settings.users.newForwardedChat')}
+                            checked={
+                              userProfileSettings.forwardedChatEmailNotifications
+                            }
+                            onCheckedChange={(checked) =>
+                                handleUserProfileSettingsChange(
+                                    'forwardedChatEmailNotifications',
+                                    checked
+                                )
+                            }
+                        />
+                        <SwitchBox
+                            name="newChatEmailNotifications"
+                            label={t('settings.users.newUnansweredChat')}
+                            checked={userProfileSettings.newChatEmailNotifications}
+                            onCheckedChange={(checked) =>
+                                handleUserProfileSettingsChange(
+                                    'newChatEmailNotifications',
+                                    checked
+                                )
+                            }
+                        />
+                      </Track>
+                    </Section>
+                    <Section>
+                      <Track gap={8} direction="vertical" align="left">
+                        <p className="h6">{t('settings.users.soundNotifications')}</p>
+                        <SwitchBox
+                            name="forwardedChatSoundNotifications"
+                            label={t('settings.users.newForwardedChat')}
+                            checked={
+                              userProfileSettings.forwardedChatSoundNotifications
+                            }
+                            onCheckedChange={(checked) =>
+                                handleUserProfileSettingsChange(
+                                    'forwardedChatSoundNotifications',
+                                    checked
+                                )
+                            }
+                        />
+                        <SwitchBox
+                            name="newChatSoundNotifications"
+                            label={t('settings.users.newUnansweredChat')}
+                            checked={userProfileSettings.newChatSoundNotifications}
+                            onCheckedChange={(checked) =>
+                                handleUserProfileSettingsChange(
+                                    'newChatSoundNotifications',
+                                    checked
+                                )
+                            }
+                        />
+                      </Track>
+                    </Section>
+                    <Section>
+                      <Track gap={8} direction="vertical" align="left">
+                        <p className="h6">{t('settings.users.popupNotifications')}</p>
+                        <SwitchBox
+                            name="forwardedChatPopupNotifications"
+                            label={t('settings.users.newForwardedChat')}
+                            checked={
+                              userProfileSettings.forwardedChatPopupNotifications
+                            }
+                            onCheckedChange={(checked) =>
+                                handleUserProfileSettingsChange(
+                                    'forwardedChatPopupNotifications',
+                                    checked
+                                )
+                            }
+                        />
+                        <SwitchBox
+                            name="newChatPopupNotifications"
+                            label={t('settings.users.newUnansweredChat')}
+                            checked={userProfileSettings.newChatPopupNotifications}
+                            onCheckedChange={(checked) =>
+                                handleUserProfileSettingsChange(
+                                    'newChatPopupNotifications',
+                                    checked
+                                )
+                            }
+                        />
+                      </Track>
+                    </Section>
+                  </>
+              )}
+            </Drawer>
+        )}
+      </>
   );
 };
 
