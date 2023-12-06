@@ -24,9 +24,11 @@ export default defineConfig({
     },
   },
   css: {
-    modules: {
-      scopeBehaviour: 'local',
-    }
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@import "@/styles/main.scss";`,
+      },
+    },
   },
 
   // Configuration for building your library.

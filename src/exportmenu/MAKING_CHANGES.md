@@ -1,6 +1,6 @@
 ## Making Changes
 
-#### If you want to make changes to current export components:
+#### If you want to make changes to export menu component:
 * Make necessary changes
 * Update version in file [package.json](package.json) 
   * Template:  `major v.mid v.minor v`
