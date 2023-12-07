@@ -1,4 +1,4 @@
-## Export Styles
+## Styles component
 
 ### General information
 
@@ -25,7 +25,7 @@ To publish created package:
   - If having import issues like `NOT FOUND` try adding to `vite.config.ts` 
     `resolve: {
     alias: {
-        '@exirain': `${path.resolve(__dirname, 'node_modules/@buerokratt-ria/styles')}`
+        '@buerokratt-ria': `${path.resolve(__dirname, 'node_modules/@buerokratt-ria/styles')}`
         },
     }`
 

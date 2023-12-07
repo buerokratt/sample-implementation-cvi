@@ -33,7 +33,7 @@
   "dependencies": {
     "react": "^18.2.0",
     "@types/react": "^18.2.21",
-    "@buerokratt-ria/styles": "file:buerokratt-ria-styles-0.0.1.tgz"
+    "@buerokratt-ria/styles": "^0.0.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.26",

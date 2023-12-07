@@ -1,9 +1,9 @@
-@import '../../styles/tools/spacing';
-@import '../../styles/tools/color';
-@import '../../styles/settings/variables/other';
-@import '../../styles/settings/variables/typography';
-@import '../../styles/settings/variables/breakpoints';
-@import '../../styles/generic/base';
+@import '@buerokratt-ria/styles/styles/tools/spacing';
+@import '@buerokratt-ria/styles/styles/tools/color';
+@import '@buerokratt-ria/styles/styles/settings/variables/other';
+@import '@buerokratt-ria/styles/styles/settings/variables/typography';
+@import '@buerokratt-ria/styles/styles/settings/variables/breakpoints';
+@import '@buerokratt-ria/styles/styles/generic/base';
 
 .switch {
   $self: &;
