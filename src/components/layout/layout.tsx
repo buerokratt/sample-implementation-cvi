@@ -2,11 +2,9 @@ import { FC, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import './layout.scss';
 import { useQuery } from '@tanstack/react-query';
-import {
-    Header,
-    MainNavigation
-} from '../../exportcomponents/src/index.ts';
+import { Header } from "../../exportcomponents/src/index";
 import useUserInfoStore from "../../exportcomponents/src/header/store/store";
+import { MainNavigation }  from "../../exportmenu/src";
 
 const Layout: FC = () => {
     const CACHE_NAME = 'mainmenu-cache';

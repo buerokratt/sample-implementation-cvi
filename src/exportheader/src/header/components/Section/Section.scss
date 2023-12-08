@@ -1,0 +1,11 @@
+@import '@buerokratt-ria/styles/styles/tools/spacing';
+@import '@buerokratt-ria/styles/styles/tools/color';
+@import '@buerokratt-ria/styles/styles/settings/variables/typography';
+
+.section {
+  padding: get-spacing(haapsalu);
+
+  &:not(:last-child) {
+    border-bottom: 1px solid get-color(black-coral-2);
+  }
+}

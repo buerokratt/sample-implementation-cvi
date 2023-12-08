@@ -1,0 +1,9 @@
+{
+  "name": "@buerokratt-ria/styles",
+  "version": "0.0.1",
+  "description": "Generic styles component that would be injected as dependency to components.",
+  "main": "index.ts",
+  "scripts": {},
+  "author": "ExiRain",
+  "license": "ISC"
+}
