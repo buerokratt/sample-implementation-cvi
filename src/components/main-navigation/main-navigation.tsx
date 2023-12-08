@@ -89,7 +89,7 @@ const MainNavigation: FC<{items: MenuItem[]}> = ({items}) => {
           <>
             <button
               className={clsx('nav__toggle', { 'nav__toggle--icon': !!menuItem.id })}
-              aria-expanded={menuItem.path && checkMenuPath(location.pathname, menuItem.path) ? 'true' : 'false'}
+              aria-expanded={menuItem.path && checkMenuPath(menuItem) ? 'true' : 'false'}
               onClick={handleNavToggle}
             >
               {menuItem.id && (
@@ -110,11 +110,18 @@ const MainNavigation: FC<{items: MenuItem[]}> = ({items}) => {
     );
   };
 
-  const checkMenuPath = (location, path) => {
-    // return location.split('/')[1] === path.split('/')[1];
-    console.log('location ' + location)
-    console.log('path ' + path)
-    return location.includes(path);
+  const urlLocation = window.location.pathname;
+  // console.log(urlLocation);
+  const checkMenuPath = (menuItem) => {
+      const result = isSameRoot(menuItem) && location.pathname.includes(menuItem.path);
+      // if(!result) {
+      //   console.log(menuItem.path);
+      // }
+      return result;
+  }
+
+  const isSameRoot = (menuItem) => {
+    return location.pathname.split("/")[1] === menuItem.path.split("/")[1];
   }
 
   if (!menuItems) return null;

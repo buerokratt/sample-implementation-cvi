@@ -1,6 +1,54 @@
 # Changelog
-
 All changes to this project will be documented in this file.
+## [0.0.28] - 16-11-2023
+
+- Re applied button styles fix from v0.22
+- Minor fix in logic for menu collapse
+
+## [0.0.27] - 10-11-2023
+
+- Added translation functionality to menu
+- Updated menu opening logic
+- Updated header to match code from chat bot
+- Removed old url links
+- Added appBase param
+
+## [0.0.26] - 24-10-2023
+
+-Updated usersettings
+
+## [0.0.25] - 24-10-2023
+
+-Menu items array fix
+
+## [0.0.23] - 24-10-2023
+
+- Fixed requests using mock data.
+
+## [0.0.22] - 24-10-2023
+
+- Fixed styling issues.
+- Fixed requests using mock data.
+
+## [0.0.21] - 18-09-2023
+
+- Changed service id from string to string[] (array)
+
+## [0.0.20] - 15-09-2023
+
+- Updated menu structure data. Changed main navigation component to use added variables. Changed finding current module logic.
+
+## [0.0.19] - 11-09-2023
+
+- Updated 'storeState' type for header. Removed double 'userInfo' interface declaration.
+
+## [0.0.18] - 11-09-2023
+
+- Updated navigation menu default data.
+
+## [0.0.17] - 06-09-2023
+
+- Updated navigation menu link generation.
 
 ## [0.0.16] - 01-09-2023
 

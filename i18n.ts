@@ -11,7 +11,7 @@ import commonET from './src/translations/et/common.json';
   .init({
     debug: import.meta.env.NODE_ENV === 'development',
     fallbackLng: 'et',
-    supportedLngs: ['et'],
+    supportedLngs: ['et','en'],
     resources: {
       en: {
         common: commonEN,
