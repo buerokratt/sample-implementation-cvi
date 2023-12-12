@@ -63,27 +63,34 @@ const MainNavigation: FC<{items: MenuItem[], serviceId: string[]}> = ( {items, s
     },
   ];
 
-  let activeMenuId;
+    let activeMenuId;
 
-  const { data } = useQuery({
-    queryKey: ['cs-get-user-role', 'prod'],
-    onSuccess: (res: any) => {
-      const filteredItems = items.filter((item) => {
-        const role = res.data.get_user[0].authorities[0]
-        switch (role) {
-          case 'ROLE_ADMINISTRATOR': return item.id
-          case 'ROLE_SERVICE_MANAGER': return item.id != 'settings' && item.id != 'training'
-          case 'ROLE_CUSTOMER_SUPPORT_AGENT': return item.id != 'settings' && item.id != 'analytics'
-          case 'ROLE_CHATBOT_TRAINER': return item.id != 'settings' && item.id != 'conversations'
-          case 'ROLE_ANALYST': return item.id == 'analytics'
-          case 'ROLE_UNAUTHENTICATED': return
-          default: return
-        }
-      }) ?? []
-      setMenuItems(filteredItems)
-    }
-
-  });
+    const { data } = useQuery({
+        queryKey: ['/account/user-role', 'prod'],
+        onSuccess: (res: any) => {
+            const filteredItems =
+                items.filter((item) => {
+                    const role = res.data.get_user[0].authorities[0];
+                    switch (role) {
+                        case 'ROLE_ADMINISTRATOR':
+                            return item.id;
+                        case 'ROLE_SERVICE_MANAGER':
+                            return item.id != 'settings' && item.id != 'training';
+                        case 'ROLE_CUSTOMER_SUPPORT_AGENT':
+                            return item.id != 'settings' && item.id != 'analytics';
+                        case 'ROLE_CHATBOT_TRAINER':
+                            return item.id != 'settings' && item.id != 'conversations';
+                        case 'ROLE_ANALYST':
+                            return item.id == 'analytics' || item.id == 'monitoring';
+                        case 'ROLE_UNAUTHENTICATED':
+                            return;
+                        default:
+                            return;
+                    }
+                }) ?? [];
+            setMenuItems(filteredItems);
+        },
+    });
 
   const location = useLocation();
   const [navCollapsed, setNavCollapsed] = useState(false);

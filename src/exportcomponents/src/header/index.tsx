@@ -21,14 +21,13 @@ import { ReactComponent as BykLogo } from './assets/logo.svg';
 import { UserProfileSettings } from './types/userProfileSettings';
 import { Chat as ChatType } from './types/chat';
 import { useToast } from './hooks/useToast';
-import { USER_IDLE_STATUS_TIMEOUT } from './consts/consts.ts';
+import { USER_IDLE_STATUS_TIMEOUT } from './constants/config';
 import apiDev from './services/api-dev';
-import apiDevV2 from './services/api-dev-v2';
-import './Header.scss';
-import chatSound from './assets/chatSound.mp3';
 import { interval } from 'rxjs';
 import { AUTHORITY } from './types/authorities';
 import { useCookies } from 'react-cookie';
+import { useDing } from './hooks/useAudio';
+import './Header.scss';
 import {UserInfo} from "./types/userInfo.ts";
 
 type CustomerSupportActivity = {
@@ -68,8 +67,8 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user}) => {
   const [csaStatus, setCsaStatus] = useState<'idle' | 'offline' | 'online'>(
       'online'
   );
-  const audio = useMemo(() => new Audio(chatSound), []);
-  const chatCsaActive = useStore(state => state.chatCsaActive);
+  const [ding] = useDing();
+  const chatCsaActive = useStore((state) => state.chatCsaActive);
   const [userProfileSettings, setUserProfileSettings] =
       useState<UserProfileSettings>({
         userId: 1,
@@ -109,42 +108,42 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user}) => {
   }, [userInfo?.idCode]);
 
   const getMessages = async () => {
-    const { data: res } = await apiDevV2.post('cs-get-user-profile-settings', {
-      userId: userInfo?.idCode ?? '',
-    });
+    const { data: res } = await apiDev.get('account/user-profile-settings');
 
-    if (res.response && res.response != 'error: not found')
-      setUserProfileSettings(res.response[0]);
-  };
   const { data: customerSupportActivity } = useQuery<CustomerSupportActivity>({
-    queryKey: ['cs-get-customer-support-activity', 'prod'],
+    queryKey: ['account/customer-support-activity', 'prod'],
     onSuccess(res: any) {
       const activity = res.data.get_customer_support_activity[0];
       setCsaStatus(activity.status);
-      useStore.getState().setChatCsaActive(activity.active === 'true');
+      setCsaActive(activity.active === 'true');
     },
   });
+  const [activeChatsList, setActiveChatsList] = useState<Chat[]>([]);
 
   useQuery<ChatType[]>({
-    queryKey: ['cs-get-all-active-chats', 'prod'],
+    queryKey: ['csa/active-chats', 'prod'],
     onSuccess(res: any) {
-      useStore.getState().setActiveChats(res.data.get_all_active_chats);
+      setActiveChatsList(res.data.get_all_active_chats);
     },
   });
-
+  const customJwtCookieKey = 'customJwtCookie';
   const [_, setCookie] = useCookies([customJwtCookieKey]);
-  const unansweredChatsLength = useStore(state => state.unansweredChatsLength());
-  const forwardedChatsLength = useStore(state => state.forwordedChatsLength());
+  const unansweredChatsLength = useStore((state) =>
+      state.unansweredChatsLength()
+  );
+  const forwardedChatsLength = useStore((state) =>
+      state.forwordedChatsLength()
+  );
 
   const handleNewMessage = () => {
-    if (unansweredChatsLength <= 0){
+    if (unansweredChatsLength <= 0) {
       return;
     }
 
     if (userProfileSettings.newChatSoundNotifications) {
-      audio.play();
+      ding?.play();
     }
-    if(userProfileSettings.newChatEmailNotifications) {
+    if (userProfileSettings.newChatEmailNotifications) {
       // TODO send email notification
     }
     if (userProfileSettings.newChatPopupNotifications) {
@@ -154,12 +153,14 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user}) => {
         message: t('settings.users.newUnansweredChat'),
       });
     }
-  }
+  };
 
   useEffect(() => {
     handleNewMessage();
 
-    const subscription = interval(2 * 60 * 1000).subscribe(()=>handleNewMessage());
+    const subscription = interval(2 * 60 * 1000).subscribe(() =>
+        handleNewMessage()
+    );
     return () => {
       subscription?.unsubscribe();
     };
@@ -171,9 +172,9 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user}) => {
     }
 
     if (userProfileSettings.forwardedChatSoundNotifications) {
-      audio.play();
+      ding?.play();
     }
-    if (userProfileSettings.forwardedChatEmailNotifications){
+    if (userProfileSettings.forwardedChatEmailNotifications) {
       // TODO send email notification
     }
     if (userProfileSettings.forwardedChatPopupNotifications) {
@@ -183,12 +184,14 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user}) => {
         message: t('settings.users.newForwardedChat'),
       });
     }
-  }
+  };
 
   useEffect(() => {
     handleForwordMessage();
 
-    const subscription = interval(2 * 60 * 1000).subscribe(()=>handleForwordMessage);
+    const subscription = interval(2 * 60 * 1000).subscribe(
+        () => handleForwordMessage
+    );
     return () => {
       subscription?.unsubscribe();
     };
@@ -196,8 +199,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user}) => {
 
   const userProfileSettingsMutation = useMutation({
     mutationFn: async (data: UserProfileSettings) => {
-      await apiDevV2.post('cs-set-user-profile-settings', {
-        userId: userInfo?.idCode ?? '',
+      await apiDev.post('account/user-profile-settings', {
         forwardedChatPopupNotifications: data.forwardedChatPopupNotifications,
         forwardedChatSoundNotifications: data.forwardedChatSoundNotifications,
         forwardedChatEmailNotifications: data.newChatEmailNotifications,
@@ -209,7 +211,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user}) => {
       setUserProfileSettings(data);
     },
     onError: async (error: AxiosError) => {
-      await queryClient.invalidateQueries(['cs-get-user-profile-settings']);
+      await queryClient.invalidateQueries(['account/user-profile-settings']);
       toast.open({
         type: 'error',
         title: t('global.notificationError'),
@@ -220,16 +222,13 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user}) => {
 
   const unClaimAllAssignedChats = useMutation({
     mutationFn: async () => {
-      await apiDev.post('cs-unclaim-all-assigned-chats', {
-        userId: userInfo?.idCode ?? '',
-      });
+      await apiDev.post('chat/unclaim-all-assigned-chats');
     },
   });
 
   const customerSupportActivityMutation = useMutation({
     mutationFn: (data: CustomerSupportActivityDTO) =>
-        apiDev.post('cs-set-customer-support-activity', {
-          customerSupportId: data.customerSupportId,
+        apiDev.post('account/customer-support-activity', {
           customerSupportActive: data.customerSupportActive,
           customerSupportStatus: data.customerSupportStatus,
         }),
@@ -238,7 +237,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user}) => {
     },
     onError: async (error: AxiosError) => {
       await queryClient.invalidateQueries([
-        'cs-get-customer-support-activity',
+        'account/customer-support-activity',
         'prod',
       ]);
       toast.open({
@@ -258,7 +257,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user}) => {
     mutationFn: async () => {
       const {
         data: { data },
-      } = await apiDev.post('cs-custom-jwt-extend', {});
+      } = await apiDev.post('custom-jwt/extend', {});
       if (data.custom_jwt_extend === null) return;
       setNewCookie(data.custom_jwt_extend);
     },
@@ -266,8 +265,8 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user}) => {
   });
 
   const logoutMutation = useMutation({
-    mutationFn: () => apiDev.post('cs-logout'),
-    onSuccess(_) {
+    mutationFn: () => apiDev.post('account/logout'),
+    onSuccess(_: any) {
       window.location.href = import.meta.env.REACT_APP_CUSTOMER_SERVICE_LOGIN;
     },
     onError: async (error: AxiosError) => {
@@ -369,8 +368,9 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user}) => {
                           textTransform: 'lowercase',
                         }}
                     >
-                      <strong>{unansweredChatsLength}</strong> {t('chat.unanswered')}{' '}
-                      <strong>{forwardedChatsLength}</strong> {t('chat.forwarded')}
+                      <strong>{unansweredChatsLength}</strong>{' '}
+                      {t('chat.unanswered')} <strong>{forwardedChatsLength}</strong>{' '}
+                      {t('chat.forwarded')}
                     </p>
                     <Switch
                         onCheckedChange={handleCsaStatusChange}
