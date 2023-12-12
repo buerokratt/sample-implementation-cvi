@@ -1,6 +1,6 @@
 {
   "name": "@exirain/header",
-  "version": "0.0.28",
+  "version": "0.0.30",
   "description": "Generic header that would be injected as dependency for all projects",
   "main": "index.js",
   "scripts": {},
@@ -17,6 +17,7 @@
     "axios": "^1.4.0",
     "axios-mock-adapter": "^1.21.5",
     "clsx": "^1.2.1",
+    "howler": "^2.2.4",
     "i18next": "^23.2.3",
     "i18next-browser-languagedetector": "^7.1.0",
     "msw": "^1.2.3",
