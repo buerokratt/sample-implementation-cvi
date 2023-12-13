@@ -9,7 +9,6 @@ import './main-navigation.scss';
 import { useQuery } from '@tanstack/react-query';
 import {useTranslation} from "react-i18next";
 import menuStructure from './data/menu-structure.json';
-import { r } from 'msw/lib/glossary-de6278a9';
 
 interface MenuItem {
     id?: string;
