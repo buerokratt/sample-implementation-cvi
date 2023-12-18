@@ -155,11 +155,11 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user }) => {
       // TODO send email notification
     }
     if (userProfileSettings.newChatPopupNotifications) {
-      // toast.open({
-      //   type: "info",
-      //   title: t("global.notification"),
-      //   message: t("settings.users.newUnansweredChat"),
-      // });
+      toast.open({
+        type: "info",
+        title: t("global.notification"),
+        message: t("settings.users.newUnansweredChat"),
+      });
     }
   };
 
