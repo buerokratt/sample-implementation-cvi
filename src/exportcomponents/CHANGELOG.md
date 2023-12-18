@@ -1,5 +1,10 @@
 # Changelog
 All changes to this project will be documented in this file.
+## [0.0.29] - 13-12-2023
+
+- Modified Header Endpoints to route to ruuter v2
+- Modified Menu Endpoints to route to ruuter v2
+
 ## [0.0.28] - 16-11-2023
 
 - Re applied button styles fix from v0.22
