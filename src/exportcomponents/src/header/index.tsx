@@ -607,6 +607,6 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user}) => {
         )}
       </>
   );
-};
+};}
 
 export default Header;

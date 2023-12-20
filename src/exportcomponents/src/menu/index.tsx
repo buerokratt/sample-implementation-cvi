@@ -89,6 +89,7 @@ const MainNavigation: FC<{items: MenuItem[], serviceId: string[]}> = ( {items, s
                     }
                 }) ?? [];
             setMenuItems(filteredItems);
+            console.log('xD')
         },
     });
 

@@ -1,8 +1,8 @@
 {
   "name": "@buerokratt-ria/menu",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Generic MainNavigation component that would be injected as dependency.",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {},
   "author": "ExiRain",
   "license": "ISC",
