@@ -1,4 +1,4 @@
-import React, {FC, MouseEvent, useEffect, useState} from 'react';
+import React, {FC, MouseEvent, useState} from 'react';
 
 import {NavLink, useLocation} from 'react-router-dom';
 import {MdClose, MdKeyboardArrowDown, MdMiscellaneousServices} from 'react-icons/md';
@@ -11,15 +11,15 @@ import {useTranslation} from "react-i18next";
 import menuStructure from './data/menu-structure.json';
 
 interface MenuItem {
-    id?: string;
-    label: TranslatedLabel;
-    path?: string;
-    target?: '_blank' | '_self';
-    children?: MenuItem[];
+  id?: string;
+  label: TranslatedLabel;
+  path?: string;
+  target?: '_blank' | '_self';
+  children?: MenuItem[];
 }
 
 interface TranslatedLabel {
-    [lang: string] : string;
+  [lang: string] : string;
 }
 
 const MainNavigation: FC<{items: MenuItem[], serviceId: string[]}> = ( {items, serviceId}) => {
@@ -66,23 +66,27 @@ const MainNavigation: FC<{items: MenuItem[], serviceId: string[]}> = ( {items, s
   let activeMenuId;
 
   const { data } = useQuery({
-    queryKey: ['cs-get-user-role', 'prod'],
+    queryKey: ['account/user-role', 'prod'],
     onSuccess: (res: any) => {
-      const filteredItems = items.filter((item) => {
-        const role = res.data.get_user[0].authorities[0]
-        switch (role) {
-          case 'ROLE_ADMINISTRATOR': return item.id
-          case 'ROLE_SERVICE_MANAGER': return item.id != 'settings' && item.id != 'training'
-          case 'ROLE_CUSTOMER_SUPPORT_AGENT': return item.id != 'settings' && item.id != 'analytics'
-          case 'ROLE_CHATBOT_TRAINER': return item.id != 'settings' && item.id != 'conversations'
-          case 'ROLE_ANALYST': return item.id == 'analytics'
-          case 'ROLE_UNAUTHENTICATED': return
-          default: return
-        }
-      }) ?? []
-      setMenuItems(filteredItems)
-    }
-
+      const filteredItems =
+          items.filter((item) => {
+            const role = res.response;
+            if (role.includes('ROLE_ADMINISTRATOR')) {
+              return item.id;
+            } else if (role.includes('ROLE_SERVICE_MANAGER')) {
+              return item.id != "settings" && item.id != "training";
+            } else if (role.includes('ROLE_CUSTOMER_SUPPORT_AGENT')) {
+              return item.id != "settings" && item.id != "analytics";
+            } else if (role.includes('ROLE_CHATBOT_TRAINER')) {
+              return item.id != "settings" && item.id != "conversations";
+            }  else if (role.includes('ROLE_ANALYST')) {
+              return item.id == "analytics" || item.id == "monitoring";
+            } else {
+              return;
+            }
+          }) ?? [];
+      setMenuItems(filteredItems);
+    },
   });
 
   const location = useLocation();
@@ -95,33 +99,33 @@ const MainNavigation: FC<{items: MenuItem[], serviceId: string[]}> = ( {items, s
 
   const renderMenuTree = (menuItems: MenuItem[]) => {
     return menuItems.map((menuItem) => (
-      <li key={menuItem.label[currentlySelectedLanguage]}>
-        {!!menuItem.children ? (
-          <>
-            <button
-              className={clsx('nav__toggle', { 'nav__toggle--icon': !!menuItem.id })}
-              aria-expanded={menuItem.path && (isSameRoot(menuItem)) ? 'true' : 'false'}
-              onClick={handleNavToggle}
-            >
-              { menuItem.id &&  (
-                <Icon icon={menuData.find(dataItem => dataItem.id === menuItem.id)?.icon} />
-              )}
+        <li key={menuItem.label[currentlySelectedLanguage]}>
+          {!!menuItem.children ? (
+              <>
+                <button
+                    className={clsx('nav__toggle', { 'nav__toggle--icon': !!menuItem.id })}
+                    aria-expanded={menuItem.path && (isSameRoot(menuItem)) ? 'true' : 'false'}
+                    onClick={handleNavToggle}
+                >
+                  { menuItem.id &&  (
+                      <Icon icon={menuData.find(dataItem => dataItem.id === menuItem.id)?.icon} />
+                  )}
 
-              <span>{menuItem.label[currentlySelectedLanguage]}</span>
-              <Icon icon={<MdKeyboardArrowDown />} />
-            </button>
-            <ul className='nav__submenu'>
-              {renderMenuTree(menuItem.children.map((item)  => ({id: menuItem.id, ...item})))}
-            </ul>
-          </>
-        ) : (
+                  <span>{menuItem.label[currentlySelectedLanguage]}</span>
+                  <Icon icon={<MdKeyboardArrowDown />} />
+                </button>
+                <ul className='nav__submenu'>
+                  {renderMenuTree(menuItem.children.map((item)  => ({id: menuItem.id, ...item})))}
+                </ul>
+              </>
+          ) : (
 
-          (serviceId.includes(menuItem.id)) ?
-            <NavLink to={menuItem.path || '#'}>{menuItem.label[currentlySelectedLanguage] }</NavLink> :
-            <a href={menuData.find(dataItem => dataItem.id === menuItem.id)?.url + menuItem.path}>{menuItem.label[currentlySelectedLanguage]}</a>
+              (serviceId.includes(menuItem.id)) ?
+                  <NavLink to={menuItem.path || '#'}>{menuItem.label[currentlySelectedLanguage] }</NavLink> :
+                  <a href={menuData.find(dataItem => dataItem.id === menuItem.id)?.url + menuItem.path}>{menuItem.label[currentlySelectedLanguage]}</a>
 
-        )}
-      </li>),
+          )}
+        </li>),
     );
   };
 
@@ -138,15 +142,15 @@ const MainNavigation: FC<{items: MenuItem[], serviceId: string[]}> = ( {items, s
   if (!menuItems) return null;
 
   return (
-    <nav className={clsx('nav', { 'nav--collapsed': navCollapsed })}>
-      <button className='nav__menu-toggle' onClick={() => setNavCollapsed(!navCollapsed)}>
-        <Icon icon={<MdClose />} />
-        {t('mainMenu.closeMenu')}
-      </button>
-      <ul className='nav__menu'>
-        {renderMenuTree(menuItems)}
-      </ul>
-    </nav>
+      <nav className={clsx('nav', { 'nav--collapsed': navCollapsed })}>
+        <button className='nav__menu-toggle' onClick={() => setNavCollapsed(!navCollapsed)}>
+          <Icon icon={<MdClose />} />
+          {t('mainMenu.closeMenu')}
+        </button>
+        <ul className='nav__menu'>
+          {renderMenuTree(menuItems)}
+        </ul>
+      </nav>
   );
 };
 
