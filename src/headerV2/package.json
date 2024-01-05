@@ -2,7 +2,7 @@
   "name": "@buerokratt-ria/header",
   "version": "0.1.1",
   "description": "Generic Header component that would be injected as dependency.",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {},
   "author": "ExiRain",
   "license": "ISC",

@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useIdleTimer } from "react-idle-timer";
+import { ToastContextType } from "./context/ToastContext.tsx";
 import { MdOutlineExpandMore } from "react-icons/md";
 
 import {
@@ -25,7 +26,6 @@ import useStore from "./store/store.ts";
 import { ReactComponent as BykLogo } from "./assets/logo.svg";
 import { UserProfileSettings } from "./types/userProfileSettings";
 import { Chat as ChatType } from "./types/chat";
-import { useToast } from "./hooks/useToast";
 import { USER_IDLE_STATUS_TIMEOUT } from "./constants/config";
 import apiDev from "./services/api-dev";
 import { interval } from "rxjs";
@@ -54,13 +54,14 @@ const statusColors: Record<string, string> = {
 };
 
 type UserStoreStateProps = {
-  user: UserInfo;
+  user: UserInfo | null;
+  toastContext: ToastContextType | null;
 };
 
-const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user }) => {
+const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext }) => {
   const { t } = useTranslation();
   const userInfo = user;
-  const toast = useToast();
+  const toast = toastContext;
   const [__, setSecondsUntilStatusPopup] = useState(300); // 5 minutes in seconds
   const [statusPopupTimerHasStarted, setStatusPopupTimerHasStarted] =
       useState(false);
@@ -253,18 +254,11 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user }) => {
     },
   });
 
-  const setNewCookie = (cookieValue: string) => {
-    const cookieOptions = { path: "/" };
-    setCookie(customJwtCookieKey, cookieValue, cookieOptions);
-  };
-
   const extendUserSessionMutation = useMutation({
     mutationFn: async () => {
       const {
         data: { data },
       } = await apiDev.post("extend", {});
-      if (data.custom_jwt_extend === null) return;
-      setNewCookie(data.custom_jwt_extend);
     },
     onError: (error: AxiosError) => {},
   });
@@ -423,6 +417,11 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user }) => {
                           customerSupportId: userInfo.idCode,
                         });
                         localStorage.removeItem("exp");
+                        toast.open({
+                          type: "info",
+                          title: t("global.notification"),
+                          message: t("settings.users.newUnansweredChat"),
+                        });
                         logoutMutation.mutate();
                       }}
                   >

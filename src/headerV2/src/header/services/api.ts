@@ -1,26 +1,24 @@
-import axios, {AxiosError} from 'axios';
-const apiInstance = (baseUrl: string) => {
-    const instance = axios.create({
-        baseURL: baseUrl,
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        },
-        withCredentials: true,
-    });
+import axios, { AxiosError } from 'axios';
 
-    instance.interceptors.response.use(
-        (response) => {
-            return response;
-        },
-        (error: AxiosError) => {
-            if (error.response?.status === 401) {
-                //TODO: handle unauthorized requests
-            }
-            return Promise.reject(error);
-        },
-    );
-    return instance;
-};
+const instance = axios.create({
+    baseURL: import.meta.env.REACT_APP_RUUTER_PRIVATE_API_URL,
+    headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    },
+    withCredentials: true,
+});
 
-export default apiInstance;
+instance.interceptors.response.use(
+    (response) => {
+        return response;
+    },
+    (error: AxiosError) => {
+        if (error.response?.status === 401) {
+            //TODO: handle unauthorized requests
+        }
+        return Promise.reject(error);
+    },
+);
+
+export default instance;

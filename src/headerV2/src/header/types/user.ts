@@ -1,4 +1,4 @@
-import { ROLES } from 'utils/constants';
+import { ROLES } from './roles.ts';
 
 export interface User {
   login?: string;

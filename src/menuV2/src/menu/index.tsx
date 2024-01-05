@@ -1,9 +1,8 @@
 import React, {FC, MouseEvent, useState} from 'react';
 
 import {NavLink, useLocation} from 'react-router-dom';
-import {MdClose, MdKeyboardArrowDown, MdMiscellaneousServices} from 'react-icons/md';
 import clsx from 'clsx';
-import { MdOutlineForum, MdOutlineAdb, MdOutlineEqualizer, MdSettings, MdOutlineMonitorWeight } from 'react-icons/md';
+import { MdOutlineForum, MdOutlineAdb, MdOutlineEqualizer, MdClose, MdKeyboardArrowDown, MdMiscellaneousServices, MdSettings, MdOutlineMonitorWeight } from 'react-icons/md';
 import  Icon from './components/icons/icon/icon';
 import './main-navigation.scss';
 import { useQuery } from '@tanstack/react-query';

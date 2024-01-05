@@ -9,7 +9,9 @@ export const useAudio = (audiosrc: string) => {
   useEffect(() => {
     const howl = new Howl({
       src: audiosrc,
-      onloaderror: (soundId, error) => console.error(soundId, error),
+      onloaderror: (soundId, error) => {
+        console.error(soundId, error)
+      },
       onplayerror: (soundId, error) => {
         console.error(soundId, error);
         howl.once('unlock', () => howl.play());
