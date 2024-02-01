@@ -23,6 +23,13 @@
       },
       {
         "label": {
+          "et": "Ootel",
+          "en": "Pending"
+        },
+        "path": "/pending"
+      },
+      {
+        "label": {
           "et": "Ajalugu",
           "en": "History"
         },

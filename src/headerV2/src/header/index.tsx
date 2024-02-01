@@ -124,7 +124,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
     onSuccess(res: any) {
       const activity = res.response;
       setCsaStatus(activity.status);
-      useStore.getState().setChatCsaActive(activity.active === "true");
+      useStore.getState().setChatCsaActive(activity.active);
     },
   });
 
