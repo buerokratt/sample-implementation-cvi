@@ -168,7 +168,7 @@
           "et": "Treeni uus mudel",
           "en": "Train new model"
         },
-        "path": "/training/train-new-model"
+        "path": "/train-new-model"
       }
     ]
   },
@@ -193,13 +193,6 @@
           "en": "Chats"
         },
         "path": "/chats"
-      },
-      {
-        "label": {
-          "et": "Bürokratt",
-          "en": "Burokratt"
-        },
-        "path": "/burokratt"
       },
       {
         "label": {
