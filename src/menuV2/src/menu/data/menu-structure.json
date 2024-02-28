@@ -107,6 +107,13 @@
               "en": "Slots"
             },
             "path": "/training/slots"
+          },
+          {
+            "label": {
+              "et": "Automatic Teenused",
+              "en": "Automatic Services"
+            },
+            "path": "/auto-services"
           }
         ]
       },
@@ -241,10 +248,10 @@
       },
       {
         "label": {
-          "et": "Teemade järeltreenimine",
-          "en": "Followup Training"
+          "et": "Automatic Teenused",
+          "en": "Automatic Services"
         },
-        "path": "/followupTraining"
+        "path": "/auto-services"
       },
       {
         "label": {
