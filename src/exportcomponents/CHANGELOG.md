@@ -1,5 +1,10 @@
 # Changelog
 All changes to this project will be documented in this file.
+
+## [0.0.31] - 25-04-2024
+
+- Updated api call addresses 
+
 ## [0.0.28] - 16-11-2023
 
 - Re applied button styles fix from v0.22

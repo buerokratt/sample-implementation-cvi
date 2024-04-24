@@ -1,6 +1,10 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.5] - 25-04-2024
+
+- Updated api call addresses 
+
 ## [0.1.3] - 01-01-2024
 
 - Updated usage of activity.active

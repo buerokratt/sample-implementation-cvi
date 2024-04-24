@@ -2,6 +2,10 @@
 
 All changes to this project will be documented in this file.
 
+## [0.1.6] - 25-04-2024
+
+- Updated api call addresses 
+
 ## [0.1.2] - 01-02-2024
 
 - Added new element in menu /pending
