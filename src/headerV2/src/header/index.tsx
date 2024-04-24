@@ -114,13 +114,13 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
   }, [userInfo?.idCode]);
 
   const getMessages = async () => {
-    const { data: res } = await apiDev.get("account/user-profile-settings");
+    const { data: res } = await apiDev.get("accounts/settings");
 
     if (res.response && res.response != "error: not found")
       setUserProfileSettings(res.response[0]);
   };
   const { data: customerSupportActivity } = useQuery<CustomerSupportActivity>({
-    queryKey: ["account/customer-support-activity", "prod"],
+    queryKey: ["accounts/customer-support-activity", "prod"],
     onSuccess(res: any) {
       const activity = res.response;
       setCsaStatus(activity.status);
@@ -129,7 +129,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
   });
 
   useQuery<ChatType[]>({
-    queryKey: ["csa/active-chats", "prod"],
+    queryKey: ["agents/chats/active", "prod"],
     onSuccess(res: any) {
       useStore.getState().setActiveChats(res.response);
     },
@@ -207,7 +207,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
 
   const userProfileSettingsMutation = useMutation({
     mutationFn: async (data: UserProfileSettings) => {
-      await apiDev.post("account/user-profile-settings", {
+      await apiDev.post("accounts/settings", {
         forwardedChatPopupNotifications: data.forwardedChatPopupNotifications,
         forwardedChatSoundNotifications: data.forwardedChatSoundNotifications,
         forwardedChatEmailNotifications: data.newChatEmailNotifications,
@@ -219,7 +219,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
       setUserProfileSettings(data);
     },
     onError: async (error: AxiosError) => {
-      await queryClient.invalidateQueries(["account/user-profile-settings"]);
+      await queryClient.invalidateQueries(["accounts/settings"]);
       toast.open({
         type: "error",
         title: t("global.notificationError"),
@@ -229,12 +229,12 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
   });
 
   const unClaimAllAssignedChats = useMutation({
-    mutationFn: (_) => apiDev.get("chat/unclaim-all-assigned-chats"),
+    mutationFn: (_) => apiDev.get("chats/assigned/unclaim"),
   });
 
   const customerSupportActivityMutation = useMutation({
     mutationFn: (data: CustomerSupportActivityDTO) =>
-        apiDev.post("account/customer-support-activity", {
+        apiDev.post("accounts/customer-support-activity", {
           customerSupportActive: data.customerSupportActive,
           customerSupportStatus: data.customerSupportStatus,
         }),
@@ -243,7 +243,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
     },
     onError: async (error: AxiosError) => {
       await queryClient.invalidateQueries([
-        "account/customer-support-activity",
+        "accounts/customer-support-activity",
         "prod",
       ]);
       toast.open({
@@ -264,7 +264,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
   });
 
   const logoutMutation = useMutation({
-    mutationFn: () => apiDev.get("logout"),
+    mutationFn: () => apiDev.get("accounts/logout"),
     onSuccess(_: any) {
       window.location.href = import.meta.env.REACT_APP_CUSTOMER_SERVICE_LOGIN;
     },
