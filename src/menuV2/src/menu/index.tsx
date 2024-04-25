@@ -65,7 +65,7 @@ const MainNavigation: FC<{items: MenuItem[], serviceId: string[]}> = ( {items, s
   let activeMenuId;
 
   const { data } = useQuery({
-    queryKey: ['account/user-role', 'prod'],
+    queryKey: ['accounts/user-role', 'prod'],
     onSuccess: (res: any) => {
       const filteredItems =
           items.filter((item) => {

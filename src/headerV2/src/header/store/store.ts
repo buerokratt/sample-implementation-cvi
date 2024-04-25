@@ -67,7 +67,7 @@ const useStore = create<StoreState>((set, get, _) => ({
   forwordedChatsLength: () => get().forwordedChats().length,
 
   loadActiveChats: async () => {
-    const res = await apiDev.get('csa/active-chats');
+    const res = await apiDev.get('agents/chats/active');
     const chats: ChatType[] = res.data.response ?? [];
     const selectedChatId = get().selectedChatId;
     const isChatStillExists = chats?.filter((e: any) => e.id === selectedChatId);
@@ -78,7 +78,7 @@ const useStore = create<StoreState>((set, get, _) => ({
     }
   },
   loadPendingChats: async () => {
-    const res = await apiDev.get('csa/pending-chats');
+    const res = await apiDev.get('agents/chats/pending');
     const chats: ChatType[] = res.data.response ?? [];
     const selectedChatId = get().selectedChatId;
     const isChatStillExists = chats?.filter((e: any) => e.id === selectedChatId);

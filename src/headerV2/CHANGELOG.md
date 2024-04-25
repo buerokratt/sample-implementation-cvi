@@ -1,6 +1,10 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.5] - 25-04-2024
+
+- Updated api call addresses 
+
 ## [0.1.4] - 02-15-2024
 
 - Updated store file to match chatbot changes.
