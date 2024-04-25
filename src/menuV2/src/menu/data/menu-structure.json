@@ -107,6 +107,13 @@
               "en": "Slots"
             },
             "path": "/training/slots"
+          },
+          {
+            "label": {
+              "et": "Automatic Teenused",
+              "en": "Automatic Services"
+            },
+            "path": "/auto-services"
           }
         ]
       },
@@ -168,7 +175,7 @@
           "et": "Treeni uus mudel",
           "en": "Train new model"
         },
-        "path": "/training/train-new-model"
+        "path": "/train-new-model"
       }
     ]
   },
@@ -193,13 +200,6 @@
           "en": "Chats"
         },
         "path": "/chats"
-      },
-      {
-        "label": {
-          "et": "Bürokratt",
-          "en": "Burokratt"
-        },
-        "path": "/burokratt"
       },
       {
         "label": {
@@ -248,10 +248,10 @@
       },
       {
         "label": {
-          "et": "Teemade järeltreenimine",
-          "en": "Followup Training"
+          "et": "Automatic Teenused",
+          "en": "Automatic Services"
         },
-        "path": "/followupTraining"
+        "path": "/auto-services"
       },
       {
         "label": {
