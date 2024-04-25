@@ -5,6 +5,11 @@ All changes to this project will be documented in this file.
 
 - Updated api call addresses 
 
+## [0.1.4] - 02-15-2024
+
+- Updated store file to match chatbot changes.
+- Updated /types/chat file to match chatbot changes.
+
 ## [0.1.3] - 01-01-2024
 
 - Updated usage of activity.active
