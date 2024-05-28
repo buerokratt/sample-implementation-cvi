@@ -15,6 +15,7 @@ interface MenuItem {
   path?: string;
   target?: '_blank' | '_self';
   children?: MenuItem[];
+  hidden?: boolean;
 }
 
 interface TranslatedLabel {
@@ -97,7 +98,7 @@ const MainNavigation: FC<{items: MenuItem[], serviceId: string[]}> = ( {items, s
   };
 
   const renderMenuTree = (menuItems: MenuItem[]) => {
-    return menuItems.map((menuItem) => (
+    return menuItems.filter(x => !x.hidden).map((menuItem) => (
         <li key={menuItem.label[currentlySelectedLanguage]}>
           {!!menuItem.children ? (
               <>
