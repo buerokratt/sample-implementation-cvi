@@ -2,6 +2,10 @@
 
 All changes to this project will be documented in this file.
 
+## [0.1.9] - 28-04-2024
+
+- Merge previous code
+
 ## [0.1.8] - 28-04-2024
 
 - Hide some menu items
