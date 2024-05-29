@@ -1,12 +1,21 @@
-import React, {FC, MouseEvent, useState} from 'react';
-
-import {NavLink, useLocation} from 'react-router-dom';
+import React, { FC, MouseEvent, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import clsx from 'clsx';
-import { MdOutlineForum, MdOutlineAdb, MdOutlineEqualizer, MdClose, MdKeyboardArrowDown, MdMiscellaneousServices, MdSettings, MdOutlineMonitorWeight } from 'react-icons/md';
-import  Icon from './components/icons/icon/icon';
+import {
+    MdOutlineForum, 
+    MdOutlineAdb, 
+    MdOutlineEqualizer, 
+    MdKeyboardArrowDown, 
+    MdMiscellaneousServices, 
+    MdSettings, 
+    MdOutlineMonitorWeight,
+    MdKeyboardArrowRight,
+    MdKeyboardArrowLeft,
+} from 'react-icons/md';
+import Icon from './components/icons/icon/icon';
 import './main-navigation.scss';
 import { useQuery } from '@tanstack/react-query';
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 import menuStructure from './data/menu-structure.json';
 
 interface MenuItem {
@@ -30,42 +39,41 @@ const MainNavigation: FC<{items: MenuItem[], serviceId: string[]}> = ( {items, s
   const { t, i18n } = useTranslation();
   const currentlySelectedLanguage = i18n.language;
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  
   const menuData = [
     {
       id: 'conversations',
-      icon: <MdOutlineForum />,
+      icon: <MdOutlineForum className='menu-item-icon' />,
       url: import.meta.env.REACT_APP_CONVERSATIONS_BASE_URL,
     },
     {
       id: 'training',
-      icon: <MdOutlineAdb />,
+      icon: <MdOutlineAdb className='menu-item-icon' />,
       url: import.meta.env.REACT_APP_TRAINING_BASE_URL,
     },
     {
       id: 'analytics',
-      icon: <MdOutlineEqualizer />,
+      icon: <MdOutlineEqualizer className='menu-item-icon' />,
       url: import.meta.env.REACT_APP_ANALYTICS_BASE_URL,
     },
     {
       id: "services",
-      icon: <MdMiscellaneousServices />,
+      icon: <MdMiscellaneousServices className='menu-item-icon' />,
       url: import.meta.env.REACT_APP_SERVICES_BASE_URL,
     },
     {
       id: 'settings',
-      icon: <MdSettings />,
+      icon: <MdSettings className='menu-item-icon' />,
       url: import.meta.env.REACT_APP_SETTINGS_BASE_URL,
     },
     {
       id: 'monitoring',
-      icon: <MdOutlineMonitorWeight />,
+      icon: <MdOutlineMonitorWeight className='menu-item-icon' />,
       url: import.meta.env.REACT_APP_MONITORING_BASE_URL,
     },
   ];
 
-  let activeMenuId;
-
-  const { data } = useQuery({
+  useQuery({
     queryKey: ['accounts/user-role', 'prod'],
     onSuccess: (res: any) => {
       const filteredItems =
@@ -89,10 +97,10 @@ const MainNavigation: FC<{items: MenuItem[], serviceId: string[]}> = ( {items, s
     },
   });
 
-  const location = useLocation();
   const [navCollapsed, setNavCollapsed] = useState(false);
 
   const handleNavToggle = (event: MouseEvent) => {
+    setNavCollapsed(false);
     const isExpanded = event.currentTarget.getAttribute('aria-expanded') === 'true';
     event.currentTarget.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
   };
@@ -103,54 +111,59 @@ const MainNavigation: FC<{items: MenuItem[], serviceId: string[]}> = ( {items, s
           {!!menuItem.children ? (
               <>
                 <button
-                    className={clsx('nav__toggle', { 'nav__toggle--icon': !!menuItem.id })}
-                    aria-expanded={menuItem.path && (isSameRoot(menuItem)) ? 'true' : 'false'}
-                    onClick={handleNavToggle}
+                  className={clsx('nav__toggle', { 'nav__toggle--icon': !!menuItem.id })}
+                  aria-expanded={menuItem.path && (isSameRoot(menuItem)) ? 'true' : 'false'}
+                  onClick={handleNavToggle}
                 >
-                  { menuItem.id &&  (
-                      <Icon icon={menuData.find(dataItem => dataItem.id === menuItem.id)?.icon} />
+                  {menuItem.id && (
+                    <Icon icon={menuData.find(dataItem => dataItem.id === menuItem.id)?.icon} size='large' />
                   )}
-
-                  <span>{menuItem.label[currentlySelectedLanguage]}</span>
-                  <Icon icon={<MdKeyboardArrowDown />} />
+                  <span className='menu-item-title'>{menuItem.label[currentlySelectedLanguage]}</span>
+                  <Icon icon={<MdKeyboardArrowDown />} className='menu-item-arrow' />
                 </button>
                 <ul className='nav__submenu'>
                   {renderMenuTree(menuItem.children.map((item)  => ({id: menuItem.id, ...item})))}
                 </ul>
               </>
           ) : (
-
-              (serviceId.includes(menuItem.id)) ?
-                  <NavLink to={menuItem.path || '#'}>{menuItem.label[currentlySelectedLanguage] }</NavLink> :
-                  <a href={menuData.find(dataItem => dataItem.id === menuItem.id)?.url + menuItem.path}>{menuItem.label[currentlySelectedLanguage]}</a>
-
+            serviceId.includes(menuItem.id)
+              ? <NavLink to={menuItem.path || '#'}>
+                  {menuItem.label[currentlySelectedLanguage]}
+                </NavLink>
+              : <a href={menuData.find(dataItem => dataItem.id === menuItem.id)?.url + menuItem.path}>
+                  {menuItem.label[currentlySelectedLanguage]}
+                </a>
           )}
-        </li>),
+        </li>
+      ),
     );
   };
 
   const base = window.location.pathname.split("/")[1];
   const currentService = base === 'chat' ? serviceId : [base];
   const isSameRoot = (menuItem) => {
-    let result = false;
-    if(currentService.includes(menuItem.id)){
-      result = menuItem.children.some((item: MenuItem) => item.path?.includes("/" + window.location.pathname.split("/")[2]));
+    if(currentService.includes(menuItem.id)) {
+      return menuItem.children.some((item: MenuItem) => item.path?.includes("/" + window.location.pathname.split("/")[2]));
     }
-    return result;
+    return false;
   }
 
   if (!menuItems) return null;
 
   return (
-      <nav className={clsx('nav', { 'nav--collapsed': navCollapsed })}>
-        <button className='nav__menu-toggle' onClick={() => setNavCollapsed(!navCollapsed)}>
-          <Icon icon={<MdClose />} />
-          {t('mainMenu.closeMenu')}
-        </button>
-        <ul className='nav__menu'>
-          {renderMenuTree(menuItems)}
-        </ul>
-      </nav>
+    <nav className={clsx('nav', { 'collapsed': navCollapsed })}>
+      <button className='nav__menu-toggle close-button-item' onClick={() => setNavCollapsed(!navCollapsed)}>
+        {
+          navCollapsed
+          ? <Icon icon={<MdKeyboardArrowRight className='menu-item-icon' />} size='large' />
+          : <Icon icon={<MdKeyboardArrowLeft className='menu-item-icon' />} size='large' />
+        }
+        <span className='menu-item-title'>{t('mainMenu.closeMenu')}</span>
+      </button>
+      <ul className='nav__menu'>
+        {renderMenuTree(menuItems)}
+      </ul>
+    </nav>
   );
 };
 
