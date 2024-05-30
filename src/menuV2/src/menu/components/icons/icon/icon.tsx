@@ -12,12 +12,13 @@ import '../icon.scss';
 type IconProps = StyleHTMLAttributes<CSSProperties> & {
     label?: string | null;
     icon: ReactNode;
-    size?: 'small' | 'medium';
+    size?: 'small' | 'medium' | 'large';
+    className?: string;
 };
 
 const IconComponent = forwardRef<HTMLSpanElement, IconProps>(
-    ({ label, icon, size = 'small', ...rest }, ref) => {
-        const iconClasses = clsx('icon', `icon--${size}`);
+    ({ label, icon, className, size = 'small', ...rest }, ref) => {
+        const iconClasses = clsx('icon', `icon--${size}`, className);
 
         return (
             <AccessibleIcon.Root label={label ?? ''}>

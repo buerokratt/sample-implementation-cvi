@@ -348,5 +348,14 @@
         "path": "/uptime"
       }
     ]
+  },
+  {
+    "id":"hidden-item",
+    "label": {
+      "et": "Peidetud",
+      "en": "Hidden"
+    },
+    "path": "/hidden",
+    "hidden": true
   }
 ]
