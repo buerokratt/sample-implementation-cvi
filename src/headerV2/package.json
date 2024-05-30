@@ -1,6 +1,6 @@
 {
   "name": "@buerokratt-ria/header",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Generic Header component that would be injected as dependency.",
   "main": "index.ts",
   "scripts": {},
