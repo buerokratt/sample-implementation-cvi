@@ -26,7 +26,7 @@ import useStore from "./store/store.ts";
 import { ReactComponent as BykLogo } from "./assets/logo.svg";
 import { UserProfileSettings } from "./types/userProfileSettings";
 import { Chat as ChatType } from "./types/chat";
-import { USER_IDLE_STATUS_TIMEOUT } from "./constants/config";
+import { USER_IDLE_STATUS_TIMEOUT, isHiddenFeaturesEnabled } from "./constants/config";
 import apiDev from "./services/api-dev";
 import { interval } from "rxjs";
 import { AUTHORITY } from "./types/authorities";
@@ -505,48 +505,56 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
                 AUTHORITY.SERVICE_MANAGER,
               ].some((auth) => userInfo.authorities.includes(auth)) && (
                   <>
-                    <Section>
-                      <Track gap={8} direction="vertical" align="left">
-                        <p className="h6">{t("settings.users.autoCorrector")}</p>
-                        <SwitchBox
-                            name="useAutocorrect"
-                            label={t("settings.users.useAutocorrect")}
-                            checked={userProfileSettings.useAutocorrect}
-                            onCheckedChange={(checked) =>
-                                handleUserProfileSettingsChange("useAutocorrect", checked)
-                            }
-                        />
-                      </Track>
-                    </Section>
-                    <Section>
-                      <Track gap={8} direction="vertical" align="left">
-                        <p className="h6">{t("settings.users.emailNotifications")}</p>
-                        <SwitchBox
-                            name="forwardedChatEmailNotifications"
-                            label={t("settings.users.newForwardedChat")}
-                            checked={
-                              userProfileSettings.forwardedChatEmailNotifications
-                            }
-                            onCheckedChange={(checked) =>
-                                handleUserProfileSettingsChange(
-                                    "forwardedChatEmailNotifications",
-                                    checked
-                                )
-                            }
-                        />
-                        <SwitchBox
-                            name="newChatEmailNotifications"
-                            label={t("settings.users.newUnansweredChat")}
-                            checked={userProfileSettings.newChatEmailNotifications}
-                            onCheckedChange={(checked) =>
-                                handleUserProfileSettingsChange(
-                                    "newChatEmailNotifications",
-                                    checked
-                                )
-                            }
-                        />
-                      </Track>
-                    </Section>
+                    {
+                      isHiddenFeaturesEnabled && (
+                        <Section>
+                          <Track gap={8} direction="vertical" align="left">
+                            <p className="h6">{t("settings.users.autoCorrector")}</p>
+                            <SwitchBox
+                                name="useAutocorrect"
+                                label={t("settings.users.useAutocorrect")}
+                                checked={userProfileSettings.useAutocorrect}
+                                onCheckedChange={(checked) =>
+                                    handleUserProfileSettingsChange("useAutocorrect", checked)
+                                }
+                            />
+                          </Track>
+                        </Section>
+                      )
+                    }
+                    {
+                      isHiddenFeaturesEnabled && (
+                        <Section>
+                          <Track gap={8} direction="vertical" align="left">
+                            <p className="h6">{t("settings.users.emailNotifications")}</p>
+                            <SwitchBox
+                                name="forwardedChatEmailNotifications"
+                                label={t("settings.users.newForwardedChat")}
+                                checked={
+                                  userProfileSettings.forwardedChatEmailNotifications
+                                }
+                                onCheckedChange={(checked) =>
+                                    handleUserProfileSettingsChange(
+                                        "forwardedChatEmailNotifications",
+                                        checked
+                                    )
+                                }
+                            />
+                            <SwitchBox
+                                name="newChatEmailNotifications"
+                                label={t("settings.users.newUnansweredChat")}
+                                checked={userProfileSettings.newChatEmailNotifications}
+                                onCheckedChange={(checked) =>
+                                    handleUserProfileSettingsChange(
+                                        "newChatEmailNotifications",
+                                        checked
+                                    )
+                                }
+                            />
+                          </Track>
+                        </Section>
+                      )
+                    }
                     <Section>
                       <Track gap={8} direction="vertical" align="left">
                         <p className="h6">{t("settings.users.soundNotifications")}</p>
