@@ -2,6 +2,22 @@
 
 All changes to this project will be documented in this file.
 
+## [0.1.11] - 30-05-2024
+
+- Hide some Training Module menu items from production
+
+## [0.1.10] - 30-05-2024
+
+- Hide some menu items from production
+
+## [0.1.9] - 28-04-2024
+
+- Merge previous code
+
+## [0.1.8] - 28-04-2024
+
+- Hide some menu items
+
 ## [0.1.7] - 27-05-2024
 
 - Fix close menu button 
