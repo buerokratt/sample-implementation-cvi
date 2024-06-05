@@ -17,6 +17,7 @@ import './main-navigation.scss';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from "react-i18next";
 import menuStructure from './data/menu-structure.json';
+import { isHiddenFeaturesEnabled } from './constants';
 
 interface MenuItem {
   id?: string;
@@ -25,6 +26,7 @@ interface MenuItem {
   target?: '_blank' | '_self';
   children?: MenuItem[];
   hidden?: boolean;
+  hiddenMode?: 'production' | 'development' | 'staging' | 'testing';
 }
 
 interface TranslatedLabel {
@@ -106,7 +108,10 @@ const MainNavigation: FC<{items: MenuItem[], serviceId: string[]}> = ( {items, s
   };
 
   const renderMenuTree = (menuItems: MenuItem[]) => {
-    return menuItems.filter(x => !x.hidden).map((menuItem) => (
+    return menuItems
+    .filter(x => !x.hidden)
+    .filter(x => isHiddenFeaturesEnabled || x.hiddenMode !== "production")
+    .map((menuItem) => (
         <li key={menuItem.label[currentlySelectedLanguage]}>
           {!!menuItem.children ? (
               <>
