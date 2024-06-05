@@ -2,6 +2,10 @@
 
 All changes to this project will be documented in this file.
 
+## [0.1.7] - 27-05-2024
+
+- Fix close menu button 
+
 ## [0.1.6] - 25-04-2024
 
 - Updated api call addresses 
