@@ -2,6 +2,12 @@
 
 All changes to this project will be documented in this file.
 
+## [0.1.12] - 07-06-2024
+
+- Add dynamic hidden menu items
+- Refactor code for better readability
+- Remove unnecessary component arguments
+
 ## [0.1.11] - 30-05-2024
 
 - Hide some Training Module menu items from production
