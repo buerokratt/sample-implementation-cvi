@@ -34,35 +34,14 @@ To publish created package:
   * `import { MainNavigation } from '@buerokratt-ria/menu/src'` for Header and Menu
   * If you want to use local package, put created package to the root of react app and add dependency like "@buerokratt-ria/header": "file:buerokratt-ria-menu-0.0.5.tgz" (use proper version)
 ### Using MainNavigation component
-  * In Layout component you need to provide fetching and caching the `menu.json` file, code snippet would be:  
-```
-    const CACHE_NAME = 'mainmenu-cache';
-    const [MainMenuItems, setMainMenuItems] = useState([])
-    const  {data, isLoading, status}  = useQuery({
-        queryKey: [import.meta.env.REACT_APP_MENU_URL + import.meta.env.REACT_APP_MENU_PATH],
-        onSuccess: (res: any) => {
-            try {
-                setMainMenuItems(res);
-                localStorage.setItem(CACHE_NAME, JSON.stringify(res));
-            } catch (e) {
-                console.log(e);
-            }
-        },
-        onError: (error: any) => {
-            setMainMenuItems(getCache());
-        }
-
-    });
-
-    function getCache(): any {
-        const cache = localStorage.getItem(CACHE_NAME) || '{}';
-        return JSON.parse(cache);
-    }
-```
-  * Then pass this MainMenu items to menu component `<MainNavigation serviceId={import.meta.env.REACT_APP_SERVICE_ID.split(',')} items={MainMenuItems}/>`
-    * If you want to use only local file provided by package then pass empty array instead `[]`
-    * REACT_APP_SERVICE_ID set of values seperated by comma resembling current module, examples of this value could
-    be found in following links
+  * MainNavigation uses four env variable:
+    * use `REACT_APP_MENU_URL` & `REACT_APP_MENU_PATH` to set the url for json that contains the menu item array
+    * use `REACT_APP_MENU_JSON` with json string of the menu item array
+      * `REACT_APP_MENU_JSON` will overrides buth the local file provieded by package and the `REACT_APP_MENU_URL` & `REACT_APP_MENU_PATH`
+    * If you want to use only local file provided by package then remove `REACT_APP_MENU_JSON`, `REACT_APP_MENU_URL` & `REACT_APP_MENU_PATH` variables
+    * `REACT_APP_SERVICE_ID` set of values seperated by comma resembling current module, examples of this value could be found in following links
+    
+    
 
 ### Implemented examples:
 * https://github.com/buerokratt/Training-Module
