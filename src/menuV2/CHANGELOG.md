@@ -2,6 +2,10 @@
 
 All changes to this project will be documented in this file.
 
+## [0.1.13] - 07-06-2024
+
+- Fix a bug
+
 ## [0.1.12] - 07-06-2024
 
 - Add dynamic hidden menu items

@@ -30,7 +30,18 @@ const useMenuItems = () => {
   });
 
   const items = useMemo(() => {
-    const allItems = externalMenuItems ?? mainMenuItems ?? menuStructure ?? [];
+    let externals;
+    
+    try {
+      externals = JSON.parse(externalMenuItems);
+      if(!externals.isArray) {
+        console.error('REACT_APP_MENU_JSON was ignored becuase it wasn\'t an array');
+      }
+    } catch (e) {
+      console.error(e);
+    }
+
+    const allItems = externals ?? mainMenuItems ?? menuStructure ?? [];
     return allItems.filter(x => !x.hidden);
   }, [externalMenuItems, mainMenuItems, menuStructure]);
   
