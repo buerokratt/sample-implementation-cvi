@@ -33,12 +33,14 @@ const useMenuItems = () => {
     let externals;
     
     try {
-      externals = JSON.parse(externalMenuItems);
-      if(!externals.isArray) {
-        console.error('REACT_APP_MENU_JSON was ignored becuase it wasn\'t an array');
+      if(externalMenuItems) {
+        externals = JSON.parse(externalMenuItems);
+        if(!Array.isArray(externals)) {
+          console.warn('REACT_APP_MENU_JSON was ignored becuase it wasn\'t an array');
+        }
       }
     } catch (e) {
-      console.error(e);
+      console.warn(e);
     }
 
     const allItems = externals ?? mainMenuItems ?? menuStructure ?? [];
