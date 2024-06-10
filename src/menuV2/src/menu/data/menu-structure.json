@@ -60,7 +60,7 @@
             "path": "/training/intents"
           },
           {
-            "hiddenMode": "production",
+            "hidden": true,
             "label": {
               "et": "Avalikud teemad",
               "en": "Public themes"
@@ -89,7 +89,7 @@
             "path": "/training/stories"
           },
           {
-            "hiddenMode": "production",
+            "hidden": true,
             "label": {
               "et": "Konfiguratsioon",
               "en": "Configuration"
@@ -111,7 +111,7 @@
             "path": "/training/slots"
           },
           {
-            "hiddenMode": "production",
+            "hidden": true,
             "label": {
               "et": "Automatic Teenused",
               "en": "Automatic Services"
@@ -135,7 +135,7 @@
             "path": "/history/history"
           },
           {
-            "hiddenMode": "production",
+            "hidden": true,
             "label": {
               "et": "Pöördumised",
               "en": "Appeals"
@@ -166,7 +166,7 @@
             "path": "/analytics/models"
           },
           {
-            "hiddenMode": "production",
+            "hidden": true,
             "label": {
               "et": "Testlood",
               "en": "testTracks"
@@ -231,7 +231,7 @@
   },
   {
     "id": "services",
-    "hiddenMode": "production",
+    "hidden": true,
     "label": {
       "et": "Teenused",
       "en": "Services"
@@ -338,7 +338,7 @@
   },
   {
     "id": "monitoring",
-    "hiddenMode": "production",
+    "hidden": true,
     "label": {
       "et": "Seire",
       "en": "Monitoring"
@@ -353,14 +353,5 @@
         "path": "/uptime"
       }
     ]
-  },
-  {
-    "id":"hidden-item",
-    "label": {
-      "et": "Peidetud",
-      "en": "Hidden"
-    },
-    "path": "/hidden",
-    "hidden": true
   }
 ]
