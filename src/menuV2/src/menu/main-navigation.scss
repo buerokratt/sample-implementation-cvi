@@ -116,24 +116,14 @@
 }
 
 .collapsed {
-  width: 64px;
-
-  .menu-item-arrow,
-  .menu-item-title {
-    display: none !important;
-  }
-  
-  .menu-item-icon {
-    height: 24px;
-    width: 24px;
-  }
-
-  .close-button-item,
-  button.nav__toggle {
-    justify-content: center;
-  }
-
   .nav__submenu {
-    display: none !important;
+    visibility: hidden;
+    height: 0;
+  }
+
+  button[aria-expanded=true] {
+    .icon {
+      transform: rotate(0deg);
+    }
   }
 }

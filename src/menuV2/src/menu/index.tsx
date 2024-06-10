@@ -1,9 +1,6 @@
 import React, { FC, MouseEvent, useState, useMemo } from 'react';
 import clsx from 'clsx';
-import {
-    MdKeyboardArrowRight,
-    MdKeyboardArrowLeft,
-} from 'react-icons/md';
+import { MdClose } from 'react-icons/md';
 import Icon from './components/icons/icon/icon';
 import { useTranslation } from "react-i18next";
 import MenuTree from './components/menuTree';
@@ -23,17 +20,19 @@ const MainNavigation: FC = () => {
     event.currentTarget.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
   };
 
+  const handleCloseButtonClick = () => {
+    const doesMenuHasExpandedItem =  !!document.querySelector('button[aria-expanded="true"]');
+    if(doesMenuHasExpandedItem)
+      setNavCollapsed(!navCollapsed);
+  }
+
   if (!menuItems) return null;
 
   return (
     <nav className={clsx('nav', { 'collapsed': navCollapsed })}>
-      <button className='nav__menu-toggle close-button-item' onClick={() => setNavCollapsed(!navCollapsed)}>
-        {
-          navCollapsed
-          ? <Icon icon={<MdKeyboardArrowRight className='menu-item-icon' />} size='large' />
-          : <Icon icon={<MdKeyboardArrowLeft className='menu-item-icon' />} size='large' />
-        }
-        <span className='menu-item-title'>{t('mainMenu.closeMenu')}</span>
+      <button className='nav__menu-toggle close-button-item' onClick={handleCloseButtonClick}>
+        <Icon icon={<MdClose />} />
+        <span className='menu-item-title'>{t(navCollapsed ? 'mainMenu.openMenu' : 'mainMenu.closeMenu' )}</span>
       </button>
       <ul className='nav__menu'>
         <MenuTree
