@@ -5,27 +5,22 @@ import { MenuItem } from "../types/menuItem";
 
 const useMenuItems = () => {
   const externalMenuItems = import.meta.env.REACT_APP_MENU_JSON;
-
-  const [mainMenuItems, setMainMenuItems] = useState<MenuItem[] | null>([]);
+  const cachedMenu = getMenuCache();
+  const [mainMenuItems, setMainMenuItems] = useState<MenuItem[] | null>(cachedMenu ?? []);
 
   useQuery({
-    enabled: !externalMenuItems,
+    enabled: !externalMenuItems && !cachedMenu,
     queryKey: [import.meta.env.REACT_APP_MENU_URL + import.meta.env.REACT_APP_MENU_PATH],
     onSuccess: (res: any) => {
       try {
         setMainMenuItems(res);
+        setCache(res);
       } catch (e) {
-        setMainMenuItems(null);
         console.error(e);
       }
-      setCache(res);
     },
     onError: () => {
-      const cached = getCache();
-      if(cached.length > 0) 
-        setMainMenuItems(cached);
-      else
-        setMainMenuItems(null);
+      setMainMenuItems(cachedMenu);
     },
   });
 
@@ -43,11 +38,17 @@ const useMenuItems = () => {
       console.warn(e);
     }
 
-    const allItems = externals ?? mainMenuItems ?? menuStructure ?? [];
-    return allItems.filter(x => !x.hidden);
+    return externals ?? mainMenuItems ?? menuStructure ?? [];
   }, [externalMenuItems, mainMenuItems, menuStructure]);
   
   return items;
+}
+
+function getMenuCache(): any {
+  const cached = getCache();
+  if(Array.isArray(cached) && cached.length > 0)
+    return cached;
+  return null;
 }
 
 function getCache(): any {

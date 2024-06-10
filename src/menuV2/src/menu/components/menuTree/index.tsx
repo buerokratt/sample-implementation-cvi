@@ -22,7 +22,9 @@ const MenuTree: FC<MenuTreeProps> = ({
 }) => {
   const currentlySelectedLanguage = useTranslation().i18n.language;
 
-  return menuItems.map((menuItem) => (
+  return menuItems
+    .filter(x => !x.hidden)
+    .map((menuItem) => (
       <li key={menuItem.label[currentlySelectedLanguage]}>
         {!!menuItem.children ? (
             <>
