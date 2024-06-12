@@ -2,6 +2,10 @@
 
 All changes to this project will be documented in this file.
 
+## [0.1.16] - 10-06-2024
+
+- Improve close menu functionality
+
 ## [0.1.15] - 10-06-2024
 
 - Fix a bug
