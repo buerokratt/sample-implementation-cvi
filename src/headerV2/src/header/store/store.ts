@@ -4,6 +4,8 @@ import {CHAT_STATUS, Chat as ChatType, GroupedChat, GroupedPendingChat} from '..
 import apiDev from "../services/api-dev.ts";
 import { UserProfileSettings } from '../types/userProfileSettings.ts';
 
+type CsaStatusType = "idle" | "offline" | "online";
+
 interface StoreState {
   userInfo: UserInfo | null;
   userId: string;
@@ -11,6 +13,8 @@ interface StoreState {
   pendingChats: ChatType[];
   selectedChatId: string | null;
   chatCsaActive: boolean;
+  csaStatus: CsaStatusType,
+  setCsaStatus: (status: CsaStatusType) => void,
   setActiveChats: (chats: ChatType[]) => void;
   setPendingChats: (chats: ChatType[]) => void;
   setUserInfo: (info: UserInfo) => void;
@@ -48,6 +52,8 @@ const useStore = create<StoreState>((set, get, _) => ({
     newChatEmailNotifications: false,
     useAutocorrect: true,
   },
+  csaStatus: "online",
+  setCsaStatus: (csaStatus) => set({ csaStatus }),
   setUserProfileSettings: (settings) => set({ userProfileSettings: settings }),
   setActiveChats: (chats) => set({ activeChats: chats }),
   setPendingChats: (chats) => set({ pendingChats: chats }),

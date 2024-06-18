@@ -69,9 +69,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
 
   const queryClient = useQueryClient();
   const [userDrawerOpen, setUserDrawerOpen] = useState(false);
-  const [csaStatus, setCsaStatus] = useState<"idle" | "offline" | "online">(
-      "online"
-  );
+  const csaStatus = useStore((state) => state.csaStatus);
   const chatCsaActive = useStore((state) => state.chatCsaActive);
   const userProfileSettings = useStore((state) => state.userProfileSettings);
   const customJwtCookieKey = "customJwtCookie";
@@ -108,11 +106,11 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
     if (res.response && res.response != "error: not found")
       useStore.getState().setUserProfileSettings(res.response[0]);
   };
-  const { data: customerSupportActivity } = useQuery<CustomerSupportActivity>({
+  const { data: customerSupportActivity, refetch: getCsaActiveStatus } = useQuery<CustomerSupportActivity>({
     queryKey: ["accounts/customer-support-activity", "prod"],
     onSuccess(res: any) {
       const activity = res.response;
-      setCsaStatus(activity.status);
+      useStore.getState().setCsaStatus(activity.status);
       useStore.getState().setChatCsaActive(activity.active);
     },
   });
@@ -165,7 +163,9 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
           customerSupportActive: data.customerSupportActive,
           customerSupportStatus: data.customerSupportStatus,
         }),
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
+      useStore.getState().setCsaStatus(variables.customerSupportStatus);
+      useStore.getState().setChatCsaActive(variables.customerSupportActive);
       if (csaStatus === "online") extendUserSessionMutation.mutate();
     },
     onError: async (error: AxiosError) => {
@@ -208,7 +208,6 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
     if (!customerSupportActivity) return;
     if (csaStatus === "offline") return;
 
-    setCsaStatus("idle");
     customerSupportActivityMutation.mutate({
       customerSupportActive: chatCsaActive,
       customerSupportId: customerSupportActivity.idCode,
@@ -223,7 +222,6 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
       return;
     }
 
-    setCsaStatus("online");
     customerSupportActivityMutation.mutate({
       customerSupportActive: chatCsaActive,
       customerSupportId: customerSupportActivity.idCode,
@@ -231,7 +229,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
     });
   };
 
-  const { getRemainingTime } = useIdleTimer({
+  useIdleTimer({
     onIdle,
     onActive,
     timeout: USER_IDLE_STATUS_TIMEOUT,
@@ -250,8 +248,6 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
   const handleCsaStatusChange = (checked: boolean) => {
     if (checked === false) unClaimAllAssignedChats.mutate();
 
-    useStore.getState().setChatCsaActive(checked);
-    setCsaStatus(checked === true ? "online" : "offline");
     customerSupportActivityMutation.mutate({
       customerSupportActive: checked,
       customerSupportStatus: checked === true ? "online" : "offline",
