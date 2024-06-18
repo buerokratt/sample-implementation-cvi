@@ -1,6 +1,10 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.7] - 18-06-2024
+
+- Improvements and bug fixes
+
 ## [0.1.6] - 30-05-2024
 
 - Hide some user settings if `REACT_APP_ENABLE_HIDDEN_FEATURES` is `TRUE`
