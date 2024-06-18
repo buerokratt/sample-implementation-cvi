@@ -8,6 +8,7 @@ import { ToastContextType } from "../context/ToastContext.tsx";
 const useChatNotifyEffect = ({ toast }: { toast: ToastContextType | null }) => {
   const { t } = useTranslation();
   const unansweredChatsLength = useStore((state) => state.unansweredChatsLength());
+  const activeChatsLength = useStore((state) => state.activeChats.length);
   const newChatSoundNotifications = useStore((state) => state.userProfileSettings.newChatSoundNotifications);
   const newChatPopupNotifications = useStore((state) => state.userProfileSettings.newChatPopupNotifications);
   const forwardedChatsLength = useStore((state) => state.forwordedChatsLength());
@@ -52,11 +53,11 @@ const useChatNotifyEffect = ({ toast }: { toast: ToastContextType | null }) => {
 
   useEffect(() => {
     handleNewMessage();
-  }, [unansweredChatsLength]);
+  }, [unansweredChatsLength, activeChatsLength]);
 
   useEffect(() => {
     handleForwordMessage();
-  }, [forwardedChatsLength]);
+  }, [forwardedChatsLength, activeChatsLength]);
 
   useEffect(() => {
     const subscription = interval(2 * 60 * 1000).subscribe(() => {
