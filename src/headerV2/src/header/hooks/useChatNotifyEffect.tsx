@@ -1,0 +1,79 @@
+import { useEffect } from "react";
+import { interval } from "rxjs";
+import { useTranslation } from "react-i18next";
+import useStore from "../store/store.ts";
+import { useDing } from "./useAudio.tsx";
+import { ToastContextType } from "../context/ToastContext.tsx";
+
+const useChatNotifyEffect = ({ toast }: { toast: ToastContextType | null }) => {
+  const { t } = useTranslation();
+  const unansweredChatsLength = useStore((state) => state.unansweredChatsLength());
+  const newChatSoundNotifications = useStore((state) => state.userProfileSettings.newChatSoundNotifications);
+  const newChatPopupNotifications = useStore((state) => state.userProfileSettings.newChatPopupNotifications);
+  const forwardedChatsLength = useStore((state) => state.forwordedChatsLength());
+  const forwardedChatSoundNotifications = useStore((state) => state.userProfileSettings.forwardedChatSoundNotifications);
+  const forwardedChatPopupNotifications = useStore((state) => state.userProfileSettings.forwardedChatPopupNotifications);
+
+  const [ding] = useDing();
+
+  const handleNewMessage = () => {
+    if (unansweredChatsLength <= 0)
+      return;
+    
+    if(samePreviousValue("byk_header_unansweredChatsLength", unansweredChatsLength))
+      return;
+
+    if (newChatSoundNotifications)
+      ding?.play();
+    if (newChatPopupNotifications)
+      toast?.open({
+        type: "info",
+        title: t("global.notification"),
+        message: t("settings.users.newUnansweredChat"),
+      });
+  };
+
+  const handleForwordMessage = () => {
+    if (forwardedChatsLength <= 0)
+      return;
+
+    if(samePreviousValue("byk_header_forwardedChatsLength", forwardedChatsLength))
+      return;
+
+    if (forwardedChatSoundNotifications)
+      ding?.play();
+    if (forwardedChatPopupNotifications)
+      toast?.open({
+        type: "info",
+        title: t("global.notification"),
+        message: t("settings.users.newForwardedChat"),
+      });
+  };
+
+  useEffect(() => {
+    handleNewMessage();
+  }, [unansweredChatsLength]);
+
+  useEffect(() => {
+    handleForwordMessage();
+  }, [forwardedChatsLength]);
+
+  useEffect(() => {
+    const subscription = interval(2 * 60 * 1000).subscribe(() => {
+      handleNewMessage();
+      handleForwordMessage();
+    });
+
+    return () => subscription?.unsubscribe();
+  }, []);
+}
+
+const samePreviousValue = (key: string, value: number) => {
+  const previousValue = parseInt(localStorage.getItem(key) || "0");
+  if(previousValue === value)
+    return true;
+  localStorage.setItem(key, value.toString());
+  return false;
+}
+
+export default useChatNotifyEffect;

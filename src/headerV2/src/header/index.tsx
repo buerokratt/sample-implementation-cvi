@@ -28,12 +28,11 @@ import { UserProfileSettings } from "./types/userProfileSettings";
 import { Chat as ChatType } from "./types/chat";
 import { USER_IDLE_STATUS_TIMEOUT, isHiddenFeaturesEnabled } from "./constants/config";
 import apiDev from "./services/api-dev";
-import { interval } from "rxjs";
 import { AUTHORITY } from "./types/authorities";
 import { useCookies } from "react-cookie";
-import { useDing } from "./hooks/useAudio";
 import "./Header.scss";
 import { UserInfo } from "./types/userInfo.ts";
+import useChatNotifyEffect from "./hooks/useChatNotifyEffect.tsx";
 
 type CustomerSupportActivity = {
   idCode: string;
@@ -73,20 +72,11 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
   const [csaStatus, setCsaStatus] = useState<"idle" | "offline" | "online">(
       "online"
   );
-  const [ding] = useDing();
   const chatCsaActive = useStore((state) => state.chatCsaActive);
-  const [userProfileSettings, setUserProfileSettings] =
-      useState<UserProfileSettings>({
-        userId: 1,
-        forwardedChatPopupNotifications: true,
-        forwardedChatSoundNotifications: true,
-        forwardedChatEmailNotifications: false,
-        newChatPopupNotifications: false,
-        newChatSoundNotifications: true,
-        newChatEmailNotifications: false,
-        useAutocorrect: true,
-      });
+  const userProfileSettings = useStore((state) => state.userProfileSettings);
   const customJwtCookieKey = "customJwtCookie";
+
+  useChatNotifyEffect({ toast });
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -102,7 +92,6 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
           localStorage.removeItem("exp");
           window.location.href =
               import.meta.env.REACT_APP_CUSTOMER_SERVICE_LOGIN;
-        } else {
         }
       }
     }, 2000);
@@ -117,7 +106,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
     const { data: res } = await apiDev.get("accounts/settings");
 
     if (res.response && res.response != "error: not found")
-      setUserProfileSettings(res.response[0]);
+      useStore.getState().setUserProfileSettings(res.response[0]);
   };
   const { data: customerSupportActivity } = useQuery<CustomerSupportActivity>({
     queryKey: ["accounts/customer-support-activity", "prod"],
@@ -143,68 +132,6 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
       state.forwordedChatsLength()
   );
 
-  const handleNewMessage = () => {
-    if (unansweredChatsLength <= 0) {
-      return;
-    }
-
-    if (userProfileSettings.newChatSoundNotifications) {
-      ding?.play();
-    }
-    if (userProfileSettings.newChatEmailNotifications) {
-      // TODO send email notification
-    }
-    if (userProfileSettings.newChatPopupNotifications) {
-      toast.open({
-        type: "info",
-        title: t("global.notification"),
-        message: t("settings.users.newUnansweredChat"),
-      });
-    }
-  };
-
-  useEffect(() => {
-    handleNewMessage();
-
-    const subscription = interval(2 * 60 * 1000).subscribe(() =>
-        handleNewMessage()
-    );
-    return () => {
-      subscription?.unsubscribe();
-    };
-  }, [unansweredChatsLength, userProfileSettings]);
-
-  const handleForwordMessage = () => {
-    if (forwardedChatsLength <= 0) {
-      return;
-    }
-
-    if (userProfileSettings.forwardedChatSoundNotifications) {
-      ding?.play();
-    }
-    if (userProfileSettings.forwardedChatEmailNotifications) {
-      // TODO send email notification
-    }
-    if (userProfileSettings.forwardedChatPopupNotifications) {
-      toast.open({
-        type: "info",
-        title: t("global.notification"),
-        message: t("settings.users.newForwardedChat"),
-      });
-    }
-  };
-
-  useEffect(() => {
-    handleForwordMessage();
-
-    const subscription = interval(2 * 60 * 1000).subscribe(
-        () => handleForwordMessage
-    );
-    return () => {
-      subscription?.unsubscribe();
-    };
-  }, [forwardedChatsLength, userProfileSettings]);
-
   const userProfileSettingsMutation = useMutation({
     mutationFn: async (data: UserProfileSettings) => {
       await apiDev.post("accounts/settings", {
@@ -216,11 +143,11 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
         newChatEmailNotifications: data.newChatEmailNotifications,
         useAutocorrect: data.useAutocorrect,
       });
-      setUserProfileSettings(data);
+      useStore.getState().setUserProfileSettings(data);
     },
     onError: async (error: AxiosError) => {
       await queryClient.invalidateQueries(["accounts/settings"]);
-      toast.open({
+      toast?.open({
         type: "error",
         title: t("global.notificationError"),
         message: error.message,
@@ -246,7 +173,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
         "accounts/customer-support-activity",
         "prod",
       ]);
-      toast.open({
+      toast?.open({
         type: "error",
         title: t("global.notificationError"),
         message: error.message,
@@ -269,7 +196,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
       window.location.href = import.meta.env.REACT_APP_CUSTOMER_SERVICE_LOGIN;
     },
     onError: async (error: AxiosError) => {
-      toast.open({
+      toast?.open({
         type: "error",
         title: t("global.notificationError"),
         message: error.message,
@@ -417,7 +344,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
                           customerSupportId: userInfo.idCode,
                         });
                         localStorage.removeItem("exp");
-                        toast.open({
+                        toast?.open({
                           type: "info",
                           title: t("global.notification"),
                           message: t("settings.users.newUnansweredChat"),

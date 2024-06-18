@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { UserInfo } from '../types/userInfo';
 import {CHAT_STATUS, Chat as ChatType, GroupedChat, GroupedPendingChat} from '../types/chat';
 import apiDev from "../services/api-dev.ts";
+import { UserProfileSettings } from '../types/userProfileSettings.ts';
 
 interface StoreState {
   userInfo: UserInfo | null;
@@ -26,6 +27,8 @@ interface StoreState {
   getGroupedUnansweredChats: () => GroupedChat;
   loadPendingChats: () => Promise<void>;
   getGroupedPendingChats: () => GroupedPendingChat;
+  userProfileSettings: UserProfileSettings,
+  setUserProfileSettings: (settings: UserProfileSettings) => void,
 }
 
 const useStore = create<StoreState>((set, get, _) => ({
@@ -35,6 +38,17 @@ const useStore = create<StoreState>((set, get, _) => ({
   pendingChats: [],
   selectedChatId: null,
   chatCsaActive: false,
+  userProfileSettings: {
+    userId: 1,
+    forwardedChatPopupNotifications: true,
+    forwardedChatSoundNotifications: true,
+    forwardedChatEmailNotifications: false,
+    newChatPopupNotifications: false,
+    newChatSoundNotifications: true,
+    newChatEmailNotifications: false,
+    useAutocorrect: true,
+  },
+  setUserProfileSettings: (settings) => set({ userProfileSettings: settings }),
   setActiveChats: (chats) => set({ activeChats: chats }),
   setPendingChats: (chats) => set({ pendingChats: chats }),
   setUserInfo: (data) => set({ userInfo: data, userId: data?.idCode || '' }),

@@ -46,6 +46,7 @@ export const ToastProvider: FC<PropsWithChildren> = ({ children }) => {
         <RadixToast.Provider
             swipeDirection='right'
             label={t('global.notification') || 'Notification'}
+            duration={2000}
         >
           {children}
           {toasts.map((toast) => (
