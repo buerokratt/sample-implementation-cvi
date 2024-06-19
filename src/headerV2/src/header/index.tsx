@@ -150,6 +150,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
         title: t("global.notificationError"),
         message: t("global.notificationErrorMsg"),
       });
+      console.error(error.message);
     },
   });
 
@@ -178,6 +179,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
         title: t("global.notificationError"),
         message: t("global.notificationErrorMsg"),
       });
+      console.error(error.message);
     },
   });
 
@@ -201,6 +203,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
         title: t("global.notificationError"),
         message: t("global.notificationErrorMsg"),
       });
+      console.error(error.message);
     },
   });
 
