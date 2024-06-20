@@ -1,11 +1,11 @@
 export {
   default as auth
-} from './src/header/services/auth'
+} from './src/services/auth'
 
 export {
   default as userStore
-} from './src/header/store/store'
+} from './src/store/store'
 
 export {
     default as Header
-} from './src/header';
+} from './src';

@@ -1,6 +1,10 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.8] - 20-06-2024
+
+- Improvements and bug fixes
+
 ## [0.1.8] - 19-06-2024
 
 - Improvements and bug fixes

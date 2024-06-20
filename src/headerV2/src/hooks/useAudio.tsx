@@ -8,7 +8,9 @@ export const useAudio = (audiosrc: string) => {
 
   useEffect(() => {
     const howl = new Howl({
-      src: audiosrc
+      src: audiosrc,
+      preload: true,
+      
     });
 
     setAudio(howl);
