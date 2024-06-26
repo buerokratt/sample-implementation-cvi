@@ -221,7 +221,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
   const onActive = () => {
     if (!customerSupportActivity) return;
     if (csaStatus === "offline") {
-      setShowStatusConfirmationModal((value) => !value);
+      setShowStatusConfirmationModal(true);
       return;
     }
 
@@ -253,7 +253,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
 
     customerSupportActivityMutation.mutate({
       customerSupportActive: checked,
-      customerSupportStatus: checked === true ? "online" : "offline",
+      customerSupportStatus: checked ? "online" : "offline",
       customerSupportId: "",
     });
 
@@ -263,15 +263,15 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
   const showStatusChangePopup = () => {
     if (statusPopupTimerHasStarted) return;
 
-    setStatusPopupTimerHasStarted((value) => !value);
+    setStatusPopupTimerHasStarted(true);
     const timer = setInterval(() => {
       setSecondsUntilStatusPopup((prevSeconds) => {
         if (prevSeconds > 0) {
           return prevSeconds - 1;
         } else {
           clearInterval(timer);
-          setShowStatusConfirmationModal((value) => !value);
-          setStatusPopupTimerHasStarted((value) => !value);
+          setShowStatusConfirmationModal(false);
+          setStatusPopupTimerHasStarted(false);
           return 0;
         }
       });
@@ -360,13 +360,13 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
 
         {showStatusConfirmationModal && (
             <Dialog
-                onClose={() => setShowStatusConfirmationModal((value) => !value)}
+                onClose={() => setShowStatusConfirmationModal(false)}
                 footer={
                   <>
                     <Button
                         appearance="secondary"
                         onClick={() =>
-                            setShowStatusConfirmationModal((value) => !value)
+                            setShowStatusConfirmationModal(false)
                         }
                     >
                       {t("global.cancel")}
@@ -375,7 +375,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
                         appearance="primary"
                         onClick={() => {
                           handleCsaStatusChange(true);
-                          setShowStatusConfirmationModal((value) => !value);
+                          setShowStatusConfirmationModal(false);
                         }}
                     >
                       {t("global.yes")}
