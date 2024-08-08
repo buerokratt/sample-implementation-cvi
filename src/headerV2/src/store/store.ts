@@ -25,6 +25,7 @@ interface StoreState {
   unansweredChats: () => ChatType[];
   forwordedChats: () => ChatType[];
   unansweredChatsLength: () => number;
+  messagesMap: () => Map<string, number>;
   forwordedChatsLength: () => number;
   loadActiveChats: () => Promise<void>;
   getGroupedActiveChats: () => GroupedChat;
@@ -85,6 +86,17 @@ const useStore = create<StoreState>((set, get, _) => ({
   },
   unansweredChatsLength: () => get().unansweredChats().length,
   forwordedChatsLength: () => get().forwordedChats().length,
+  messagesMap: () => {
+    const map = new Map<string, number>();
+
+    get().activeChats.forEach(chat => {
+      if (chat.id && chat.customerMessages !== undefined) {
+        map.set(chat.id, chat.customerMessages);
+      }
+    });
+
+    return map;
+  },
 
   loadActiveChats: async () => {
     const res = await apiDev.get('agents/chats/active');

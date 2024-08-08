@@ -46,6 +46,7 @@ export interface Chat {
   csaTitle?: string | null;
   customerSupportId?: string;
   customerSupportDisplayName?: string;
+  customerMessages?: number;
   endUserId?: string;
   endUserEmail?: string;
   endUserPhone?: string;

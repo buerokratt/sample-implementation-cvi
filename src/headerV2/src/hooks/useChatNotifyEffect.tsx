@@ -8,6 +8,7 @@ import { ToastContextType } from "../context/ToastContext.tsx";
 const useChatNotifyEffect = ({ toast }: { toast: ToastContextType | null }) => {
   const { t } = useTranslation();
   const unansweredChatsLength = useStore((state) => state.unansweredChatsLength());
+  const messagesMap = useStore((state) => state.messagesMap());
   const activeChatsLength = useStore((state) => state.activeChats.length);
   const newChatSoundNotifications = useStore((state) => state.userProfileSettings.newChatSoundNotifications);
   const newChatPopupNotifications = useStore((state) => state.userProfileSettings.newChatPopupNotifications);
@@ -18,20 +19,18 @@ const useChatNotifyEffect = ({ toast }: { toast: ToastContextType | null }) => {
   const [ding] = useDing();
 
   const handleNewMessage = () => {
-    if (unansweredChatsLength <= 0)
-      return;
-    
-    if(samePreviousValue("byk_header_unansweredChatsLength", unansweredChatsLength))
-      return;
+    if (unansweredChatsLength <= 0) return;
 
-    if (newChatSoundNotifications)
-      ding?.play();
-    if (newChatPopupNotifications)
-      toast?.open({
-        type: "info",
-        title: t("global.notification"),
-        message: t("settings.users.newUnansweredChat"),
-      });
+    if (newMessagesDetected("byk_header_unansweredChatsMessagesMap", messagesMap)) {
+      if (newChatSoundNotifications) ding?.play();
+      if (newChatPopupNotifications) {
+        toast?.open({
+          type: "info",
+          title: t("global.notification"),
+          message: t("settings.users.newUnansweredChat"),
+        });
+      }
+    }
   };
 
   const handleForwordMessage = () => {
@@ -53,11 +52,11 @@ const useChatNotifyEffect = ({ toast }: { toast: ToastContextType | null }) => {
 
   useEffect(() => {
     handleNewMessage();
-  }, [unansweredChatsLength, activeChatsLength]);
+  }, [unansweredChatsLength, activeChatsLength, messagesMap]);
 
   useEffect(() => {
     handleForwordMessage();
-  }, [forwardedChatsLength, activeChatsLength]);
+  }, [forwardedChatsLength, activeChatsLength, messagesMap]);
 
   useEffect(() => {
     const subscription = interval(2 * 60 * 1000).subscribe(() => {
@@ -76,5 +75,20 @@ const samePreviousValue = (key: string, value: number) => {
   localStorage.setItem(key, value.toString());
   return false;
 }
+
+const newMessagesDetected = (key: string, currentMessagesMap: Map<string, number>) => {
+  const previousMessagesMap = JSON.parse(localStorage.getItem(key) || "{}");
+
+  let newMessages = false;
+  for (const [id, value] of currentMessagesMap.entries()) {
+    if (!previousMessagesMap[id] || previousMessagesMap[id] < value) {
+      newMessages = true;
+      break;
+    }
+  }
+
+  localStorage.setItem(key, JSON.stringify(Object.fromEntries(currentMessagesMap)));
+  return newMessages;
+};
 
 export default useChatNotifyEffect;

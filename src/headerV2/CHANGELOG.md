@@ -1,6 +1,10 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.11] - 07-07-2024
+
+- Header is updated to send notifications for every new message instead of every new chat
+
 ## [0.1.8] - 20-06-2024
 
 - Improvements and bug fixes
