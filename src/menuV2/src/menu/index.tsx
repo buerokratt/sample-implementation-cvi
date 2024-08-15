@@ -6,10 +6,15 @@ import { useTranslation } from "react-i18next";
 import MenuTree from './components/menuTree';
 import useFilteredMenuItems from './hooks/useFilteredMenuItems';
 import './main-navigation.scss';
+import { CountConf } from "./types/countConf";
 
-const MainNavigation: FC = () => {
+interface MainNavigationProps {
+  countConf?: CountConf
+}
+
+const MainNavigation: FC<MainNavigationProps> = ({countConf}) => {
   const { t } = useTranslation();
-  const menuItems = useFilteredMenuItems();
+  const menuItems = useFilteredMenuItems(countConf);
   const serviceId = useMemo(() => import.meta.env.REACT_APP_SERVICE_ID.split(','), []);
 
   const [navCollapsed, setNavCollapsed] = useState(false);

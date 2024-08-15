@@ -15,9 +15,22 @@ interface MenuTreeProps {
   handleNavToggle: (event: MouseEvent) => void;
 }
 
+interface MenuItemLabelProps {
+  menuItem: MenuItem
+  currentlySelectedLanguage: string
+}
+
+const MenuItemLabel: React.FC<MenuItemLabelProps> = ({ menuItem, currentlySelectedLanguage }) => {
+  return (
+    <>
+      {menuItem.label[currentlySelectedLanguage]} {menuItem.count != null ? `(${menuItem.count})` : ''}
+    </>
+  );
+};
+
 const MenuTree: FC<MenuTreeProps> = ({
-  menuItems, 
-  serviceId, 
+  menuItems,
+  serviceId,
   handleNavToggle,
 }) => {
   const currentlySelectedLanguage = useTranslation().i18n.language;
@@ -50,10 +63,10 @@ const MenuTree: FC<MenuTreeProps> = ({
         ) : (
           serviceId.includes(menuItem.id!)
             ? <NavLink to={menuItem.path || '#'}>
-                {menuItem.label[currentlySelectedLanguage]}
+                <MenuItemLabel menuItem={menuItem} currentlySelectedLanguage={currentlySelectedLanguage} />
               </NavLink>
             : <a href={(menuData.find(dataItem => dataItem.id === menuItem.id)?.url ?? '') + menuItem.path}>
-                {menuItem.label[currentlySelectedLanguage]}
+                <MenuItemLabel menuItem={menuItem} currentlySelectedLanguage={currentlySelectedLanguage} />
               </a>
         )}
       </li>
