@@ -10,4 +10,5 @@ export interface MenuItem {
   target?: '_blank' | '_self';
   children?: MenuItem[];
   hidden?: boolean;
+  count?: number
 }

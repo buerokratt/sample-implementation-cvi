@@ -2,8 +2,9 @@ import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import menuStructure from '../data/menu-structure.json';
 import { MenuItem } from "../types/menuItem";
+import { CountConf } from "../types/countConf";
 
-const useMenuItems = () => {
+const useMenuItems = (count?: CountConf) => {
   const externalMenuItems = import.meta.env.REACT_APP_MENU_JSON;
   const cachedMenu = getMenuCache();
   const [mainMenuItems, setMainMenuItems] = useState<MenuItem[] | null>(cachedMenu ?? []);
@@ -26,11 +27,11 @@ const useMenuItems = () => {
 
   const items = useMemo(() => {
     let externals;
-    
+
     try {
-      if(externalMenuItems) {
+      if (externalMenuItems) {
         externals = JSON.parse(externalMenuItems);
-        if(!Array.isArray(externals)) {
+        if (!Array.isArray(externals)) {
           console.warn('REACT_APP_MENU_JSON was ignored becuase it wasn\'t an array');
         }
       }
@@ -38,15 +39,28 @@ const useMenuItems = () => {
       console.warn(e);
     }
 
-    return externals ?? mainMenuItems ?? menuStructure ?? [];
-  }, [externalMenuItems, mainMenuItems, menuStructure]);
-  
+    const addCountToPathFields = (item: MenuItem) => {
+      if (count && item.path in count) {
+        item.count = count[item.path]
+      }
+
+      if (item.children) {
+        item.children.forEach(child => addCountToPathFields(child));
+      }
+    }
+
+    const finalMenu = externals ?? mainMenuItems ?? menuStructure ?? [];
+    finalMenu.forEach((item: MenuItem) => addCountToPathFields(item))
+
+    return finalMenu;
+  }, [externalMenuItems, mainMenuItems, menuStructure, count]);
+
   return items;
 }
 
 function getMenuCache(): any {
   const cached = getCache();
-  if(Array.isArray(cached) && cached.length > 0)
+  if (Array.isArray(cached) && cached.length > 0)
     return cached;
   return null;
 }
