@@ -4,7 +4,7 @@ import useStore from "../store/store";
 export const useMenuCountConf = () => {
   const unansweredChatsLength = useStore((state) => state.unansweredChatsLength());
   const { myChats, otherChats } = useStore((state) => state.getGroupedActiveChats());
-  const pendingChatsLength = useStore((state) => state.pendingChats.length);
+  const pendingChatsLength = useStore((state) => state.pendingChatsLength());
 
   const [menuCountConf, setMenuCountConf] = useState({});
 
