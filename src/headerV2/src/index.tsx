@@ -123,12 +123,9 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
   });
 
   const [_, setCookie] = useCookies([customJwtCookieKey]);
-  const unansweredChatsLength = useStore((state) =>
-      state.unansweredChatsLength()
-  );
-  const forwardedChatsLength = useStore((state) =>
-      state.forwordedChatsLength()
-  );
+  const unansweredChatsLength = useStore((state) => state.unansweredChatsLength());
+  const forwardedChatsLength = useStore((state) => state.forwordedChatsLength());
+  const pendingChatsLength = useStore((state) => state.pendingChatsLength());
 
   const userProfileSettingsMutation = useMutation({
     mutationFn: async (data: UserProfileSettings) => {
@@ -293,20 +290,22 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
                           textTransform: "lowercase",
                         }}
                     >
-                      <strong>{unansweredChatsLength}</strong>{" "}
-                      {t("chat.unanswered")} <strong>{forwardedChatsLength}</strong>{" "}
-                      {t("chat.forwarded")}
+                      <strong>{unansweredChatsLength}</strong> {t("chat.unanswered")} {" "}
+                      <strong>{forwardedChatsLength}</strong> {t("chat.forwarded")} {" "}
+                      <strong>{pendingChatsLength}</strong> {t("chat.pending")} {" "}
                     </p>
-                    <Switch
-                        onCheckedChange={handleCsaStatusChange}
-                        checked={chatCsaActive}
-                        label={t("global.csaStatus")}
-                        hideLabel
-                        name="csaStatus"
-                        onColor="#308653"
-                        onLabel={t("global.present") || ""}
-                        offLabel={t("global.away") || ""}
-                    />
+                    <div>
+                      <Switch
+                          onCheckedChange={handleCsaStatusChange}
+                          checked={chatCsaActive}
+                          label={t("global.csaStatus")}
+                          hideLabel
+                          name="csaStatus"
+                          onColor="#308653"
+                          onLabel={t("global.present") || ""}
+                          offLabel={t("global.away") || ""}
+                      />
+                    </div>
                   </Track>
                   <span
                       style={{

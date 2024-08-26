@@ -9,3 +9,5 @@ export {
 export {
     default as Header
 } from './src';
+
+export { useMenuCountConf } from './src/hooks/useMenuCountConf'
