@@ -4,9 +4,12 @@ import { useTranslation } from "react-i18next";
 import useStore from "../store/store.ts";
 import { useDing } from "./useAudio.tsx";
 import { ToastContextType } from "../context/ToastContext.tsx";
+import { useBrowserNotification } from "./useBrowserNotification";
 
 const useChatNotifyEffect = ({ toast }: { toast: ToastContextType | null }) => {
   const { t } = useTranslation();
+  const { showNotification } = useBrowserNotification();
+
   const unansweredChatsLength = useStore((state) => state.unansweredChatsLength());
   const messagesMap = useStore((state) => state.messagesMap());
   const activeChatsLength = useStore((state) => state.activeChats.length);
@@ -30,6 +33,7 @@ const useChatNotifyEffect = ({ toast }: { toast: ToastContextType | null }) => {
           message: t("settings.users.newUnansweredChat"),
         });
       }
+      showNotification()
     }
   };
 
@@ -37,7 +41,7 @@ const useChatNotifyEffect = ({ toast }: { toast: ToastContextType | null }) => {
     if (forwardedChatsLength <= 0)
       return;
 
-    if(samePreviousValue("byk_header_forwardedChatsLength", forwardedChatsLength))
+    if (samePreviousValue("byk_header_forwardedChatsLength", forwardedChatsLength))
       return;
 
     if (forwardedChatSoundNotifications)
@@ -70,7 +74,7 @@ const useChatNotifyEffect = ({ toast }: { toast: ToastContextType | null }) => {
 
 const samePreviousValue = (key: string, value: number) => {
   const previousValue = parseInt(localStorage.getItem(key) || "0");
-  if(previousValue === value)
+  if (previousValue === value)
     return true;
   localStorage.setItem(key, value.toString());
   return false;
