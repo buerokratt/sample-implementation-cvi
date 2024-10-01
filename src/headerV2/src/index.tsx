@@ -74,7 +74,13 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
   const userProfileSettings = useStore((state) => state.userProfileSettings);
   const customJwtCookieKey = "customJwtCookie";
 
-  useChatNotifyEffect({ toast });
+  useEffect(() => {
+    if (userInfo) {
+      useStore.getState().setUserInfo(userInfo ?? null);
+    }
+  }, [userInfo]);
+
+  useChatNotifyEffect({ toast, useStore });
 
   useEffect(() => {
     const interval = setInterval(() => {

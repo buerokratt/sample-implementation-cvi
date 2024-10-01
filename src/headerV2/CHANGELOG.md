@@ -1,6 +1,13 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.14] - 07-07-2024
+
+- Replace Howler with audio
+- Passed State to useChatNotifyEffect Hook
+- Passed User info given to header to the header store
+- Checked for CSA Status before playing sound or showing notification
+
 ## [0.1.11] - 07-07-2024
 
 - Header is updated to send notifications for every new message instead of every new chat

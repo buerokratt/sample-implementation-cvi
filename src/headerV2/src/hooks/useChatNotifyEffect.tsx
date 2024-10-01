@@ -1,12 +1,11 @@
 import { useEffect } from "react";
 import { interval } from "rxjs";
 import { useTranslation } from "react-i18next";
-import useStore from "../store/store.ts";
 import { useDing } from "./useAudio.tsx";
 import { ToastContextType } from "../context/ToastContext.tsx";
 import { useBrowserNotification } from "./useBrowserNotification";
 
-const useChatNotifyEffect = ({ toast }: { toast: ToastContextType | null }) => {
+const useChatNotifyEffect = ({ toast, useStore }: { toast: ToastContextType | null, useStore: any }) => {
   const { t } = useTranslation();
   const { showNotification } = useBrowserNotification();
 
@@ -18,15 +17,16 @@ const useChatNotifyEffect = ({ toast }: { toast: ToastContextType | null }) => {
   const forwardedChatsLength = useStore((state) => state.forwordedChatsLength());
   const forwardedChatSoundNotifications = useStore((state) => state.userProfileSettings.forwardedChatSoundNotifications);
   const forwardedChatPopupNotifications = useStore((state) => state.userProfileSettings.forwardedChatPopupNotifications);
+  const csaStatus = useStore((state) => state.csaStatus);
 
-  const [ding] = useDing();
+  const ding = useDing();
 
   const handleNewMessage = () => {
     if (unansweredChatsLength <= 0) return;
 
     if (newMessagesDetected("byk_header_unansweredChatsMessagesMap", messagesMap)) {
-      if (newChatSoundNotifications) ding?.play();
-      if (newChatPopupNotifications) {
+      if (newChatSoundNotifications && csaStatus != "offline") ding?.play();
+      if (newChatPopupNotifications && csaStatus != "offline") {
         toast?.open({
           type: "info",
           title: t("global.notification"),
@@ -44,9 +44,8 @@ const useChatNotifyEffect = ({ toast }: { toast: ToastContextType | null }) => {
     if (samePreviousValue("byk_header_forwardedChatsLength", forwardedChatsLength))
       return;
 
-    if (forwardedChatSoundNotifications)
-      ding?.play();
-    if (forwardedChatPopupNotifications)
+    if (forwardedChatSoundNotifications && csaStatus != "offline") ding?.play();
+    if (forwardedChatPopupNotifications && csaStatus != "offline")
       toast?.open({
         type: "info",
         title: t("global.notification"),
