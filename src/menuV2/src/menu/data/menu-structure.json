@@ -333,6 +333,13 @@
           "en": "Session length"
         },
         "path": "/session-length"
+      },
+      {
+        "label": {
+          "et": "Sõnunmite kustutamine",
+          "en": "Delete conversations"
+        },
+        "path": "/delete-conversations"
       }
     ]
   },

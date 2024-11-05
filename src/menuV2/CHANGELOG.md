@@ -1,6 +1,9 @@
 # Changelog
 
 All changes to this project will be documented in this file.
+## [0.1.17] - 24-10-2024
+
+- Add /delete to chat
 
 ## [0.1.16] - 10-06-2024
 
