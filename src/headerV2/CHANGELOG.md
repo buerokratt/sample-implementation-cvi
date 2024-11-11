@@ -1,6 +1,10 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.15] - 11-11-2024
+
+- Updated token expiration check
+
 ## [0.1.14] - 07-07-2024
 
 - Replace Howler with audio

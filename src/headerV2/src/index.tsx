@@ -94,13 +94,15 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
         const currentDate = new Date(Date.now());
         if (expirationDate < currentDate) {
           localStorage.removeItem("exp");
-          window.location.href =
-              import.meta.env.REACT_APP_CUSTOMER_SERVICE_LOGIN;
+          logoutMutation.mutate();
         }
+      } else {
+        localStorage.removeItem("exp");
+        logoutMutation.mutate();
       }
-    }, 2000);
+    }, 10000);
     return () => clearInterval(interval);
-  }, [userInfo]);
+  }, []);
 
   useEffect(() => {
     getMessages();
@@ -196,7 +198,10 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
   });
 
   const logoutMutation = useMutation({
-    mutationFn: () => apiDev.get("accounts/logout"),
+    mutationFn: () => {
+      apiDev.get("accounts/logout")
+      console.log('triggered logout')
+    },
     onSuccess(_: any) {
       window.location.href = import.meta.env.REACT_APP_CUSTOMER_SERVICE_LOGIN;
     },
@@ -437,54 +442,54 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
               ].some((auth) => userInfo.authorities.includes(auth)) && (
                   <>
                     {
-                      isHiddenFeaturesEnabled && (
-                        <Section>
-                          <Track gap={8} direction="vertical" align="left">
-                            <p className="h6">{t("settings.users.autoCorrector")}</p>
-                            <SwitchBox
-                                name="useAutocorrect"
-                                label={t("settings.users.useAutocorrect")}
-                                checked={userProfileSettings.useAutocorrect}
-                                onCheckedChange={(checked) =>
-                                    handleUserProfileSettingsChange("useAutocorrect", checked)
-                                }
-                            />
-                          </Track>
-                        </Section>
-                      )
+                        isHiddenFeaturesEnabled && (
+                            <Section>
+                              <Track gap={8} direction="vertical" align="left">
+                                <p className="h6">{t("settings.users.autoCorrector")}</p>
+                                <SwitchBox
+                                    name="useAutocorrect"
+                                    label={t("settings.users.useAutocorrect")}
+                                    checked={userProfileSettings.useAutocorrect}
+                                    onCheckedChange={(checked) =>
+                                        handleUserProfileSettingsChange("useAutocorrect", checked)
+                                    }
+                                />
+                              </Track>
+                            </Section>
+                        )
                     }
                     {
-                      isHiddenFeaturesEnabled && (
-                        <Section>
-                          <Track gap={8} direction="vertical" align="left">
-                            <p className="h6">{t("settings.users.emailNotifications")}</p>
-                            <SwitchBox
-                                name="forwardedChatEmailNotifications"
-                                label={t("settings.users.newForwardedChat")}
-                                checked={
-                                  userProfileSettings.forwardedChatEmailNotifications
-                                }
-                                onCheckedChange={(checked) =>
-                                    handleUserProfileSettingsChange(
-                                        "forwardedChatEmailNotifications",
-                                        checked
-                                    )
-                                }
-                            />
-                            <SwitchBox
-                                name="newChatEmailNotifications"
-                                label={t("settings.users.newUnansweredChat")}
-                                checked={userProfileSettings.newChatEmailNotifications}
-                                onCheckedChange={(checked) =>
-                                    handleUserProfileSettingsChange(
-                                        "newChatEmailNotifications",
-                                        checked
-                                    )
-                                }
-                            />
-                          </Track>
-                        </Section>
-                      )
+                        isHiddenFeaturesEnabled && (
+                            <Section>
+                              <Track gap={8} direction="vertical" align="left">
+                                <p className="h6">{t("settings.users.emailNotifications")}</p>
+                                <SwitchBox
+                                    name="forwardedChatEmailNotifications"
+                                    label={t("settings.users.newForwardedChat")}
+                                    checked={
+                                      userProfileSettings.forwardedChatEmailNotifications
+                                    }
+                                    onCheckedChange={(checked) =>
+                                        handleUserProfileSettingsChange(
+                                            "forwardedChatEmailNotifications",
+                                            checked
+                                        )
+                                    }
+                                />
+                                <SwitchBox
+                                    name="newChatEmailNotifications"
+                                    label={t("settings.users.newUnansweredChat")}
+                                    checked={userProfileSettings.newChatEmailNotifications}
+                                    onCheckedChange={(checked) =>
+                                        handleUserProfileSettingsChange(
+                                            "newChatEmailNotifications",
+                                            checked
+                                        )
+                                    }
+                                />
+                              </Track>
+                            </Section>
+                        )
                     }
                     <Section>
                       <Track gap={8} direction="vertical" align="left">
