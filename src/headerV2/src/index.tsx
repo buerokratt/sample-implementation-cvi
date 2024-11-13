@@ -75,8 +75,18 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
   const customJwtCookieKey = "customJwtCookie";
 
   useEffect(() => {
-    if (userInfo) {
-      useStore.getState().setUserInfo(userInfo ?? null);
+    if(!userInfo) {
+      const timer = setTimeout(() => {
+        if (userInfo) {
+          useStore.getState().setUserInfo(userInfo ?? null);
+        } else {
+          logoutMutation.mutate();
+        }
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    } else {
+      useStore.getState().setUserInfo(userInfo);
     }
   }, [userInfo]);
 
@@ -92,7 +102,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
       ) {
         const expirationDate = new Date(parseInt(expirationTimeStamp) ?? "");
         const currentDate = new Date(Date.now());
-        if (expirationDate < currentDate) {
+        if (expirationDate < currentDate && !useStore.getState().chatCsaActive && useStore.getState().csaStatus !== 'online') {
           localStorage.removeItem("exp");
           logoutMutation.mutate();
         }
@@ -224,6 +234,8 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
       customerSupportId: customerSupportActivity.idCode,
       customerSupportStatus: "idle",
     });
+
+    extendUserSessionMutation.mutate();
   };
 
   const onActive = () => {
@@ -238,6 +250,8 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
       customerSupportId: customerSupportActivity.idCode,
       customerSupportStatus: "online",
     });
+
+    extendUserSessionMutation.mutate();
   };
 
   useIdleTimer({
