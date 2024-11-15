@@ -75,18 +75,8 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
   const customJwtCookieKey = "customJwtCookie";
 
   useEffect(() => {
-    if(!userInfo) {
-      const timer = setTimeout(() => {
-        if (userInfo) {
-          useStore.getState().setUserInfo(userInfo ?? null);
-        } else {
-          logoutMutation.mutate();
-        }
-      }, 3000);
-
-      return () => clearTimeout(timer);
-    } else {
-      useStore.getState().setUserInfo(userInfo);
+    if (userInfo) {
+      useStore.getState().setUserInfo(userInfo ?? null);
     }
   }, [userInfo]);
 
