@@ -13,21 +13,29 @@ const useFilteredMenuItems = (countConf?: CountConf) => {
   });
 
   useEffect(() => {
-    const filteredItems = items.filter((item) => {
-      if (!data) {
-        return;
+    if (!data) {
+      return;
+    }
+    
+    const roles: any[] = data.response;
+    const rolePermissions = {
+      ROLE_ADMINISTRATOR: ["conversations", "training", "analytics", "services", "settings", "monitoring"],
+      ROLE_SERVICE_MANAGER: ["training", "services", "monitoring"],
+      ROLE_CUSTOMER_SUPPORT_AGENT: ["conversations", "monitoring"],
+      ROLE_CHATBOT_TRAINER: ["training", "monitoring"],
+      ROLE_ANALYST: ["analytics", "monitoring"],
+    };
+
+    let permissions = new Set();
+
+    roles.forEach((role) => {
+      if (rolePermissions[role]) {
+        rolePermissions[role].forEach((permission: any) => permissions.add(permission));
       }
-      const role: any[] = data.response;
-      if (role.includes('ROLE_ADMINISTRATOR'))
-        return item.id;
-      if (role.includes('ROLE_SERVICE_MANAGER'))
-        return item.id != "settings" && item.id != "training";
-      if (role.includes('ROLE_CUSTOMER_SUPPORT_AGENT'))
-        return item.id != "settings" && item.id != "analytics";
-      if (role.includes('ROLE_CHATBOT_TRAINER'))
-        return item.id != "settings" && item.id != "conversations";
-      if (role.includes('ROLE_ANALYST'))
-        return item.id == "analytics" || item.id == "monitoring";
+    });
+
+    const filteredItems = items.filter((item: any) => {
+      return permissions.has(item.id);
     });
 
     setMenuItems(filteredItems ?? []);
