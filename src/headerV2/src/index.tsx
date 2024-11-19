@@ -83,25 +83,27 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
   useChatNotifyEffect({ toast, useStore });
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      const expirationTimeStamp = localStorage.getItem("exp");
-      if (
-          expirationTimeStamp !== "null" &&
-          expirationTimeStamp !== null &&
-          expirationTimeStamp !== undefined
-      ) {
-        const expirationDate = new Date(parseInt(expirationTimeStamp) ?? "");
-        const currentDate = new Date(Date.now());
-        if (expirationDate < currentDate && !useStore.getState().chatCsaActive && useStore.getState().csaStatus !== 'online') {
+    if(import.meta.env.REACT_APP_LOCAL !== 'true') {
+      const interval = setInterval(() => {
+        const expirationTimeStamp = localStorage.getItem("exp");
+        if (
+            expirationTimeStamp !== "null" &&
+            expirationTimeStamp !== null &&
+            expirationTimeStamp !== undefined
+        ) {
+          const expirationDate = new Date(parseInt(expirationTimeStamp) ?? "");
+          const currentDate = new Date(Date.now());
+          if (expirationDate < currentDate && !useStore.getState().chatCsaActive && useStore.getState().csaStatus !== 'online') {
+            localStorage.removeItem("exp");
+            logoutMutation.mutate();
+          }
+        } else {
           localStorage.removeItem("exp");
           logoutMutation.mutate();
         }
-      } else {
-        localStorage.removeItem("exp");
-        logoutMutation.mutate();
-      }
-    }, 10000);
-    return () => clearInterval(interval);
+      }, 10000);
+      return () => clearInterval(interval);
+    }
   }, []);
 
   useEffect(() => {
