@@ -5,6 +5,10 @@ All changes to this project will be documented in this file.
 
 - Add /delete to chat
 
+## [0.2.2] - 19-11-2024
+
+- Refactor menu permissions
+
 ## [0.1.16] - 10-06-2024
 
 - Improve close menu functionality
