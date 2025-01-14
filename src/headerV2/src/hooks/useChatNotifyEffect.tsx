@@ -26,8 +26,8 @@ const useChatNotifyEffect = ({ toast, useStore }: { toast: ToastContextType | nu
     if (unansweredChatsLength <= 0) return;
 
     if (newMessagesDetected("byk_header_unansweredChatsMessagesMap", messagesMap)) {
-      if (newChatSoundNotifications && csaStatus != "offline") ding?.play();
-      if (newChatPopupNotifications && csaStatus != "offline") {
+      if (newChatSoundNotifications) ding?.play();
+      if (newChatPopupNotifications) {
         toast?.open({
           type: "info",
           title: t("global.notification"),
@@ -45,8 +45,8 @@ const useChatNotifyEffect = ({ toast, useStore }: { toast: ToastContextType | nu
     if (samePreviousValue("byk_header_forwardedChatsLength", forwardedChatsLength))
       return;
 
-    if (forwardedChatSoundNotifications && csaStatus != "offline") ding?.play();
-    if (forwardedChatPopupNotifications && csaStatus != "offline")
+    if (forwardedChatSoundNotifications) ding?.play();
+    if (forwardedChatPopupNotifications)
       toast?.open({
         type: "info",
         title: t("global.notification"),
@@ -59,8 +59,8 @@ const useChatNotifyEffect = ({ toast, useStore }: { toast: ToastContextType | nu
 
     if (samePreviousValue("byk_header_validationMessagesLength", validationMessagesLength)) return;
 
-    if (newChatSoundNotifications && csaStatus != "offline") ding?.play();
-    if (newChatPopupNotifications && csaStatus != "offline")
+    if (newChatSoundNotifications) ding?.play();
+    if (newChatPopupNotifications)
       toast?.open({
         type: "info",
         title: t("global.notification"),

@@ -33,6 +33,7 @@ import { useCookies } from "react-cookie";
 import "./Header.scss";
 import { UserInfo } from "./types/userInfo.ts";
 import useChatNotifyEffect from "./hooks/useChatNotifyEffect.tsx";
+import sse from "./services/sse-service.ts";
 
 type CustomerSupportActivity = {
   idCode: string;
@@ -66,6 +67,10 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
       useState(false);
   const [showStatusConfirmationModal, setShowStatusConfirmationModal] =
       useState(false);
+
+  const loadActiveChats = useStore((state) => state.loadActiveChats);
+  const pendingChats = useStore((state) => state.loadPendingChats);
+  const validationChats = useStore((state) => state.loadValidationMessages);
 
   const queryClient = useQueryClient();
   const [userDrawerOpen, setUserDrawerOpen] = useState(false);
@@ -125,12 +130,14 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
     },
   });
 
-  useQuery<ChatType[]>({
-    queryKey: ["agents/chats/active", "prod"],
-    onSuccess(res: any) {
-      useStore.getState().setActiveChats(res.response);
-    },
-  });
+  useEffect(() => {
+    const handlers = [loadActiveChats, validationChats, pendingChats];
+    const connections = handlers.map((handler) => sse(`/chat-list`, handler));
+
+    return () => {
+      connections.forEach((conn) => conn.close());
+    };
+  }, []);
 
   const [_, setCookie] = useCookies([customJwtCookieKey]);
   const unansweredChatsLength = useStore((state) => state.unansweredChatsLength());
