@@ -1,6 +1,10 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.19] - 17-01-2025
+
+- Modified Validations Endpoint
+
 ## [0.1.18] - 13-01-2025
 
 - Added sse event into header to track chats properly

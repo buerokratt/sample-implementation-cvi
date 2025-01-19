@@ -70,7 +70,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
 
   const loadActiveChats = useStore((state) => state.loadActiveChats);
   const pendingChats = useStore((state) => state.loadPendingChats);
-  const validationChats = useStore((state) => state.loadValidationMessages);
+  const validationChats = useStore((state) => state.loadValidationChats);
 
   const queryClient = useQueryClient();
   const [userDrawerOpen, setUserDrawerOpen] = useState(false);
