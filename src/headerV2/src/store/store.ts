@@ -1,9 +1,8 @@
 import { create } from 'zustand';
 import { UserInfo } from '../types/userInfo';
-import {CHAT_STATUS, Chat as ChatType, GroupedChat, GroupedPendingChat} from '../types/chat';
+import {Chat, CHAT_STATUS, Chat as ChatType, GroupedChat, GroupedPendingChat} from '../types/chat';
 import apiDev from "../services/api-dev.ts";
 import { UserProfileSettings } from '../types/userProfileSettings.ts';
-import { Message } from '../types/message.ts';
 
 type CsaStatusType = "idle" | "offline" | "online";
 
@@ -12,43 +11,44 @@ interface StoreState {
   userId: string;
   activeChats: ChatType[];
   pendingChats: ChatType[];
-  validationMessages: Message[];
+  validationChats: Chat[];
   selectedChatId: string | null;
   chatCsaActive: boolean;
-  csaStatus: CsaStatusType,
-  setCsaStatus: (status: CsaStatusType) => void,
+  csaStatus: CsaStatusType;
+  setCsaStatus: (status: CsaStatusType) => void;
   setActiveChats: (chats: ChatType[]) => void;
   setPendingChats: (chats: ChatType[]) => void;
-  setValidationMessages: (messages: Message[]) => void;
+  setValidationChats: (chats: Chat[]) => void;
   setUserInfo: (info: UserInfo) => void;
   setSelectedChatId: (id: string | null) => void;
   setChatCsaActive: (active: boolean) => void;
   selectedChat: () => ChatType | null | undefined;
   selectedPendingChat: () => ChatType | null | undefined;
+  selectedValidationChat: () => ChatType | null | undefined;
   unansweredChats: () => ChatType[];
   forwordedChats: () => ChatType[];
   unansweredChatsLength: () => number;
   messagesMap: () => Map<string, number>;
   forwordedChatsLength: () => number;
   pendingChatsLength: () => number;
-  validationMessagesLength: () => number;
+  validationChatsLength: () => number;
   loadActiveChats: () => Promise<void>;
   getGroupedActiveChats: () => GroupedChat;
   getGroupedUnansweredChats: () => GroupedChat;
   loadPendingChats: () => Promise<void>;
-  loadValidationMessages: () => Promise<void>;
+  loadValidationChats: () => Promise<void>;
   getGroupedPendingChats: () => GroupedPendingChat;
-  getValidationMessages: () => Message[];
-  userProfileSettings: UserProfileSettings,
-  setUserProfileSettings: (settings: UserProfileSettings) => void,
+  getValidationChats: () => Chat[];
+  userProfileSettings: UserProfileSettings;
+  setUserProfileSettings: (settings: UserProfileSettings) => void;
 }
 
 const useStore = create<StoreState>((set, get, _) => ({
   userInfo: null,
-  userId: '',
+  userId: "",
   activeChats: [],
   pendingChats: [],
-  validationMessages: [],
+  validationChats: [],
   selectedChatId: null,
   chatCsaActive: false,
   userProfileSettings: {
@@ -66,8 +66,8 @@ const useStore = create<StoreState>((set, get, _) => ({
   setUserProfileSettings: (settings) => set({ userProfileSettings: settings }),
   setActiveChats: (chats) => set({ activeChats: chats }),
   setPendingChats: (chats) => set({ pendingChats: chats }),
-  setValidationMessages: (messages) => set({ validationMessages: messages }),
-  setUserInfo: (data) => set({ userInfo: data, userId: data?.idCode || '' }),
+  setValidationChats: (chats) => set({ validationChats: chats }),
+  setUserInfo: (data) => set({ userInfo: data, userId: data?.idCode || "" }),
   setSelectedChatId: (id) => set({ selectedChatId: id }),
   setChatCsaActive: (active) => {
     set({
@@ -75,33 +75,35 @@ const useStore = create<StoreState>((set, get, _) => ({
     });
     get().loadActiveChats();
     get().loadPendingChats();
-    get().loadValidationMessages();
+    get().loadValidationChats();
   },
   selectedChat: () => {
     const selectedChatId = get().selectedChatId;
-    return get().activeChats.find(c => c.id === selectedChatId);
+    return get().activeChats.find((c) => c.id === selectedChatId);
   },
   selectedPendingChat: () => {
     const selectedChatId = get().selectedChatId;
-    return get().pendingChats.find(c => c.id === selectedChatId);
+    return get().pendingChats.find((c) => c.id === selectedChatId);
+  },
+  selectedValidationChat: () => {
+    const selectedChatId = get().selectedChatId;
+    return get().validationChats.find((c) => c.id === selectedChatId);
   },
   unansweredChats: () => {
-    return get().activeChats.filter(c => c.customerSupportId === '');
+    return get().activeChats.filter((c) => c.customerSupportId === "");
   },
   forwordedChats: () => {
     const userId = get().userId;
-    return get().activeChats.filter(c =>
-        c.status === CHAT_STATUS.REDIRECTED && c.customerSupportId === userId
-    ) || [];
+    return get().activeChats.filter((c) => c.status === CHAT_STATUS.REDIRECTED && c.customerSupportId === userId) || [];
   },
   unansweredChatsLength: () => get().unansweredChats().length,
   forwordedChatsLength: () => get().forwordedChats().length,
   pendingChatsLength: () => get().pendingChats.length,
-  validationMessagesLength: () => get().validationMessages.length,
+  validationChatsLength: () => get().validationChats.length,
   messagesMap: () => {
     const map = new Map<string, number>();
 
-    get().activeChats.forEach(chat => {
+    get().activeChats.forEach((chat) => {
       if (chat.id && chat.customerMessages !== undefined) {
         map.set(chat.id, chat.customerMessages);
       }
@@ -111,7 +113,7 @@ const useStore = create<StoreState>((set, get, _) => ({
   },
 
   loadActiveChats: async () => {
-    const res = await apiDev.get('agents/chats/active');
+    const res = await apiDev.get("agents/chats/active");
     const chats: ChatType[] = res.data.response ?? [];
     const selectedChatId = get().selectedChatId;
     const isChatStillExists = chats?.filter((e: any) => e.id === selectedChatId);
@@ -122,7 +124,7 @@ const useStore = create<StoreState>((set, get, _) => ({
     }
   },
   loadPendingChats: async () => {
-    const res = await apiDev.get('agents/chats/pending');
+    const res = await apiDev.get("agents/chats/pending");
     const chats: ChatType[] = res.data.response ?? [];
     const selectedChatId = get().selectedChatId;
     const isChatStillExists = chats?.filter((e: any) => e.id === selectedChatId);
@@ -132,10 +134,10 @@ const useStore = create<StoreState>((set, get, _) => ({
       get().setPendingChats(chats);
     }
   },
-  loadValidationMessages: async () => {
-    const res = await apiDev.get('chats/messages/waiting-validation');
-    const messages: Message[] = res.data.response ?? [];
-    get().setValidationMessages(messages);
+  loadValidationChats: async () => {
+    const res = await apiDev.get("chats/validations");
+    const chats: Chat[] = res.data.response ?? [];
+    get().setValidationChats(chats);
   },
   getGroupedActiveChats: () => {
     const activeChats = get().activeChats;
@@ -149,10 +151,7 @@ const useStore = create<StoreState>((set, get, _) => ({
 
     if (!activeChats) return grouped;
 
-    if (
-        chatCsaActive === false &&
-        !userInfo?.authorities.includes('ROLE_ADMINISTRATOR')
-    ) {
+    if (chatCsaActive === false && !userInfo?.authorities.includes("ROLE_ADMINISTRATOR")) {
       if (get().selectedChatId !== null) {
         get().setSelectedChatId(null);
       }
@@ -165,15 +164,13 @@ const useStore = create<StoreState>((set, get, _) => ({
         return;
       }
 
-      const groupIndex = grouped.otherChats.findIndex(
-          (x) => x.groupId === c.customerSupportId
-      );
+      const groupIndex = grouped.otherChats.findIndex((x) => x.groupId === c.customerSupportId);
 
-      if (c.customerSupportId !== '') {
+      if (c.customerSupportId !== "") {
         if (groupIndex === -1) {
           grouped.otherChats.push({
-            groupId: c.customerSupportId ?? '',
-            name: c.customerSupportDisplayName ?? '',
+            groupId: c.customerSupportId ?? "",
+            name: c.customerSupportDisplayName ?? "",
             chats: [c],
           });
         } else {
@@ -200,30 +197,25 @@ const useStore = create<StoreState>((set, get, _) => ({
 
     if (chatCsaActive === true) {
       activeChats.forEach((c) => {
-        if (c.customerSupportId === '') {
+        if (c.customerSupportId === "") {
           grouped.myChats.push(c);
           return;
         }
       });
     } else {
       activeChats.forEach((c) => {
-        if (
-            c.customerSupportId === userInfo?.idCode ||
-            c.customerSupportId === ''
-        ) {
+        if (c.customerSupportId === userInfo?.idCode || c.customerSupportId === "") {
           grouped.myChats.push(c);
           return;
         }
 
         grouped.myChats.sort((a, b) => a.created.localeCompare(b.created));
-        const groupIndex = grouped.otherChats.findIndex(
-            (x) => x.groupId === c.customerSupportId
-        );
-        if (c.customerSupportId !== '') {
+        const groupIndex = grouped.otherChats.findIndex((x) => x.groupId === c.customerSupportId);
+        if (c.customerSupportId !== "") {
           if (groupIndex === -1) {
             grouped.otherChats.push({
-              groupId: c.customerSupportId ?? '',
-              name: c.customerSupportDisplayName ?? '',
+              groupId: c.customerSupportId ?? "",
+              name: c.customerSupportDisplayName ?? "",
               chats: [c],
             });
           } else {
@@ -253,7 +245,7 @@ const useStore = create<StoreState>((set, get, _) => ({
 
     if (chatCsaActive) {
       pendingChats.forEach((c) => {
-        if (c.customerSupportId === 'chatbot') {
+        if (c.customerSupportId === "chatbot") {
           grouped.newChats.push(c);
         } else {
           grouped.inProcessChats.push(c);
@@ -267,14 +259,12 @@ const useStore = create<StoreState>((set, get, _) => ({
         }
 
         grouped.myChats.sort((a, b) => a.created.localeCompare(b.created));
-        const groupIndex = grouped.otherChats.findIndex(
-            (x) => x.groupId === c.customerSupportId
-        );
-        if (c.customerSupportId !== '') {
+        const groupIndex = grouped.otherChats.findIndex((x) => x.groupId === c.customerSupportId);
+        if (c.customerSupportId !== "") {
           if (groupIndex === -1) {
             grouped.otherChats.push({
-              groupId: c.customerSupportId ?? '',
-              name: c.customerSupportDisplayName ?? '',
+              groupId: c.customerSupportId ?? "",
+              name: c.customerSupportDisplayName ?? "",
               chats: [c],
             });
           } else {
@@ -286,8 +276,8 @@ const useStore = create<StoreState>((set, get, _) => ({
     }
     return grouped;
   },
-  getValidationMessages: () => {
-    return get().validationMessages;
+  getValidationChats: () => {
+    return get().validationChats;
   },
 }));
 

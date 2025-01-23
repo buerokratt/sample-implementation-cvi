@@ -10,7 +10,7 @@ const useChatNotifyEffect = ({ toast, useStore }: { toast: ToastContextType | nu
   const { showNotification } = useBrowserNotification();
 
   const unansweredChatsLength = useStore((state) => state.unansweredChatsLength());
-  const validationMessagesLength = useStore((state) => state.validationMessagesLength());
+  const validationChatsLength = useStore((state) => state.validationChatsLength());
   const messagesMap = useStore((state) => state.messagesMap());
   const activeChatsLength = useStore((state) => state.activeChats.length);
   const newChatSoundNotifications = useStore((state) => state.userProfileSettings.newChatSoundNotifications);
@@ -54,10 +54,10 @@ const useChatNotifyEffect = ({ toast, useStore }: { toast: ToastContextType | nu
       });
   };
 
-  const handleValidationMessage = () => {
-    if (validationMessagesLength <= 0) return;
+  const handleValidationchats = () => {
+    if (validationChatsLength <= 0) return;
 
-    if (samePreviousValue("byk_header_validationMessagesLength", validationMessagesLength)) return;
+    if (samePreviousValue("byk_header_validationChatsLength", validationChatsLength)) return;
 
     if (newChatSoundNotifications) ding?.play();
     if (newChatPopupNotifications)
@@ -77,8 +77,8 @@ const useChatNotifyEffect = ({ toast, useStore }: { toast: ToastContextType | nu
   }, [forwardedChatsLength, activeChatsLength, messagesMap]);
 
   useEffect(() => {
-    handleValidationMessage();
-  }, [validationMessagesLength]);
+    handleValidationchats();
+  }, [validationChatsLength]);
 
   useEffect(() => {
     const subscription = interval(2 * 60 * 1000).subscribe(() => {
