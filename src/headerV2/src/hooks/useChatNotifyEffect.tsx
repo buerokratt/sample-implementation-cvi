@@ -18,14 +18,13 @@ const useChatNotifyEffect = ({ toast, useStore }: { toast: ToastContextType | nu
   const forwardedChatsLength = useStore((state) => state.forwordedChatsLength());
   const forwardedChatSoundNotifications = useStore((state) => state.userProfileSettings.forwardedChatSoundNotifications);
   const forwardedChatPopupNotifications = useStore((state) => state.userProfileSettings.forwardedChatPopupNotifications);
-  const csaStatus = useStore((state) => state.csaStatus);
 
   const ding = useDing();
 
   const handleNewMessage = () => {
-    if (unansweredChatsLength <= 0) return;
+    if (unansweredChatsLength <= 0 && activeChatsLength <= 0) return;
 
-    if (newMessagesDetected("byk_header_unansweredChatsMessagesMap", messagesMap)) {
+    if (newMessagesDetected("byk_header_chatsMessagesMap", messagesMap)) {
       if (newChatSoundNotifications) ding?.play();
       if (newChatPopupNotifications) {
         toast?.open({
@@ -99,7 +98,7 @@ const samePreviousValue = (key: string, value: number) => {
 }
 
 const newMessagesDetected = (key: string, currentMessagesMap: Map<string, number>) => {
-  const previousMessagesMap = JSON.parse(localStorage.getItem(key) || "{}");
+  const previousMessagesMap = JSON.parse(localStorage.getItem(key) ?? "{}");
 
   let newMessages = false;
   for (const [id, value] of currentMessagesMap.entries()) {

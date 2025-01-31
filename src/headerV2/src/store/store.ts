@@ -1,8 +1,8 @@
-import { create } from 'zustand';
-import { UserInfo } from '../types/userInfo';
-import {Chat, CHAT_STATUS, Chat as ChatType, GroupedChat, GroupedPendingChat} from '../types/chat';
+import { create } from "zustand";
+import { UserInfo } from "../types/userInfo";
+import { Chat, CHAT_STATUS, Chat as ChatType, GroupedChat, GroupedPendingChat } from "../types/chat";
 import apiDev from "../services/api-dev.ts";
-import { UserProfileSettings } from '../types/userProfileSettings.ts';
+import { UserProfileSettings } from "../types/userProfileSettings.ts";
 
 type CsaStatusType = "idle" | "offline" | "online";
 
@@ -232,7 +232,6 @@ const useStore = create<StoreState>((set, get, _) => ({
   getGroupedPendingChats: () => {
     const pendingChats = get().pendingChats;
     const userInfo = get().userInfo;
-    const chatCsaActive = get().chatCsaActive;
 
     const grouped: GroupedPendingChat = {
       newChats: [],
@@ -243,37 +242,35 @@ const useStore = create<StoreState>((set, get, _) => ({
 
     if (!pendingChats) return grouped;
 
-    if (chatCsaActive) {
-      pendingChats.forEach((c) => {
-        if (c.customerSupportId === "chatbot") {
-          grouped.newChats.push(c);
+    pendingChats.forEach((c) => {
+      if (c.customerSupportId === "chatbot") {
+        grouped.newChats.push(c);
+      } else {
+        grouped.inProcessChats.push(c);
+      }
+    });
+
+    grouped.inProcessChats.forEach((c) => {
+      if (c.customerSupportId === userInfo?.idCode) {
+        grouped.myChats.push(c);
+        return;
+      }
+
+      grouped.myChats.sort((a, b) => a.created.localeCompare(b.created));
+      const groupIndex = grouped.otherChats.findIndex((x) => x.groupId === c.customerSupportId);
+      if (c.customerSupportId !== "") {
+        if (groupIndex === -1) {
+          grouped.otherChats.push({
+            groupId: c.customerSupportId ?? "",
+            name: c.customerSupportDisplayName ?? "",
+            chats: [c],
+          });
         } else {
-          grouped.inProcessChats.push(c);
+          grouped.otherChats[groupIndex].chats.push(c);
         }
-      });
-
-      grouped.inProcessChats.forEach((c) => {
-        if (c.customerSupportId === userInfo?.idCode) {
-          grouped.myChats.push(c);
-          return;
-        }
-
-        grouped.myChats.sort((a, b) => a.created.localeCompare(b.created));
-        const groupIndex = grouped.otherChats.findIndex((x) => x.groupId === c.customerSupportId);
-        if (c.customerSupportId !== "") {
-          if (groupIndex === -1) {
-            grouped.otherChats.push({
-              groupId: c.customerSupportId ?? "",
-              name: c.customerSupportDisplayName ?? "",
-              chats: [c],
-            });
-          } else {
-            grouped.otherChats[groupIndex].chats.push(c);
-          }
-        }
-        grouped.otherChats.sort((a, b) => a.name.localeCompare(b.name));
-      });
-    }
+      }
+      grouped.otherChats.sort((a, b) => a.name.localeCompare(b.name));
+    });
     return grouped;
   },
   getValidationChats: () => {
