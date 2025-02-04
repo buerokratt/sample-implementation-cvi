@@ -4,7 +4,7 @@ All changes to this project will be documented in this file.
 
 ## [0.2.3] - 04-02-2025
 
-- Rename `training/stories` path to `training/rules` and related menu items
+- Rename Training module menu items and paths
 
 ## [0.2.2] - 19-11-2024
 
