@@ -34,6 +34,13 @@
           "en": "History"
         },
         "path": "/history"
+      },
+      {
+        "label": {
+          "et": "Valideerimised",
+          "en": "Validations"
+        },
+        "path": "/validations"
       }
     ]
   },
@@ -146,6 +153,13 @@
       },
       {
         "label": {
+          "et": "Treeni uus mudel",
+          "en": "Train new model"
+        },
+        "path": "/train-new-model"
+      },
+      {
+        "label": {
           "et": "Mudelipank ja analüütika",
           "en": "Modelbank and analytics"
         },
@@ -174,13 +188,6 @@
             "path": "/analytics/testcases"
           }
         ]
-      },
-      {
-        "label": {
-          "et": "Treeni uus mudel",
-          "en": "Train new model"
-        },
-        "path": "/train-new-model"
       }
     ]
   },
@@ -340,6 +347,13 @@
           "en": "Delete conversations"
         },
         "path": "/delete-conversations"
+      },
+      {
+        "label": {
+          "et": "SKMi konfiguratsioon",
+          "en": "SKM Configuration"
+        },
+        "path": "/skm-configuration"
       }
     ]
   },

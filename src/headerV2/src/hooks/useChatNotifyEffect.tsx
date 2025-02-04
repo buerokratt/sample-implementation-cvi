@@ -10,6 +10,7 @@ const useChatNotifyEffect = ({ toast, useStore }: { toast: ToastContextType | nu
   const { showNotification } = useBrowserNotification();
 
   const unansweredChatsLength = useStore((state) => state.unansweredChatsLength());
+  const validationChatsLength = useStore((state) => state.validationChatsLength());
   const messagesMap = useStore((state) => state.messagesMap());
   const activeChatsLength = useStore((state) => state.activeChats.length);
   const newChatSoundNotifications = useStore((state) => state.userProfileSettings.newChatSoundNotifications);
@@ -17,16 +18,15 @@ const useChatNotifyEffect = ({ toast, useStore }: { toast: ToastContextType | nu
   const forwardedChatsLength = useStore((state) => state.forwordedChatsLength());
   const forwardedChatSoundNotifications = useStore((state) => state.userProfileSettings.forwardedChatSoundNotifications);
   const forwardedChatPopupNotifications = useStore((state) => state.userProfileSettings.forwardedChatPopupNotifications);
-  const csaStatus = useStore((state) => state.csaStatus);
 
   const ding = useDing();
 
   const handleNewMessage = () => {
-    if (unansweredChatsLength <= 0) return;
+    if (unansweredChatsLength <= 0 && activeChatsLength <= 0) return;
 
-    if (newMessagesDetected("byk_header_unansweredChatsMessagesMap", messagesMap)) {
-      if (newChatSoundNotifications && csaStatus != "offline") ding?.play();
-      if (newChatPopupNotifications && csaStatus != "offline") {
+    if (newMessagesDetected("byk_header_chatsMessagesMap", messagesMap)) {
+      if (newChatSoundNotifications) ding?.play();
+      if (newChatPopupNotifications) {
         toast?.open({
           type: "info",
           title: t("global.notification"),
@@ -44,12 +44,26 @@ const useChatNotifyEffect = ({ toast, useStore }: { toast: ToastContextType | nu
     if (samePreviousValue("byk_header_forwardedChatsLength", forwardedChatsLength))
       return;
 
-    if (forwardedChatSoundNotifications && csaStatus != "offline") ding?.play();
-    if (forwardedChatPopupNotifications && csaStatus != "offline")
+    if (forwardedChatSoundNotifications) ding?.play();
+    if (forwardedChatPopupNotifications)
       toast?.open({
         type: "info",
         title: t("global.notification"),
         message: t("settings.users.newForwardedChat"),
+      });
+  };
+
+  const handleValidationchats = () => {
+    if (validationChatsLength <= 0) return;
+
+    if (samePreviousValue("byk_header_validationChatsLength", validationChatsLength)) return;
+
+    if (newChatSoundNotifications) ding?.play();
+    if (newChatPopupNotifications)
+      toast?.open({
+        type: "info",
+        title: t("global.notification"),
+        message: t("settings.users.newValidationMessage"),
       });
   };
 
@@ -60,6 +74,10 @@ const useChatNotifyEffect = ({ toast, useStore }: { toast: ToastContextType | nu
   useEffect(() => {
     handleForwordMessage();
   }, [forwardedChatsLength, activeChatsLength, messagesMap]);
+
+  useEffect(() => {
+    handleValidationchats();
+  }, [validationChatsLength]);
 
   useEffect(() => {
     const subscription = interval(2 * 60 * 1000).subscribe(() => {
@@ -80,7 +98,7 @@ const samePreviousValue = (key: string, value: number) => {
 }
 
 const newMessagesDetected = (key: string, currentMessagesMap: Map<string, number>) => {
-  const previousMessagesMap = JSON.parse(localStorage.getItem(key) || "{}");
+  const previousMessagesMap = JSON.parse(localStorage.getItem(key) ?? "{}");
 
   let newMessages = false;
   for (const [id, value] of currentMessagesMap.entries()) {

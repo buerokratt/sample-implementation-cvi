@@ -1,6 +1,23 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.20] - 27-01-2025
+
+- Fixed Active Chats Ding
+- Removed CSA Status from pending chats
+
+## [0.1.19] - 17-01-2025
+
+- Modified Validations Endpoint
+
+## [0.1.18] - 13-01-2025
+
+- Added sse event into header to track chats properly
+
+## [0.1.17] - 06-12-2024
+
+- Added Validation Messages
+
 ## [0.1.16] - 19-11-2024
 
 - Added check for local to ignore token check for developers

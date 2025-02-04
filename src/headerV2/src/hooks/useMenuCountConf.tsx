@@ -5,16 +5,18 @@ export const useMenuCountConf = () => {
   const unansweredChatsLength = useStore((state) => state.unansweredChatsLength());
   const { myChats, otherChats } = useStore((state) => state.getGroupedActiveChats());
   const pendingChatsLength = useStore((state) => state.pendingChatsLength());
+  const validationChatsLength = useStore((state) => state.validationChatsLength());
 
   const [menuCountConf, setMenuCountConf] = useState({});
 
   useEffect(() => {
     setMenuCountConf({
-      '/unanswered': unansweredChatsLength,
-      '/active': otherChats.length + myChats.length,
-      '/pending': pendingChatsLength,
+      "/unanswered": unansweredChatsLength,
+      "/active": otherChats.length + myChats.length,
+      "/pending": pendingChatsLength,
+      "/validations": validationChatsLength,
     });
-  }, [unansweredChatsLength, otherChats.length, myChats.length, pendingChatsLength]);
+  }, [unansweredChatsLength, otherChats.length, myChats.length, pendingChatsLength, validationChatsLength]);
 
   return menuCountConf;
 };

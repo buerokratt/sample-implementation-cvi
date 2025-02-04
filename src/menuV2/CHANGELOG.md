@@ -2,6 +2,24 @@
 
 All changes to this project will be documented in this file.
 
+## [0.2.6] - 04-02-2025
+
+- Rename Stories to Rules in Training module menu items and paths
+
+## [0.2.5] - 23-12-2024
+
+- Updated menu position for model and train model
+
+## [0.2.4] - 13-12-2024
+
+- Added Skm configration
+
+## [0.2.3] - 06-12-2024
+
+- Added Validations
+
+## [0.1.17] - 24-10-2024
+
 ## [0.2.3] - 04-02-2025
 
 - Rename Training module menu items and paths
