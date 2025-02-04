@@ -1,13 +1,19 @@
 # Changelog
 
 All changes to this project will be documented in this file.
-## [0.1.17] - 24-10-2024
 
-- Add /delete to chat
+## [0.2.3] - 04-02-2025
+
+- Rename `training/stories` to `training/rules`.
+- Rename
 
 ## [0.2.2] - 19-11-2024
 
 - Refactor menu permissions
+
+## [0.1.17] - 24-10-2024
+
+- Add /delete to chat
 
 ## [0.1.16] - 10-06-2024
 
@@ -49,11 +55,11 @@ All changes to this project will be documented in this file.
 
 ## [0.1.7] - 27-05-2024
 
-- Fix close menu button 
+- Fix close menu button
 
 ## [0.1.6] - 25-04-2024
 
-- Updated api call addresses 
+- Updated api call addresses
 
 ## [0.1.5] - 27-02-2024
 
