@@ -61,7 +61,7 @@
     "training": "Training",
     "themes": "Themes",
     "answers": "Answers",
-    "userStories": "User Stories",
+    "rules": "Rules",
     "configuration": "Configuration",
     "forms": "Forms",
     "slots": "Slots",
@@ -285,7 +285,7 @@
       "copied": "Copied",
       "userDeleted": "User deleted",
       "newUserAdded": "New user added",
-      "userUpdated": "User updated" 
+      "userUpdated": "User updated"
     }
   }
 }

@@ -90,10 +90,10 @@
           },
           {
             "label": {
-              "et": "Kasutuslood",
-              "en": "User Stories"
+              "et": "Reeglid",
+              "en": "Rules"
             },
-            "path": "/training/stories"
+            "path": "/training/rules"
           },
           {
             "hidden": true,

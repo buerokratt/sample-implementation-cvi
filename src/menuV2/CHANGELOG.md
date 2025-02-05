@@ -2,6 +2,10 @@
 
 All changes to this project will be documented in this file.
 
+## [0.2.6] - 04-02-2025
+
+- Rename Stories to Rules in Training module menu items
+
 ## [0.2.5] - 23-12-2024
 
 - Updated menu position for model and train model
@@ -16,11 +20,17 @@ All changes to this project will be documented in this file.
 
 ## [0.1.17] - 24-10-2024
 
-- Add /delete to chat
+## [0.2.3] - 04-02-2025
+
+- Rename Training module menu items and paths
 
 ## [0.2.2] - 19-11-2024
 
 - Refactor menu permissions
+
+## [0.1.17] - 24-10-2024
+
+- Add /delete to chat
 
 ## [0.1.16] - 10-06-2024
 
