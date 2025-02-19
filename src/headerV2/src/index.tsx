@@ -128,6 +128,10 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
       useStore.getState().setCsaStatus(activity.status);
       useStore.getState().setChatCsaActive(activity.active);
     },
+    onError: (_) => {
+      useStore.getState().setCsaStatus('offline');
+      useStore.getState().setChatCsaActive(false);
+    }
   });
 
   useEffect(() => {
