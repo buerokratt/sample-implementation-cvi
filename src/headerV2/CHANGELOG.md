@@ -1,6 +1,12 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.22] - 04-03-2025
+
+- Fixed forwarded chats and validations notifications
+- Handled focused chat
+- Fixed Notifications for unrelated csa's
+
 ## [0.1.21] - 12-02-2025
 
 - Added customer support activity on error handle
