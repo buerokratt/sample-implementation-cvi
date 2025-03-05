@@ -31,15 +31,19 @@ const useChatNotifyEffect = ({ toast, useStore }: { toast: ToastContextType | nu
     if (newMessageDetected.newMessages) {
       const chat = activeChats.find((chat: ChatType) => chat.id === newMessageDetected.id);
       if (chat?.customerSupportId === userId || chat?.customerSupportId === "") {
-        if (newChatSoundNotifications) ding?.play();
-        if (newChatPopupNotifications) {
-          toast?.open({
-            type: "info",
-            title: t("global.notification"),
-            message: t("settings.users.newUnansweredChat"),
-          });
+        const focusedChat = localStorage.getItem("focused_chat");
+
+        if (focusedChat === null || focusedChat !== newMessageDetected.id) {
+          if (newChatSoundNotifications) ding?.play();
+          if (newChatPopupNotifications) {
+            toast?.open({
+              type: "info",
+              title: t("global.notification"),
+              message: t("settings.users.newUnansweredChat"),
+            });
+          }
+          showNotification();
         }
-        showNotification();
       }
     }
   };
