@@ -50,7 +50,9 @@ const useChatNotifyEffect = ({ toast, useStore }: { toast: ToastContextType | nu
 
   const handleForwordMessage = () => {
     if (forwardedChatsLength <= 0) {
-      localStorage.setItem("byk_header_forwardedChatsLength", "0");
+      if (activeChats.length != 0) {
+        localStorage.setItem("byk_header_forwardedChatsLength", forwardedChatsLength);
+      }
       return;
     };
 
@@ -66,7 +68,12 @@ const useChatNotifyEffect = ({ toast, useStore }: { toast: ToastContextType | nu
   };
 
   const handleValidationchats = () => {
-    if (validationChatsLength <= 0) return;
+    if (validationChatsLength <= 0) {
+      if (activeChats.length != 0) {
+        localStorage.setItem("byk_header_validationChatsLength", validationChatsLength);
+      }
+      return;
+    }
 
     if (samePreviousValue("byk_header_validationChatsLength", validationChatsLength)) return;
 
