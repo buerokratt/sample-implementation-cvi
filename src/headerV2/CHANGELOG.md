@@ -1,6 +1,10 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.24] - 18-03-2025
+
+- Disabled Api Request Cache
+
 ## [0.1.23] - 14-03-2025
 
 - Fixed csa status change on idle
