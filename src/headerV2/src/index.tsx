@@ -232,21 +232,23 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
     if (!customerSupportActivity) return;
     if (csaStatus === "offline") return;
 
-    customerSupportActivityMutation.mutate({
-      customerSupportActive: chatCsaActive,
-      customerSupportId: customerSupportActivity.idCode,
-      customerSupportStatus: "idle",
-    });
+    if (csaStatus === "online") {
+      customerSupportActivityMutation.mutate({
+        customerSupportActive: false,
+        customerSupportId: customerSupportActivity.idCode,
+        customerSupportStatus: "offline",
+      });
+
+      setShowStatusConfirmationModal(true);
+      return;
+    }
 
     extendUserSessionMutation.mutate();
   };
 
   const onActive = () => {
     if (!customerSupportActivity) return;
-    if (csaStatus === "offline") {
-      setShowStatusConfirmationModal(true);
-      return;
-    }
+    if (csaStatus === "offline") return;
 
     customerSupportActivityMutation.mutate({
       customerSupportActive: chatCsaActive,

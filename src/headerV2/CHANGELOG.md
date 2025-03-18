@@ -1,6 +1,10 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.23] - 14-03-2025
+
+- Fixed csa status change on idle
+
 ## [0.1.22] - 04-03-2025
 
 - Fixed forwarded chats and validations notifications
