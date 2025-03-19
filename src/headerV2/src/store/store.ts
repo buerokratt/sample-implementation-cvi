@@ -32,6 +32,7 @@ interface StoreState {
   forwordedChatsLength: () => number;
   pendingChatsLength: () => number;
   validationChatsLength: () => number;
+  activeChatsLength: () => number;
   loadActiveChats: () => Promise<void>;
   getGroupedActiveChats: () => GroupedChat;
   getGroupedUnansweredChats: () => GroupedChat;
@@ -100,6 +101,7 @@ const useStore = create<StoreState>((set, get, _) => ({
   forwordedChatsLength: () => get().forwordedChats().length,
   pendingChatsLength: () => get().pendingChats.length,
   validationChatsLength: () => get().validationChats.length,
+  activeChatsLength: () => get().activeChats.length,
   messagesMap: () => {
     const map = new Map<string, number>();
 
