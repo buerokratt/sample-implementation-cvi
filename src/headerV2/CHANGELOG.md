@@ -1,6 +1,10 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.26] - 24-03-2025
+
+- Fixed logic behind active chats length method.
+
 ## [0.1.25] - 19-03-2025
 
 - Updated active chat counts that used in menu to just display overall active chats length.

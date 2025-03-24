@@ -101,7 +101,9 @@ const useStore = create<StoreState>((set, get, _) => ({
   forwordedChatsLength: () => get().forwordedChats().length,
   pendingChatsLength: () => get().pendingChats.length,
   validationChatsLength: () => get().validationChats.length,
-  activeChatsLength: () => get().activeChats.length,
+  activeChatsLength: () => {
+    return get().activeChats.filter((c) => c.customerSupportId !== "").length;
+  },
   messagesMap: () => {
     const map = new Map<string, number>();
 
