@@ -213,7 +213,6 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
   const logoutMutation = useMutation({
     mutationFn: () => {
       apiDev.get("accounts/logout")
-      console.log('triggered logout')
     },
     onSuccess(_: any) {
       window.location.href = import.meta.env.REACT_APP_CUSTOMER_SERVICE_LOGIN;
@@ -234,9 +233,9 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
 
     if (csaStatus === "online") {
       customerSupportActivityMutation.mutate({
-        customerSupportActive: false,
+        customerSupportActive: true,
         customerSupportId: customerSupportActivity.idCode,
-        customerSupportStatus: "offline",
+        customerSupportStatus: "idle",
       });
 
       setShowStatusConfirmationModal(true);
@@ -248,7 +247,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
 
   const onActive = () => {
     if (!customerSupportActivity) return;
-    if (csaStatus === "offline") return;
+    if (csaStatus === "offline" || showStatusConfirmationModal) return;
 
     customerSupportActivityMutation.mutate({
       customerSupportActive: chatCsaActive,
@@ -259,9 +258,22 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
     extendUserSessionMutation.mutate();
   };
 
+  const onAction = () => {
+    if (!customerSupportActivity) return;
+    if (csaStatus === "idle" && !showStatusConfirmationModal) {
+      customerSupportActivityMutation.mutate({
+        customerSupportActive: chatCsaActive,
+        customerSupportId: customerSupportActivity.idCode,
+        customerSupportStatus: "online",
+      });
+      extendUserSessionMutation.mutate();
+    }
+  }
+
   useIdleTimer({
     onIdle,
     onActive,
+    onAction,
     timeout: USER_IDLE_STATUS_TIMEOUT,
     throttle: 500,
   });
@@ -390,15 +402,18 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
         {showStatusConfirmationModal && (
             <Dialog
                 onClose={() => setShowStatusConfirmationModal(false)}
+                outSideDismiss={false}
                 footer={
                   <>
                     <Button
                         appearance="secondary"
-                        onClick={() =>
-                            setShowStatusConfirmationModal(false)
+                        onClick={() => {
+                            handleCsaStatusChange(false);
+                            setShowStatusConfirmationModal(false);
+                          }
                         }
                     >
-                      {t("global.cancel")}
+                      {t("global.no")}
                     </Button>
                     <Button
                         appearance="primary"

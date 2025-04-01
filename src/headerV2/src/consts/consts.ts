@@ -1,4 +1,4 @@
-export const USER_IDLE_STATUS_TIMEOUT = 300000;
+export const USER_IDLE_STATUS_TIMEOUT = 900000; // milliseconds - 15 minutes
 export const STATUS_COLORS : Record<string, string> = {
     idle: '#FFB511',
     online: '#308653',

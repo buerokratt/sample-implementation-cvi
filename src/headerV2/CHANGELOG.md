@@ -1,6 +1,11 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.27] - 25-03-2025
+
+- Fixed Status Green to yellow flow
+- Enhanced Active - Idle - Offline switch flow
+
 ## [0.1.26] - 24-03-2025
 
 - Fixed logic behind active chats length method.
