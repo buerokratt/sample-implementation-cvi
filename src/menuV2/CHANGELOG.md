@@ -2,6 +2,10 @@
 
 All changes to this project will be documented in this file.
 
+## [0.2.7] - 08-04-2025
+
+- Added path /feedback menu element to Chatbot module adminstration
+
 ## [0.2.6] - 04-02-2025
 
 - Rename Stories to Rules in Training module menu items
