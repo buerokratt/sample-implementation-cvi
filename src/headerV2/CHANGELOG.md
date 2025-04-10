@@ -1,6 +1,14 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.29] - 10-04-2025
+
+- Modified Idle Timeout Constant
+
+## [0.1.28] - 10-04-2025
+
+- Removed Idle Notification
+
 ## [0.1.27] - 25-03-2025
 
 - Fixed Status Green to yellow flow
