@@ -19,13 +19,11 @@ import {
   Section,
   SwitchBox,
   Switch,
-  Dialog,
 } from "./components";
 import useStore from "./store/store.ts";
 // @ts-ignore
 import { ReactComponent as BykLogo } from "./assets/logo.svg";
 import { UserProfileSettings } from "./types/userProfileSettings";
-import { Chat as ChatType } from "./types/chat";
 import { USER_IDLE_STATUS_TIMEOUT, isHiddenFeaturesEnabled } from "./constants/config";
 import apiDev from "./services/api-dev";
 import { AUTHORITY } from "./types/authorities";
@@ -62,11 +60,6 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
   const { t } = useTranslation();
   const userInfo = user;
   const toast = toastContext;
-  const [__, setSecondsUntilStatusPopup] = useState(300); // 5 minutes in seconds
-  const [statusPopupTimerHasStarted, setStatusPopupTimerHasStarted] =
-      useState(false);
-  const [showStatusConfirmationModal, setShowStatusConfirmationModal] =
-      useState(false);
 
   const loadActiveChats = useStore((state) => state.loadActiveChats);
   const pendingChats = useStore((state) => state.loadPendingChats);
@@ -238,7 +231,6 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
         customerSupportStatus: "idle",
       });
 
-      setShowStatusConfirmationModal(true);
       return;
     }
 
@@ -247,20 +239,14 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
 
   const onActive = () => {
     if (!customerSupportActivity) return;
-    if (csaStatus === "offline" || showStatusConfirmationModal) return;
-
-    customerSupportActivityMutation.mutate({
-      customerSupportActive: chatCsaActive,
-      customerSupportId: customerSupportActivity.idCode,
-      customerSupportStatus: "online",
-    });
-
+    if (csaStatus === "offline" || csaStatus === 'idle') return;
+    
     extendUserSessionMutation.mutate();
   };
 
   const onAction = () => {
     if (!customerSupportActivity) return;
-    if (csaStatus === "idle" && !showStatusConfirmationModal) {
+    if (csaStatus === "idle") {
       customerSupportActivityMutation.mutate({
         customerSupportActive: chatCsaActive,
         customerSupportId: customerSupportActivity.idCode,
@@ -295,26 +281,6 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
       customerSupportStatus: checked ? "online" : "offline",
       customerSupportId: "",
     });
-
-    if (!checked) showStatusChangePopup();
-  };
-
-  const showStatusChangePopup = () => {
-    if (statusPopupTimerHasStarted) return;
-
-    setStatusPopupTimerHasStarted(true);
-    const timer = setInterval(() => {
-      setSecondsUntilStatusPopup((prevSeconds) => {
-        if (prevSeconds > 0) {
-          return prevSeconds - 1;
-        } else {
-          clearInterval(timer);
-          setShowStatusConfirmationModal(false);
-          setStatusPopupTimerHasStarted(false);
-          return 0;
-        }
-      });
-    }, 1000);
   };
 
   return (
@@ -398,44 +364,6 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
             )}
           </Track>
         </header>
-
-        {showStatusConfirmationModal && (
-            <Dialog
-                onClose={() => setShowStatusConfirmationModal(false)}
-                outSideDismiss={false}
-                footer={
-                  <>
-                    <Button
-                        appearance="secondary"
-                        onClick={() => {
-                            handleCsaStatusChange(false);
-                            setShowStatusConfirmationModal(false);
-                          }
-                        }
-                    >
-                      {t("global.no")}
-                    </Button>
-                    <Button
-                        appearance="primary"
-                        onClick={() => {
-                          handleCsaStatusChange(true);
-                          setShowStatusConfirmationModal(false);
-                        }}
-                    >
-                      {t("global.yes")}
-                    </Button>
-                  </>
-                }
-            >
-              <div className="dialog__body">
-                <h1
-                    style={{ fontSize: "24px", fontWeight: "400", color: "#09090B" }}
-                >
-                  {t("global.statusChangeQuestion")}
-                </h1>
-              </div>
-            </Dialog>
-        )}
 
         {userInfo && userProfileSettings && userDrawerOpen && (
             <Drawer
