@@ -44,7 +44,8 @@
     "today": "Täna",
     "forward": "Suuna",
     "chosen": "Valitud",
-    "read": "Loetud"
+    "read": "Loetud",
+    "statusClarification": "Staatuse täpsustus"
   },
   "mainMenu": {
     "menuLabel": "Põhinavigatsioon",
@@ -213,7 +214,8 @@
       "newValidationMessage": "Uus teade kinnitamiseks",
       "useAutocorrect": "Teksti autokorrektor",
       "required": "Nõutud",
-      "invalidemail": "Kehtetu e-posti"
+      "invalidemail": "Kehtetu e-posti",
+      "statusCommentUpdated": "Staatuse täpsustus uuendatud"
     },
     "chat": {
       "chatActive": "Vestlusrobot aktiivne",

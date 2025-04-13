@@ -1,6 +1,10 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.30] - 11-04-2025
+
+- Added Offline Status Comment
+
 ## [0.1.29] - 10-04-2025
 
 - Modified Idle Timeout Constant
