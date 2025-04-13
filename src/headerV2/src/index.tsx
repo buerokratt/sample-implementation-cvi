@@ -48,7 +48,7 @@ type CustomerSupportActivityDTO = {
   customerSupportStatus: "offline" | "idle" | "online";
   customerSupportId: string;
   statusComment: string;
-  changingStatus?: boolean;
+  changingStatusComment?: boolean;
 };
 
 const statusColors: Record<string, string> = {
@@ -193,14 +193,17 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
       useStore.getState().setChatCsaActive(variables.customerSupportActive);
       if (csaStatus === "online") extendUserSessionMutation.mutate();
 
-      if (variables.changingStatus) {
+      if (variables.changingStatusComment) {
         toast?.open({
           type: "success",
           title: t("global.notification"),
           message: t("settings.users.statusCommentUpdated"),
         });
-       useStore.getState().setCsaStatusComment(variables.statusComment);
-       setStatusCommentOpen(false);
+        useStore.getState().setCsaStatusComment(variables.statusComment);
+        setStatusCommentOpen(false);
+      } else {
+        setEditingStatusComment('');
+        useStore.getState().setCsaStatusComment('');
       }
     },
     onError: async (error: AxiosError) => {
@@ -391,7 +394,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
                               customerSupportStatus: "offline",
                               customerSupportId: userInfo.idCode,
                               statusComment: editingStatusComment,
-                              changingStatus: true
+                              changingStatusComment: true,
                             });
                           }}
                         />
