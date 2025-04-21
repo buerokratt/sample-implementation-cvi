@@ -44,7 +44,8 @@
     "today": "Today",
     "forward": "Forward",
     "chosen": "Chosen",
-    "read": "Read"
+    "read": "Read",
+    "statusClarification": "Status clarification"
   },
   "mainMenu": {
     "menuLabel": "Main navigation",
@@ -213,7 +214,8 @@
       "newValidationMessage": "New message to validate",
       "useAutocorrect": "Text auto corrector",
       "required": "Required",
-      "invalidemail": "Invalid email"
+      "invalidemail": "Invalid email",
+      "statusCommentUpdated": "Status clarification updated"
     },
     "chat": {
       "chatActive": "Chatbot active",

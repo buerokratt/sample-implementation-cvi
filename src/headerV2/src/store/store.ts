@@ -3,6 +3,7 @@ import { UserInfo } from "../types/userInfo";
 import { Chat, CHAT_STATUS, Chat as ChatType, GroupedChat, GroupedPendingChat } from "../types/chat";
 import apiDev from "../services/api-dev.ts";
 import { UserProfileSettings } from "../types/userProfileSettings.ts";
+import { isValidationsEnabled } from "../constants/config.ts";
 
 type CsaStatusType = "idle" | "offline" | "online";
 
@@ -15,6 +16,7 @@ interface StoreState {
   selectedChatId: string | null;
   chatCsaActive: boolean;
   csaStatus: CsaStatusType;
+  csaStatusComment: string;
   setCsaStatus: (status: CsaStatusType) => void;
   setActiveChats: (chats: ChatType[]) => void;
   setPendingChats: (chats: ChatType[]) => void;
@@ -22,6 +24,7 @@ interface StoreState {
   setUserInfo: (info: UserInfo) => void;
   setSelectedChatId: (id: string | null) => void;
   setChatCsaActive: (active: boolean) => void;
+  setCsaStatusComment: (comment: string) => void;
   selectedChat: () => ChatType | null | undefined;
   selectedPendingChat: () => ChatType | null | undefined;
   selectedValidationChat: () => ChatType | null | undefined;
@@ -63,6 +66,7 @@ const useStore = create<StoreState>((set, get, _) => ({
     useAutocorrect: true,
   },
   csaStatus: "online",
+  csaStatusComment: "",
   setCsaStatus: (csaStatus) => set({ csaStatus }),
   setUserProfileSettings: (settings) => set({ userProfileSettings: settings }),
   setActiveChats: (chats) => set({ activeChats: chats }),
@@ -70,13 +74,14 @@ const useStore = create<StoreState>((set, get, _) => ({
   setValidationChats: (chats) => set({ validationChats: chats }),
   setUserInfo: (data) => set({ userInfo: data, userId: data?.idCode || "" }),
   setSelectedChatId: (id) => set({ selectedChatId: id }),
+  setCsaStatusComment: (comment) => set({ csaStatusComment: comment }),
   setChatCsaActive: (active) => {
     set({
       chatCsaActive: active,
     });
     get().loadActiveChats();
     get().loadPendingChats();
-    get().loadValidationChats();
+    if (isValidationsEnabled) get().loadValidationChats();
   },
   selectedChat: () => {
     const selectedChatId = get().selectedChatId;

@@ -7,6 +7,7 @@ import Toast from './Toast/index';
 import Drawer from './Drawer/index';
 import Dialog from './Dialog/index';
 import Section from './Section/index';
+import Input from "./Input/index";
 
 export {
     Button,
@@ -18,4 +19,5 @@ export {
     Drawer,
     Dialog,
     Section,
+    Input,
 };
