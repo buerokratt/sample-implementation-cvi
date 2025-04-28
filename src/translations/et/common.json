@@ -210,6 +210,8 @@
       "soundNotifications": "Häälmärguanded",
       "popupNotifications": "Pop-up märguanded",
       "newUnansweredChat": "Uus vastamata vestlus",
+      "newForwardedChatTitle": "Suunatud vestlus",
+      "newForwardedChatMessage": "Sulle suunati uus vestlus!",
       "newForwardedChat": "Uus suunatud vestlus",
       "newValidationMessage": "Uus teade kinnitamiseks",
       "useAutocorrect": "Teksti autokorrektor",

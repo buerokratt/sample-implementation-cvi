@@ -1,6 +1,10 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.33] - 23-04-2025
+
+- Modified CSA chat forwarding notification toast
+
 ## [0.1.32] - 11-04-2025
 
 - Fixed Activity Change alignment with status

@@ -11,6 +11,8 @@ import clsx from 'clsx';
 
 import Icon from '../Icon';
 import type { ToastType } from './ToastContext';
+import { TOAST_TIMEOUT } from "../../constants/config";
+
 import './Toast.scss';
 
 type ToastProps = {
@@ -36,6 +38,7 @@ const Toast: FC<ToastProps> = ({ toast, close }) => {
       onEscapeKeyDown={close}
       open={open}
       onOpenChange={setOpen}
+      duration={toast.duration ?? TOAST_TIMEOUT}
     >
       <RadixToast.Title className="toast__title h5">
         <Icon icon={toastIcons[toast.type]} />
