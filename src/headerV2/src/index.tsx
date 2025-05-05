@@ -314,6 +314,12 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
     setStatusCommentOpen(!checked);
   };
 
+  const cancelStatusComment = () => {
+    setEditingStatusComment(statusComment);
+    useStore.getState().setCsaStatusComment(statusComment);
+    setStatusCommentOpen(false);
+  };
+
   return (
     <>
       <header className="header">
@@ -329,8 +335,9 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
                     textTransform: "lowercase",
                   }}
                 >
-                  <strong>{unansweredChatsLength}</strong> {t("chat.unanswered")}{" "}
-                  <strong>{forwardedChatsLength}</strong> {t("chat.forwarded")} <strong>{pendingChatsLength}</strong>{" "}
+                  <strong>{unansweredChatsLength}</strong>{" "}
+                  {t("chat.unanswered")} <strong>{forwardedChatsLength}</strong>{" "}
+                  {t("chat.forwarded")} <strong>{pendingChatsLength}</strong>{" "}
                   {t("chat.pending")}{" "}
                 </p>
                 <div>
@@ -360,34 +367,56 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
                     </Button>
                   )}
                   {!chatCsaActive && statusCommentOpen && (
-                    <Input
+                    <div
                       style={{
+                        background: "#FFF",
+                        borderRadius: "4px",
+                        boxShadow: "0px 20px 40px rgba(0, 0, 0, 0.25)",
+                        padding: "5px 15px 30px",
                         position: "absolute",
-                        zIndex: 10,
-                        marginTop: "50px",
-                        width: "260px",
+                        top: "100px",
+                        width: "600px"
                       }}
-                      maxLength={STATUS_COMMENT_LENGTH}
-                      value={editingStatusComment}
-                      placeholder={t("global.statusClarification")}
-                      onChange={(e) => {
-                        setEditingStatusComment(e.target.value);
-                      }}
-                    />
-                  )}
-                  {!chatCsaActive && statusCommentOpen && (
-                    <Icon
-                      style={{
-                        right: "95px",
-                        cursor: "pointer",
-                        position: "absolute",
-                        marginTop: "115px",
-                        zIndex: 11,
-                      }}
-                      icon={
-                        <AiOutlineCheck
-                          fontSize={18}
-                          color="#308653"
+                    >
+                      <Icon
+                        style={{
+                          cursor: "pointer",
+                          display: "flex",
+                          margin: "0 0 15px auto"
+                        }}
+                        icon={
+                          <AiOutlineClose
+                            fontSize={18}
+                            color="#000"
+                            onClick={cancelStatusComment}
+                          />
+                        }
+                        size="medium"
+                      />
+                      <Input
+                        label={t("global.statusClarification")}
+                        maxLength={STATUS_COMMENT_LENGTH}
+                        value={editingStatusComment}
+                        onChange={(e) => {
+                          setEditingStatusComment(e.target.value);
+                        }}
+                      />
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "10px",
+                          justifyContent: "flex-end",
+                          marginTop: "15px",
+                        }}
+                      >
+                        <Button
+                          appearance="secondary"
+                          onClick={cancelStatusComment}
+                        >
+                          {t("global.cancel")}
+                        </Button>
+                        <Button
+                          appearance="primary"
                           onClick={() => {
                             customerSupportActivityMutation.mutate({
                               customerSupportActive: false,
@@ -397,33 +426,11 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
                               changingStatusComment: true,
                             });
                           }}
-                        />
-                      }
-                      size="medium"
-                    />
-                  )}
-                  {!chatCsaActive && statusCommentOpen && (
-                    <Icon
-                      style={{
-                        right: "65px",
-                        cursor: "pointer",
-                        position: "absolute",
-                        marginTop: "115px",
-                        zIndex: 12,
-                      }}
-                      icon={
-                        <AiOutlineClose
-                          fontSize={18}
-                          color="#D73E3E"
-                          onClick={() => {
-                            setEditingStatusComment(statusComment);
-                            useStore.getState().setCsaStatusComment(statusComment);
-                            setStatusCommentOpen(false);
-                          }}
-                        />
-                      }
-                      size="medium"
-                    />
+                        >
+                          {t("global.save")}
+                        </Button>
+                      </div>
+                    </div>
                   )}
                 </Track>
               </Track>
@@ -435,7 +442,10 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
                   backgroundColor: "#DBDFE2",
                 }}
               ></span>
-              <Button appearance="text" onClick={() => setUserDrawerOpen(!userDrawerOpen)}>
+              <Button
+                appearance="text"
+                onClick={() => setUserDrawerOpen(!userDrawerOpen)}
+              >
                 <span
                   style={{
                     display: "block",
@@ -476,7 +486,11 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
       </header>
 
       {userInfo && userProfileSettings && userDrawerOpen && (
-        <Drawer title={userInfo.displayName} onClose={() => setUserDrawerOpen(false)} style={{ width: 400 }}>
+        <Drawer
+          title={userInfo.displayName}
+          onClose={() => setUserDrawerOpen(false)}
+          style={{ width: 400 }}
+        >
           <Section>
             <Track gap={8} direction="vertical" align="left">
               {[
@@ -486,7 +500,9 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
                 },
                 {
                   label: t("settings.users.userRoles"),
-                  value: userInfo.authorities.map((r) => t(`roles.${r}`)).join(", "),
+                  value: userInfo.authorities
+                    .map((r) => t(`roles.${r}`))
+                    .join(", "),
                 },
                 {
                   label: t("settings.users.userTitle"),
@@ -501,9 +517,11 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
               ))}
             </Track>
           </Section>
-          {[AUTHORITY.ADMINISTRATOR, AUTHORITY.CUSTOMER_SUPPORT_AGENT, AUTHORITY.SERVICE_MANAGER].some((auth) =>
-            userInfo.authorities.includes(auth)
-          ) && (
+          {[
+            AUTHORITY.ADMINISTRATOR,
+            AUTHORITY.CUSTOMER_SUPPORT_AGENT,
+            AUTHORITY.SERVICE_MANAGER,
+          ].some((auth) => userInfo.authorities.includes(auth)) && (
             <>
               {isHiddenFeaturesEnabled && (
                 <Section>
@@ -513,7 +531,12 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
                       name="useAutocorrect"
                       label={t("settings.users.useAutocorrect")}
                       checked={userProfileSettings.useAutocorrect}
-                      onCheckedChange={(checked) => handleUserProfileSettingsChange("useAutocorrect", checked)}
+                      onCheckedChange={(checked) =>
+                        handleUserProfileSettingsChange(
+                          "useAutocorrect",
+                          checked
+                        )
+                      }
                     />
                   </Track>
                 </Section>
@@ -521,13 +544,20 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
               {isHiddenFeaturesEnabled && (
                 <Section>
                   <Track gap={8} direction="vertical" align="left">
-                    <p className="h6">{t("settings.users.emailNotifications")}</p>
+                    <p className="h6">
+                      {t("settings.users.emailNotifications")}
+                    </p>
                     <SwitchBox
                       name="forwardedChatEmailNotifications"
                       label={t("settings.users.newForwardedChat")}
-                      checked={userProfileSettings.forwardedChatEmailNotifications}
+                      checked={
+                        userProfileSettings.forwardedChatEmailNotifications
+                      }
                       onCheckedChange={(checked) =>
-                        handleUserProfileSettingsChange("forwardedChatEmailNotifications", checked)
+                        handleUserProfileSettingsChange(
+                          "forwardedChatEmailNotifications",
+                          checked
+                        )
                       }
                     />
                     <SwitchBox
@@ -535,7 +565,10 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
                       label={t("settings.users.newUnansweredChat")}
                       checked={userProfileSettings.newChatEmailNotifications}
                       onCheckedChange={(checked) =>
-                        handleUserProfileSettingsChange("newChatEmailNotifications", checked)
+                        handleUserProfileSettingsChange(
+                          "newChatEmailNotifications",
+                          checked
+                        )
                       }
                     />
                   </Track>
@@ -547,16 +580,26 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
                   <SwitchBox
                     name="forwardedChatSoundNotifications"
                     label={t("settings.users.newForwardedChat")}
-                    checked={userProfileSettings.forwardedChatSoundNotifications}
+                    checked={
+                      userProfileSettings.forwardedChatSoundNotifications
+                    }
                     onCheckedChange={(checked) =>
-                      handleUserProfileSettingsChange("forwardedChatSoundNotifications", checked)
+                      handleUserProfileSettingsChange(
+                        "forwardedChatSoundNotifications",
+                        checked
+                      )
                     }
                   />
                   <SwitchBox
                     name="newChatSoundNotifications"
                     label={t("settings.users.newUnansweredChat")}
                     checked={userProfileSettings.newChatSoundNotifications}
-                    onCheckedChange={(checked) => handleUserProfileSettingsChange("newChatSoundNotifications", checked)}
+                    onCheckedChange={(checked) =>
+                      handleUserProfileSettingsChange(
+                        "newChatSoundNotifications",
+                        checked
+                      )
+                    }
                   />
                 </Track>
               </Section>
@@ -566,16 +609,26 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({ user, toastContext
                   <SwitchBox
                     name="forwardedChatPopupNotifications"
                     label={t("settings.users.newForwardedChat")}
-                    checked={userProfileSettings.forwardedChatPopupNotifications}
+                    checked={
+                      userProfileSettings.forwardedChatPopupNotifications
+                    }
                     onCheckedChange={(checked) =>
-                      handleUserProfileSettingsChange("forwardedChatPopupNotifications", checked)
+                      handleUserProfileSettingsChange(
+                        "forwardedChatPopupNotifications",
+                        checked
+                      )
                     }
                   />
                   <SwitchBox
                     name="newChatPopupNotifications"
                     label={t("settings.users.newUnansweredChat")}
                     checked={userProfileSettings.newChatPopupNotifications}
-                    onCheckedChange={(checked) => handleUserProfileSettingsChange("newChatPopupNotifications", checked)}
+                    onCheckedChange={(checked) =>
+                      handleUserProfileSettingsChange(
+                        "newChatPopupNotifications",
+                        checked
+                      )
+                    }
                   />
                 </Track>
               </Section>
