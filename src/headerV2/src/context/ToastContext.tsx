@@ -11,12 +11,12 @@ import * as RadixToast from '@radix-ui/react-toast';
 
 import { Toast } from '../components';
 import { generateUEID } from '../utils/generateUEID';
-import { TOAST_TIMEOUT } from '../constants/config';
 
 export type ToastType = {
   type: 'info' | 'success' | 'error' | 'warning';
   title: string;
   message: ReactNode;
+  duration?: number;
 };
 
 type ToastTypeWithId = ToastType & { id: string };
@@ -47,7 +47,6 @@ export const ToastProvider: FC<PropsWithChildren> = ({ children }) => {
         <RadixToast.Provider
             swipeDirection='right'
             label={t('global.notification') || 'Notification'}
-            duration={TOAST_TIMEOUT}
         >
           {children}
           {toasts.map((toast) => (

@@ -61,9 +61,10 @@ const useChatNotifyEffect = ({ toast, useStore }: { toast: ToastContextType | nu
     if (forwardedChatSoundNotifications) ding?.play();
     if (forwardedChatPopupNotifications)
       toast?.open({
-        type: "info",
-        title: t("global.notification"),
-        message: t("settings.users.newForwardedChat"),
+        type: "success",
+        title: t("settings.users.newForwardedChatTitle"),
+        message: t("settings.users.newForwardedChatMessage"),
+        duration: Infinity,
       });
   };
 
