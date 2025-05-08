@@ -1,6 +1,10 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.35] - 07-05-2025
+
+- Updated default toast duration to be 5 seconds.
+
 ## [0.1.34] - 30-04-2025
 
 - Improved adding comment to away status UI
