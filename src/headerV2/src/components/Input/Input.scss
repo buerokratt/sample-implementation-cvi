@@ -10,7 +10,7 @@
   gap: get-spacing(paldiski);
   width: 100%;
 
-  &__label {
+  &__title {
     flex: none !important;
     font-size: map-get($cvi-font-sizes, 100);
     line-height: 24px;

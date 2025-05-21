@@ -22,7 +22,7 @@ const FieldInput = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className={`${inputClasses} ${className}`}>
         {label && !hideLabel && (
-          <label htmlFor={id} className="input__label">
+          <label htmlFor={id} className="input__title">
             {label}
           </label>
         )}

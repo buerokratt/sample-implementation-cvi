@@ -1,6 +1,10 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.36] - 20-05-2025
+
+- Renamed Input Label to Title to avoid css collision on modules
+
 ## [0.1.35] - 07-05-2025
 
 - Updated default toast duration to be 5 seconds.
