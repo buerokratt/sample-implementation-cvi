@@ -361,6 +361,14 @@
           "en": "SKM Configuration"
         },
         "path": "/skm-configuration"
+      },
+      {
+        "hidden": false,
+        "label": {
+          "et": "Multidomeenid",
+          "en": "Multi-Domains"
+        },
+        "path": "/multi-domains"
       }
     ]
   },
