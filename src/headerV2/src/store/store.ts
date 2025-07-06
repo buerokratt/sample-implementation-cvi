@@ -35,6 +35,7 @@ interface StoreState {
   forwordedChatsLength: () => number;
   pendingChatsLength: () => number;
   validationChatsLength: () => number;
+  userDomains: string[];
   activeChatsLength: () => number;
   loadActiveChats: () => Promise<void>;
   getGroupedActiveChats: () => GroupedChat;
@@ -66,6 +67,7 @@ const useStore = create<StoreState>((set, get, _) => ({
     useAutocorrect: true,
   },
   csaStatus: "online",
+  userDomains: [],
   csaStatusComment: "",
   setCsaStatus: (csaStatus) => set({ csaStatus }),
   setUserProfileSettings: (settings) => set({ userProfileSettings: settings }),
@@ -75,6 +77,7 @@ const useStore = create<StoreState>((set, get, _) => ({
   setUserInfo: (data) => set({ userInfo: data, userId: data?.idCode || "" }),
   setSelectedChatId: (id) => set({ selectedChatId: id }),
   setCsaStatusComment: (comment) => set({ csaStatusComment: comment }),
+  setUserDomains: (data: string[]) => set({ userDomains: data}),
   setChatCsaActive: (active) => {
     set({
       chatCsaActive: active,

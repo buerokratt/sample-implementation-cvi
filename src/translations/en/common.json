@@ -54,6 +54,9 @@
     "openIcon": "Open menu icon",
     "closeIcon": "Close menu icon"
   },
+  "multiDomains": {
+    "selectDomains": "Select Domains"
+  },
   "menu": {
     "conversations": "Conversations",
     "unanswered": "Unanswered",
