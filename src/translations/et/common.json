@@ -54,6 +54,9 @@
     "openMenuIcon": "Ava menüü ikoon",
     "closeMenuIcon": "Sulge menüü ikoon"
   },
+  "multiDomains": {
+    "selectDomains": "Vali Domeenid"
+  },
   "menu": {
     "conversations": "Vestlused",
     "unanswered": "Vastamata",

@@ -1,10 +1,14 @@
-# Changelog
+# Changelog (MM-DD-YYYY)
 
 All changes to this project will be documented in this file.
 
+## [0.2.8] - 05-06-2025
+
+- Added path /multi-domains menu element to Chatbot module administration
+
 ## [0.2.7] - 08-04-2025
 
-- Added path /feedback menu element to Chatbot module adminstration
+- Added path /feedback menu element to Chatbot module administration
 
 ## [0.2.6] - 04-02-2025
 

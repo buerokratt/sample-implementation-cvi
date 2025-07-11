@@ -1,6 +1,11 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.37] - 25-06-2025
+
+- Added multi domain modal
+- Updated store to include selected domains
+
 ## [0.1.36] - 20-05-2025
 
 - Renamed Input Label to Title to avoid css collision on modules
