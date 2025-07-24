@@ -45,7 +45,8 @@
     "forward": "Forward",
     "chosen": "Chosen",
     "read": "Read",
-    "statusClarification": "Status clarification"
+    "statusClarification": "Status clarification",
+    "selectAll": "Select all"
   },
   "mainMenu": {
     "menuLabel": "Main navigation",
@@ -55,7 +56,8 @@
     "closeIcon": "Close menu icon"
   },
   "multiDomains": {
-    "selectDomains": "Select Domains"
+    "selectDomains": "Select Domains",
+    "noDomains": "No domains available. Please contact your system administrator."
   },
   "menu": {
     "conversations": "Conversations",

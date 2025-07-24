@@ -18,6 +18,7 @@ type FormMultiselectProps = SelectHTMLAttributes<HTMLSelectElement> & {
     selectedOptions?: SelectOption[];
     onSelectionChange?: (selection: SelectOption[] | null) => void;
     mode?: 'dropdown' | 'static';
+    selectAllEnabled?: boolean;
 };
 
 const FormMultiselect: FC<FormMultiselectProps> = ({
@@ -30,14 +31,26 @@ const FormMultiselect: FC<FormMultiselectProps> = ({
                                                        selectedOptions = [],
                                                        onSelectionChange,
                                                        mode = 'dropdown',
+                                                       selectAllEnabled = false,
                                                        name,
                                                        ...rest
                                                    }) => {
     const id = useId();
     const {t} = useTranslation();
     const [selectedItems, setSelectedItems] = useState<SelectOption[]>(selectedOptions);
+    const selectClasses = clsx('select', disabled && 'select--disabled');
+    const placeholderValue = placeholder || t('global.choose');
+    const areAllSelected = options.length > 0 && selectedItems.length === options.length;
+    const displayOptions = selectAllEnabled && options.length > 0
+        ? [{ label: t('global.selectAll') as string, value: 'selectAll' }, ...options]
+        : options;
+
 
     const handleToggle = (option: SelectOption) => {
+        if (option.value === 'selectAll') {
+            handleSelectAllToggle();
+            return;
+        }
         const isSelected = selectedItems.some((item) => item.value === option.value);
         const newSelection = isSelected
             ? selectedItems.filter((item) => item.value !== option.value)
@@ -83,8 +96,11 @@ const FormMultiselect: FC<FormMultiselectProps> = ({
             getItemProps: () => ({}),
         };
 
-    const selectClasses = clsx('select', disabled && 'select--disabled');
-    const placeholderValue = placeholder || t('global.choose');
+    const handleSelectAllToggle = () => {
+        const newSelection = areAllSelected ? [] : [...options];
+        setSelectedItems(newSelection);
+        onSelectionChange?.(newSelection);
+    };
 
     return (
         <div className={selectClasses} style={rest.style}>
@@ -96,21 +112,23 @@ const FormMultiselect: FC<FormMultiselectProps> = ({
 
             {mode === 'static' ? (
                 <div className='select__static-list'>
-                    {options.map((option) => (
+                    {displayOptions.map((option) => (
                         <label key={option.value} className='select__option'>
                             <input
                                 type='checkbox'
                                 value={option.value}
-                                checked={selectedItems.some((item) => {
-                                    return item.value === option.value
-                                })}
+                                checked={
+                                    option.value === 'selectAll'
+                                        ? areAllSelected
+                                        : selectedItems.some((item) => item.value === option.value)
+                                }
                                 onChange={() => handleToggle(option)}
                                 disabled={disabled}
                                 name={name}
                             />
-                            <span style={{ width: '45%'}}>{option.label}</span>
-                            {option.meta && (
-                                <span style={{fontSize: '16px', color: 'grey'}}>{option.meta}</span>
+                            <span style={{ width: '45%' }}>{option.label}</span>
+                            {option.meta && option.value !== 'selectAll' && (
+                                <span style={{ fontSize: '16px', color: 'grey' }}>{option.meta}</span>
                             )}
                         </label>
                     ))}
@@ -129,7 +147,7 @@ const FormMultiselect: FC<FormMultiselectProps> = ({
 
                     {isOpen && (
                         <ul className='select__menu' {...getMenuProps()}>
-                            {options.map((item, index) => (
+                            {displayOptions.map((item, index) => (
                                 <li
                                     key={`${item.label}-${index}`}
                                     className={clsx('select__option', {
@@ -142,7 +160,11 @@ const FormMultiselect: FC<FormMultiselectProps> = ({
                                 >
                                     <input
                                         type='checkbox'
-                                        checked={selectedItems.some((s) => s.value === item.value)}
+                                        checked={
+                                            item.value === 'selectAll'
+                                                ? areAllSelected
+                                                : selectedItems.some((s) => s.value === item.value)
+                                        }
                                         value={item.value}
                                         onChange={() => null}
                                         disabled={disabled}

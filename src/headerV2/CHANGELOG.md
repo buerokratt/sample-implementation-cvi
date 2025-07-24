@@ -1,6 +1,12 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.38] - 24-07-2025
+
+- Removed console log
+- Added selectAll functionality
+- Added missing toggle to remove domains button from header
+
 ## [0.1.37] - 25-06-2025
 
 - Added multi domain modal

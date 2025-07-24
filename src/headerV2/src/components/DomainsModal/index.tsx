@@ -27,6 +27,7 @@ const DomainsModal: FC<DomainsModalProps> = ({onClose, user, toastContext,setUse
     const [renderVersion, setRenderVersion] = useState(0);
     const [options, setOptions] = useState<SelectOption[]>([]);
     const [selectedOptions, setSelectedOptions] = useState<SelectOption[]>([]);
+    const [showWarningMessage, setShowWarningMessage] = useState<boolean>(false);
     const queryClient = useQueryClient();
     const {
         control,
@@ -58,11 +59,15 @@ const DomainsModal: FC<DomainsModalProps> = ({onClose, user, toastContext,setUse
     }
 
     useEffect(() => {
-        if (!user?.idCode) return;
+        if (!user?.idCode) {
+            setShowWarningMessage(true);
+            return;
+        }
 
         const fetchData = async () => {
             try {
                 const data = await getWidgetData(user.idCode);
+                setShowWarningMessage(data?.length < 1 );
                 const {options, selectedOptions} = mapDomainSelections(data);
                 reset({selectedDomains: options});
                 setOptions(options);
@@ -97,7 +102,6 @@ const DomainsModal: FC<DomainsModalProps> = ({onClose, user, toastContext,setUse
                 title: t('global.notification'),
                 message: t('toast.success.userUpdated'),
             });
-            console.log('Calling onClose');
             onClose();
         },
         onError: (error: AxiosError) => {
@@ -146,6 +150,11 @@ const DomainsModal: FC<DomainsModalProps> = ({onClose, user, toastContext,setUse
                     render={({field: {onChange, onBlur, name}}) => (
                         <div className="multiSelect">
                             <div className="multiSelect_wrapper">
+                                {showWarningMessage && (
+                                    <div className="warn-message">
+                                        {t('multiDomains.noDomains')}
+                                    </div>
+                                )}
                                 <FormMultiselect
                                     name={name}
                                     key={renderVersion}
@@ -155,6 +164,7 @@ const DomainsModal: FC<DomainsModalProps> = ({onClose, user, toastContext,setUse
                                     selectedOptions={selectedOptions || []}
                                     options={options || []}
                                     isMulti={true}
+                                    selectAllEnabled={true}
                                     placeholder={t('global.choose')}
                                     onSelectionChange={(val) => {
                                         onChange(val || []);
