@@ -45,7 +45,8 @@
     "forward": "Suuna",
     "chosen": "Valitud",
     "read": "Loetud",
-    "statusClarification": "Staatuse täpsustus"
+    "statusClarification": "Staatuse täpsustus",
+    "selectAll": "Vali kõik"
   },
   "mainMenu": {
     "menuLabel": "Põhinavigatsioon",
@@ -55,7 +56,8 @@
     "closeMenuIcon": "Sulge menüü ikoon"
   },
   "multiDomains": {
-    "selectDomains": "Vali Domeenid"
+    "selectDomains": "Vali Domeenid",
+    "noDomains": "Domeene ei ole saadaval. Palun võtke ühendust süsteemiadministraatoriga."
   },
   "menu": {
     "conversations": "Vestlused",

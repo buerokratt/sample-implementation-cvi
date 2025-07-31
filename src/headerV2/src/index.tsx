@@ -72,6 +72,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
     const chatCsaActive = useStore((state) => state.chatCsaActive);
     const userProfileSettings = useStore((state) => state.userProfileSettings);
     const customJwtCookieKey = "customJwtCookie";
+    const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN?.toLowerCase() === 'true';
 
     const [selectDomains, setSelectDomains] = useState<boolean>(false);
 
@@ -323,7 +324,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
                     {userInfo && (
                         <Track gap={32}>
                             <Track gap={16}>
-                                <div style={{width: "120px"}}>
+                                {multiDomainEnabled && (<div style={{width: "120px"}}>
                                     <Button
                                         appearance="text"
                                         style={{ textDecoration: 'underline' }}
@@ -340,6 +341,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
                                     ></DomainsModal>
                                     )}
                                 </div>
+                                )}
 
                                 <p
                                     style={{
