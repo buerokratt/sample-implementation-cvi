@@ -1,6 +1,12 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.39] - 21-08-2025
+
+- Added utility to filter chats
+- Updated get pending chats based on domains
+- Updated get active chats based on domains
+
 ## [0.1.38] - 24-07-2025
 
 - Removed console log
