@@ -3,7 +3,8 @@ import { UserInfo } from "../types/userInfo";
 import { Chat, CHAT_STATUS, Chat as ChatType, GroupedChat, GroupedPendingChat } from "../types/chat";
 import apiDev from "../services/api-dev.ts";
 import { UserProfileSettings } from "../types/userProfileSettings.ts";
-import { isValidationsEnabled } from "../constants/config.ts";
+import { isValidationsEnabled, multiDomainEnabled } from "../constants/config.ts";
+import {filterChatsByDomains} from "../services/domainUtils";
 
 type CsaStatusType = "idle" | "offline" | "online";
 
@@ -36,6 +37,7 @@ interface StoreState {
   pendingChatsLength: () => number;
   validationChatsLength: () => number;
   userDomains: string[];
+  setUserDomains: (domains: string[]) => void;
   activeChatsLength: () => number;
   loadActiveChats: () => Promise<void>;
   getGroupedActiveChats: () => GroupedChat;
@@ -99,6 +101,9 @@ const useStore = create<StoreState>((set, get, _) => ({
     return get().validationChats.find((c) => c.id === selectedChatId);
   },
   unansweredChats: () => {
+  if (multiDomainEnabled) {
+      return filterChatsByDomains(get().activeChats, get().userDomains,c => c.customerSupportId === "")
+    }
     return get().activeChats.filter((c) => c.customerSupportId === "");
   },
   forwordedChats: () => {
@@ -141,9 +146,9 @@ const useStore = create<StoreState>((set, get, _) => ({
     const selectedChatId = get().selectedChatId;
     const isChatStillExists = chats?.filter((e: any) => e.id === selectedChatId);
     if (isChatStillExists.length === 0 && get().pendingChats.length > 0) {
-      setTimeout(() => get().setPendingChats(chats), 3000);
+      setTimeout(() => get().setPendingChats(multiDomainEnabled ? filterChatsByDomains(chats, get().userDomains) : chats), 3000);
     } else {
-      get().setPendingChats(chats);
+      get().setPendingChats(multiDomainEnabled ? filterChatsByDomains(chats, get().userDomains) : chats);
     }
   },
   loadValidationChats: async () => {
@@ -152,7 +157,7 @@ const useStore = create<StoreState>((set, get, _) => ({
     get().setValidationChats(chats);
   },
   getGroupedActiveChats: () => {
-    const activeChats = get().activeChats;
+    const activeChats = multiDomainEnabled ? filterChatsByDomains(get().activeChats,get().userDomains) : get().activeChats;
     const userInfo = get().userInfo;
     const chatCsaActive = get().chatCsaActive;
 
@@ -196,7 +201,7 @@ const useStore = create<StoreState>((set, get, _) => ({
   },
 
   getGroupedUnansweredChats: () => {
-    const activeChats = get().activeChats;
+    const activeChats = multiDomainEnabled ? filterChatsByDomains(get().activeChats,get().userDomains) : get().activeChats;
     const userInfo = get().userInfo;
     const chatCsaActive = get().chatCsaActive;
 

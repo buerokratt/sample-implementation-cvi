@@ -13,3 +13,6 @@ export const isHiddenFeaturesEnabled =
 export const isValidationsEnabled =
   import.meta.env.REACT_APP_VALIDATIONS_ENABLED?.toLowerCase().trim() == "true" ||
   import.meta.env.REACT_APP_VALIDATIONS_ENABLED?.toLowerCase().trim() == "1";
+
+export const multiDomainEnabled =
+    import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN?.toLowerCase().trim() === 'true';
