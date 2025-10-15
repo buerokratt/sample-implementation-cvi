@@ -4,6 +4,7 @@ All changes to this project will be documented in this file.
 ## [0.1.49] - 13-10-2025
 
 - Added use effect to logout on close.
+- Added tabs session management.
 
 ## [0.1.39] - 21-08-2025
 
