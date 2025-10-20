@@ -5,3 +5,8 @@ export const STATUS_COLORS : Record<string, string> = {
     offline: '#D73E3E',
 };
 export const SUBSCRIPTION_INTERVAL = 2 * 60 * 1000;
+
+export enum CHAT_SESSIONS {
+    SESSION_ID_KEY = "tabId",
+    SESSION_STATE_KEY = "sessionTabs"
+}

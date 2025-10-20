@@ -27,6 +27,7 @@ import useChatNotifyEffect from "./hooks/useChatNotifyEffect.tsx";
 import sse from "./services/sse-service.ts";
 import {AiOutlineClose} from "react-icons/ai";
 import DomainsModal from "./components/DomainsModal";
+import { isLastSession } from "./utils/stateManagement.ts";
 
 type CustomerSupportActivity = {
     idCode: string;
@@ -227,9 +228,10 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
 
     const logoutMutation = useMutation({
         mutationFn: () => {
-            apiDev.get("accounts/logout")
+            return apiDev.get("accounts/logout")
         },
         onSuccess(_: any) {
+            localStorage.removeItem("exp");
             window.location.href = import.meta.env.REACT_APP_CUSTOMER_SERVICE_LOGIN;
         },
         onError: async (error: AxiosError) => {
@@ -259,6 +261,28 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
 
         extendUserSessionMutation.mutate();
     };
+
+    useEffect(() => {
+        const handleBeforeUnload = () => {
+            if (isLastSession()) {
+                logoutMutation.mutate();
+            }
+        };
+
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key !== "F5" && event.ctrlKey && event.key === "r") {
+                handleBeforeUnload();
+            }
+        };
+
+        window.addEventListener("beforeunload", handleBeforeUnload);
+        window.addEventListener("keydown", handleKeyDown);
+
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+            window.removeEventListener("keydown", handleKeyDown);
+        };
+    }, []);
 
     const onActive = () => {
         if (!customerSupportActivity) return;
@@ -484,7 +508,6 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
                                         customerSupportId: userInfo.idCode,
                                         statusComment: "",
                                     });
-                                    localStorage.removeItem("exp");
                                     toast?.open({
                                         type: "info",
                                         title: t("global.notification"),
