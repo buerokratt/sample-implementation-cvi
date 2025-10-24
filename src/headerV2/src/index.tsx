@@ -27,7 +27,6 @@ import useChatNotifyEffect from "./hooks/useChatNotifyEffect.tsx";
 import sse from "./services/sse-service.ts";
 import {AiOutlineClose} from "react-icons/ai";
 import DomainsModal from "./components/DomainsModal";
-import { isLastSession } from "./utils/stateManagement.ts";
 
 type CustomerSupportActivity = {
     idCode: string;
@@ -97,11 +96,9 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
             const expirationDate = new Date(parseInt(expirationTimeStamp) ?? "");
             const currentDate = new Date(Date.now());
             if (expirationDate < currentDate && !useStore.getState().chatCsaActive && useStore.getState().csaStatus !== 'online') {
-              localStorage.removeItem("exp");
               logoutMutation.mutate();
             }
           } else {
-            localStorage.removeItem("exp");
             logoutMutation.mutate();
           }
         }, 10000);
@@ -261,28 +258,6 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
 
         extendUserSessionMutation.mutate();
     };
-
-    useEffect(() => {
-        const handleBeforeUnload = () => {
-            if (isLastSession()) {
-                logoutMutation.mutate();
-            }
-        };
-
-        const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.key !== "F5" && event.ctrlKey && event.key === "r") {
-                handleBeforeUnload();
-            }
-        };
-
-        window.addEventListener("beforeunload", handleBeforeUnload);
-        window.addEventListener("keydown", handleKeyDown);
-
-        return () => {
-            window.removeEventListener("beforeunload", handleBeforeUnload);
-            window.removeEventListener("keydown", handleKeyDown);
-        };
-    }, []);
 
     const onActive = () => {
         if (!customerSupportActivity) return;
