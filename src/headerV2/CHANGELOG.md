@@ -1,7 +1,33 @@
 # Changelog
 All changes to this project will be documented in this file.
 
-## [0.1.49] - 13-10-2025
+## [0.1.46] - 24-10-2025
+
+- Removed logout use effects from header as its not consitent in prod.
+
+## [0.1.45] - 23-10-2025
+
+- Removed log out sequence
+
+## [0.1.44] - 23-10-2025
+
+- Added reload and navigate as second check
+
+## [0.1.43] - 22-10-2025
+
+- Reverting changes
+
+## [0.1.42] - 22-10-2025
+
+- Added logs to last session check in before unload
+- Removed extra pre log out check.
+
+## [0.1.41] - 21-10-2025
+
+- Added console log prelogout for test env
+- Added extra check for logout trigger.
+
+## [0.1.40] - 13-10-2025
 
 - Added use effect to logout on close.
 - Added tabs session management.
