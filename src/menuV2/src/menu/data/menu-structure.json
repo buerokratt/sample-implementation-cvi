@@ -369,6 +369,13 @@
           "en": "Multi-Domains"
         },
         "path": "/multi-domains"
+      },
+      {
+        "label": {
+          "et": "Anonümiseerija",
+          "en": "Anonymizer"
+        },
+        "path": "/anonymizer"
       }
     ]
   },
