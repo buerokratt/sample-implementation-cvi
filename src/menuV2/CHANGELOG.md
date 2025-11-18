@@ -2,6 +2,10 @@
 
 All changes to this project will be documented in this file.
 
+## [0.2.9] - 12-11-2025
+
+- Added path /anonymizer to menu items
+
 ## [0.2.8] - 05-06-2025
 
 - Added path /multi-domains menu element to Chatbot module administration
