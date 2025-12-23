@@ -483,11 +483,6 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
                                         customerSupportId: userInfo.idCode,
                                         statusComment: "",
                                     });
-                                    toast?.open({
-                                        type: "info",
-                                        title: t("global.notification"),
-                                        message: t("settings.users.newUnansweredChat"),
-                                    });
                                     logoutMutation.mutate();
                                 }}
                             >

@@ -1,6 +1,10 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.47] - 23-12-2025
+
+- Removed toast on logout
+
 ## [0.1.46] - 24-10-2025
 
 - Removed logout use effects from header as its not consitent in prod.
