@@ -261,6 +261,13 @@
       },
       {
         "label": {
+          "et": "API varamu",
+          "en": "API Registry"
+        },
+        "path": "/api-registry"
+      },
+      {
+        "label": {
           "et": "Automatic Teenused",
           "en": "Automatic Services"
         },
