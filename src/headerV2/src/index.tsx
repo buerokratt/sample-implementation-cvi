@@ -96,10 +96,10 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
             const expirationDate = new Date(parseInt(expirationTimeStamp) ?? "");
             const currentDate = new Date(Date.now());
             if (expirationDate < currentDate && !useStore.getState().chatCsaActive && useStore.getState().csaStatus !== 'online') {
-              logoutMutation.mutate();
+              sessionLogoutMutation.mutate();
             }
           } else {
-            logoutMutation.mutate();
+            sessionLogoutMutation.mutate();
           }
         }, 10000);
         return () => clearInterval(interval);
@@ -239,6 +239,19 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
             });
             console.error(error.message);
         },
+    });
+
+    const sessionLogoutMutation = useMutation({
+      mutationFn: () => {
+        return apiDev.post("session/logout", { "userId": userInfo?.idCode });
+      },
+      onSuccess(_: any) {
+        localStorage.removeItem("exp");
+        window.location.href = import.meta.env.REACT_APP_CUSTOMER_SERVICE_LOGIN;
+      },
+      onError: async (error: AxiosError) => {
+        console.error(error.message);
+      },
     });
 
     const onIdle = () => {

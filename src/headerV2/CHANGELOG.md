@@ -1,6 +1,10 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.48] - 20-04-2026
+
+- Added session logout
+
 ## [0.1.47] - 23-12-2025
 
 - Removed toast on logout
