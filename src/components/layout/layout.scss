@@ -10,19 +10,24 @@
     display: flex;
     flex-direction: column;
     position: relative;
+    min-height: 0;
+  }
+  
+  #placeholder_for_header {
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
   }
 
   &__main {
+    position: relative;
+    z-index: 0;
     flex: 1;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     gap: get-spacing(haapsalu);
     overflow: auto;
     padding: get-spacing(haapsalu);
-    position: absolute;
-    top: 100px;
-    left: 0;
-    right: 0;
-    bottom: 0;
   }
 }
