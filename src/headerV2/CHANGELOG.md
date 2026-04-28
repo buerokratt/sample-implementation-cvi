@@ -1,6 +1,10 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.50] - 28-04-2026
+
+- Enhanced domain selector bar
+
 ## [0.1.49] - 27-04-2026
 
 - Added new domain visual changes
