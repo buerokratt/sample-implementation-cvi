@@ -1,4 +1,4 @@
-import React, {FC, PropsWithChildren, useEffect, useMemo, useState,} from "react";
+import React, {FC, PropsWithChildren, useEffect, useState,} from "react";
 import {useTranslation} from "react-i18next";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {AxiosError} from "axios";
@@ -26,7 +26,7 @@ import {UserInfo} from "./types/userInfo.ts";
 import useChatNotifyEffect from "./hooks/useChatNotifyEffect.tsx";
 import sse from "./services/sse-service.ts";
 import {AiOutlineClose} from "react-icons/ai";
-import DomainsModal from "./components/DomainsModal";
+import DomainSelectorBar from "./components/DomainSelectorBar";
 
 type CustomerSupportActivity = {
     idCode: string;
@@ -73,8 +73,6 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
     const userProfileSettings = useStore((state) => state.userProfileSettings);
     const customJwtCookieKey = "customJwtCookie";
     const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN?.toLowerCase() === 'true';
-
-    const [selectDomains, setSelectDomains] = useState<boolean>(false);
 
     useEffect(() => {
         if (userInfo) {
@@ -331,30 +329,12 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
     return (
         <>
             <header className="header">
+                <div className="header__top">
                 <Track justify="between">
                     <BykLogo height={50}/>
                     {userInfo && (
                         <Track gap={32}>
                             <Track gap={16}>
-                                {multiDomainEnabled && (<div style={{width: "120px"}}>
-                                    <Button
-                                        appearance="text"
-                                        style={{ textDecoration: 'underline' }}
-                                        onClick={() => setSelectDomains(true)}
-                                    >
-                                        {t("multiDomains.selectDomains")}
-                                    </Button>
-                                    {selectDomains && (
-                                    <DomainsModal
-                                        onClose={() => setSelectDomains(false)}
-                                        user={userInfo}
-                                        setUserDomains={setUserDomains}
-                                        toast={toast}
-                                    ></DomainsModal>
-                                    )}
-                                </div>
-                                )}
-
                                 <p
                                     style={{
                                         color: "#5D6071",
@@ -504,6 +484,14 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
                         </Track>
                     )}
                 </Track>
+                </div>
+                {multiDomainEnabled && userInfo && (
+                    <DomainSelectorBar
+                        user={userInfo}
+                        setUserDomains={setUserDomains}
+                        toastContext={toast}
+                    />
+                )}
             </header>
 
             {userInfo && userProfileSettings && userDrawerOpen && (
