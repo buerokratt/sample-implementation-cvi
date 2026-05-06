@@ -343,6 +343,13 @@
       },
       {
         "label": {
+          "et": "Vestluste analüüs",
+          "en": "Chat analysis"
+        },
+        "path": "/chat-analysis"
+      },
+      {
+        "label": {
           "et": "Asutuse tööaeg",
           "en": "Office opening hours"
         },
