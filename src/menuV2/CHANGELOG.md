@@ -2,6 +2,10 @@
 
 All changes to this project will be documented in this file.
 
+## [0.2.11] - 03-03-2026
+
+- Added path /api-registry to menu items
+
 ## [0.2.10] - 07-01-2026
 
 - Added current version environment variable
