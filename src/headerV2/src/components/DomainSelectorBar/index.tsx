@@ -7,6 +7,8 @@ import {getWidgetData, updateUserSelection} from '../../services/user';
 import {DomainSelection} from '../../types/widgetModels';
 import {ToastContextType} from '../../context/ToastContext';
 import {UserInfo} from '../../types/userInfo';
+import useStore from '../../store/store';
+import {isValidationsEnabled} from '../../constants/config';
 import SelectedTick from './SelectedTick';
 import './DomainSelectorBar.scss';
 
@@ -90,6 +92,10 @@ const DomainSelectorBar: FC<DomainSelectorBarProps> = ({user, toastContext, setU
                 .map((s) => s.meta)
                 .filter((m): m is string => typeof m === 'string');
             setUserDomains(domainMeta);
+            useStore.getState().setUserDomains(domainMeta);
+            void useStore.getState().loadActiveChats();
+            void useStore.getState().loadPendingChats();
+            if (isValidationsEnabled) void useStore.getState().loadValidationChats();
             toast?.open({
                 type: 'success',
                 title: t('global.notification'),
