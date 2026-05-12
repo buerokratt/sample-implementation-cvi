@@ -1,6 +1,10 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.51] - 11-05-2026
+
+- Updated user domains on selection
+
 ## [0.1.50] - 28-04-2026
 
 - Enhanced domain selector bar
