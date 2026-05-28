@@ -77,7 +77,6 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
     const customJwtCookieKey = "customJwtCookie";
     const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN?.toLowerCase() === 'true';
     const domainBarVisible = multiDomainEnabled && !!userInfo && !(hideDomainBarPages?.includes(pathname));
-    const headerHeight = domainBarVisible ? 150 : 100;
 
     useEffect(() => {
         if (userInfo) {
@@ -386,7 +385,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
                                                 boxShadow: "0px 20px 40px rgba(0, 0, 0, 0.25)",
                                                 padding: "5px 15px 30px",
                                                 position: "fixed",
-                                                top: `${headerHeight}px`,
+                                                top: `${domainBarVisible ? 150 : 100}px`,
                                                 right: 0,
                                                 width: "600px"
                                             }}
@@ -504,7 +503,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
                 <Drawer
                     title={userInfo.displayName}
                     onClose={() => setUserDrawerOpen(false)}
-                    style={{width: 400, top: headerHeight}}
+                    style={{width: 400, top: domainBarVisible ? 150 : 100}}
                 >
                     <Section>
                         <Track gap={8} direction="vertical" align="left">
