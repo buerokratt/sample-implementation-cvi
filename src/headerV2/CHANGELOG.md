@@ -1,6 +1,10 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.52] - 28-05-2026
+
+- Fixed multidomain selection covers user settings menu
+
 ## [0.1.51] - 11-05-2026
 
 - Updated user domains on selection
