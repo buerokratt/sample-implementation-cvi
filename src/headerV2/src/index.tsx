@@ -77,7 +77,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
     const customJwtCookieKey = "customJwtCookie";
     const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN?.toLowerCase() === 'true';
     const domainBarVisible = multiDomainEnabled && !!userInfo && !(hideDomainBarPages?.includes(pathname));
-    const headerHeight = domainBarVisible ? 135 : 100;
+    const headerHeight = domainBarVisible ? 150 : 100;
 
     useEffect(() => {
         if (userInfo) {
@@ -385,8 +385,9 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
                                                 borderRadius: "4px",
                                                 boxShadow: "0px 20px 40px rgba(0, 0, 0, 0.25)",
                                                 padding: "5px 15px 30px",
-                                                position: "absolute",
+                                                position: "fixed",
                                                 top: `${headerHeight}px`,
+                                                right: 0,
                                                 width: "600px"
                                             }}
                                         >
