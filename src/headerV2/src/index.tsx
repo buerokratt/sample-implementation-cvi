@@ -486,9 +486,9 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
                     )}
                 </Track>
                 </div>
-                {isDomainSelectorVisible && (
+                {isDomainSelectorVisible && userInfo && (
                     <DomainSelectorBar
-                        user={userInfo!}
+                        user={userInfo}
                         setUserDomains={setUserDomains}
                         toastContext={toast}
                     />
