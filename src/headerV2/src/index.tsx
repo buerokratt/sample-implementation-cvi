@@ -3,7 +3,6 @@ import {useTranslation} from "react-i18next";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {AxiosError} from "axios";
 import {useIdleTimer} from "react-idle-timer";
-import {useLocation} from "react-router-dom";
 import {ToastContextType} from "./context/ToastContext.tsx";
 import {MdOutlineExpandMore} from "react-icons/md";
 
@@ -54,12 +53,11 @@ type UserStoreStateProps = {
     user: UserInfo | null;
     setUserDomains: (domains: string[]) => void;
     toastContext: ToastContextType | null;
-    hideDomainBarPages?: string[];
+    isDomainSelectorVisible: boolean;
 };
 
-const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext, setUserDomains, hideDomainBarPages}) => {
+const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext, setUserDomains, isDomainSelectorVisible}) => {
     const {t} = useTranslation();
-    const {pathname} = useLocation();
     const userInfo = user;
     const toast = toastContext;
 
@@ -75,8 +73,6 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
     const chatCsaActive = useStore((state) => state.chatCsaActive);
     const userProfileSettings = useStore((state) => state.userProfileSettings);
     const customJwtCookieKey = "customJwtCookie";
-    const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN?.toLowerCase() === 'true';
-    const domainBarVisible = multiDomainEnabled && !!userInfo && !(hideDomainBarPages?.includes(pathname));
 
     useEffect(() => {
         if (userInfo) {
@@ -385,7 +381,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
                                                 boxShadow: "0px 20px 40px rgba(0, 0, 0, 0.25)",
                                                 padding: "5px 15px 30px",
                                                 position: "fixed",
-                                                top: `${domainBarVisible ? 150 : 100}px`,
+                                                top: `${isDomainSelectorVisible ? 150 : 100}px`,
                                                 right: 0,
                                                 width: "600px"
                                             }}
@@ -490,7 +486,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
                     )}
                 </Track>
                 </div>
-                {domainBarVisible && (
+                {isDomainSelectorVisible && (
                     <DomainSelectorBar
                         user={userInfo!}
                         setUserDomains={setUserDomains}
@@ -503,7 +499,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
                 <Drawer
                     title={userInfo.displayName}
                     onClose={() => setUserDrawerOpen(false)}
-                    style={{width: 400, top: domainBarVisible ? 150 : 100}}
+                    style={{width: 400, top: isDomainSelectorVisible ? 150 : 100}}
                 >
                     <Section>
                         <Track gap={8} direction="vertical" align="left">
