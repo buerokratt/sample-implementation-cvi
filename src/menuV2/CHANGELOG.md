@@ -2,6 +2,10 @@
 
 All changes to this project will be documented in this file.
 
+## [0.2.13] - 02-06-2026
+
+- Removed /advisors from menu items
+
 ## [0.2.12] - 06-05-2026
 
 - Added path /chat-analysis to menu items

@@ -222,13 +222,6 @@
       },
       {
         "label": {
-          "et": "Nõustajad",
-          "en": "Advisors"
-        },
-        "path": "/advisors"
-      },
-      {
-        "label": {
           "et": "Avaandmed",
           "en": "Reports"
         },
