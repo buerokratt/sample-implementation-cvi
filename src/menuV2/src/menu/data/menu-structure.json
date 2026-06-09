@@ -287,7 +287,7 @@
         "id": "rag-search",
         "label": {
           "et": "Mudelid ja seadistused",
-          "en": "Models' management"
+          "en": "Models management"
         },
         "path": "/rag-search",
         "children": [
