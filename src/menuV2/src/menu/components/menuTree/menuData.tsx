@@ -6,6 +6,7 @@ import {
   MdMiscellaneousServices, 
   MdSettings, 
   MdOutlineMonitorWeight,
+  MdOutlineSchool,
 } from 'react-icons/md';
 
 export const menuData = [
@@ -38,5 +39,10 @@ export const menuData = [
     id: 'monitoring',
     icon: <MdOutlineMonitorWeight className='menu-item-icon' />,
     url: import.meta.env.REACT_APP_MONITORING_BASE_URL,
+  },
+  {
+    id: 'knowledge-center',
+    icon: <MdOutlineSchool className='menu-item-icon' />,
+    url: import.meta.env.REACT_APP_KNOWLEDGE_CENTER_BASE_URL,
   },
 ];

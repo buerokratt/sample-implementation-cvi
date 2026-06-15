@@ -2,6 +2,14 @@
 
 All changes to this project will be documented in this file.
 
+## [0.2.15] - 09-06-2026
+
+- Fixed typo
+
+## [0.2.14] - 08-06-2026
+
+- Added knowledge center to menu items
+
 ## [0.2.13] - 02-06-2026
 
 - Removed /advisors from menu items

@@ -276,6 +276,78 @@
     ]
   },
   {
+    "id": "knowledge-center",
+    "label": {
+      "et": "Teadmuskeskus",
+      "en": "Knowledge Center"
+    },
+    "path": "/knowledge-center",
+    "children": [
+      {
+        "id": "rag-search",
+        "label": {
+          "et": "Mudelid ja seadistused",
+          "en": "Models management"
+        },
+        "path": "/rag-search",
+        "children": [
+          {
+            "label": {
+              "et": "Mudelite ühendused",
+              "en": "LLM connections"
+            },
+            "path": "/rag-search/llm-connections"
+          },
+          {
+            "label": {
+              "et": "Viiba Seaded",
+              "en": "Prompt Configurations"
+            },
+            "path": "/rag-search/prompt-configurations"
+          },
+          {
+            "label": {
+              "et": "Testi mudelit",
+              "en": "Test LLM"
+            },
+            "path": "/rag-search/test-llm"
+          }
+        ]
+      },
+      {
+        "id": "ckb",
+        "label": {
+          "et": "Teadmusbaas",
+          "en": "Knowledge Base"
+        },
+        "path": "/ckb",
+        "children": [
+          {
+            "label": {
+              "et": "Agentuur",
+              "en": "Agency"
+            },
+            "path": "/ckb/agency"
+          },
+          {
+            "label": {
+              "et": "Aruanded",
+              "en": "Reports"
+            },
+            "path": "/ckb/reports"
+          },
+          {
+            "label": {
+              "et": "API Integratsioonid",
+              "en": "API Integrations"
+            },
+            "path": "/ckb/api"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "settings",
     "label": {
       "et": "Haldus",
