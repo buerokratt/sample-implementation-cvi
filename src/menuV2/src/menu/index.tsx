@@ -34,18 +34,23 @@ const MainNavigation: FC<MainNavigationProps> = ({countConf}) => {
   if (!menuItems) return null;
 
   return (
-    <nav className={clsx('nav', { 'collapsed': navCollapsed })}>
-      <button className='nav__menu-toggle close-button-item' onClick={handleCloseButtonClick}>
-        <Icon icon={<MdClose />} />
-        <span className='menu-item-title'>{t(navCollapsed ? 'mainMenu.openMenu' : 'mainMenu.closeMenu' )}</span>
-      </button>
-      <ul className='nav__menu'>
-        <MenuTree
-          menuItems={menuItems}
-          serviceId={serviceId}
-          handleNavToggle={handleNavToggle}
-        />
-      </ul>
+    <nav className={clsx("nav", { collapsed: navCollapsed })}>
+      <div className="nav__wrapper">
+        <button className="nav__menu-toggle close-button-item" onClick={handleCloseButtonClick}>
+          <Icon icon={<MdClose />} />
+          <span className="menu-item-title">{t(navCollapsed ? "mainMenu.openMenu" : "mainMenu.closeMenu")}</span>
+        </button>
+
+        <div className="nav__content">
+          <ul className="nav__menu">
+            <MenuTree menuItems={menuItems} serviceId={serviceId} handleNavToggle={handleNavToggle} />
+          </ul>
+        </div>
+
+        {import.meta.env.REACT_APP_CURRENT_VERSION && (
+          <div className="nav__version-bar">{import.meta.env.REACT_APP_CURRENT_VERSION}</div>
+        )}
+      </div>
     </nav>
   );
 };

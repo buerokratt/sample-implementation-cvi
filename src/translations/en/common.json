@@ -44,7 +44,9 @@
     "today": "Today",
     "forward": "Forward",
     "chosen": "Chosen",
-    "read": "Read"
+    "read": "Read",
+    "statusClarification": "Status clarification",
+    "selectAll": "Select all"
   },
   "mainMenu": {
     "menuLabel": "Main navigation",
@@ -52,6 +54,12 @@
     "openMenu": "Open menu",
     "openIcon": "Open menu icon",
     "closeIcon": "Close menu icon"
+  },
+  "multiDomains": {
+    "selectDomains": "Select Domains",
+    "chooseDomain": "Select domain:",
+    "allDomains": "All",
+    "noDomains": "No domains available. Please contact your system administrator."
   },
   "menu": {
     "conversations": "Conversations",
@@ -61,7 +69,7 @@
     "training": "Training",
     "themes": "Themes",
     "answers": "Answers",
-    "userStories": "User Stories",
+    "rules": "Rules",
     "configuration": "Configuration",
     "forms": "Forms",
     "slots": "Slots",
@@ -209,10 +217,14 @@
       "soundNotifications": "Sound notifications",
       "popupNotifications": "Popup notifications",
       "newUnansweredChat": "New unanswered chat",
+      "newForwardedChatTitle": "Forwarded chat",
+      "newForwardedChatMessage": "You have new forwarded chat!",
       "newForwardedChat": "New forwarded chat",
+      "newValidationMessage": "New message to validate",
       "useAutocorrect": "Text auto corrector",
       "required": "Required",
-      "invalidemail": "Invalid email"
+      "invalidemail": "Invalid email",
+      "statusCommentUpdated": "Status clarification updated"
     },
     "chat": {
       "chatActive": "Chatbot active",
@@ -284,7 +296,7 @@
       "copied": "Copied",
       "userDeleted": "User deleted",
       "newUserAdded": "New user added",
-      "userUpdated": "User updated" 
+      "userUpdated": "User updated"
     }
   }
 }

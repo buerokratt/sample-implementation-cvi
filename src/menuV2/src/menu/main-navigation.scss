@@ -9,9 +9,30 @@
   overflow: auto;
   scrollbar-width: none;
   transition: width .1s ease-out;
+  display: flex;
+  height: 100vh;
 
   &::-webkit-scrollbar {
     display: none;
+  }
+
+  &__wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  &__content {
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: none;
+    padding-bottom: 50px;
+    
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   li, a, .nav__toggle, .nav__menu-toggle {
@@ -36,7 +57,7 @@
     width: 100%;
     display: flex;
     align-items: center;
-    gap: get-spacing(paldiski);
+    gap: 5px !important;
     color: get-color(black-coral-0);
     padding: 14px 8px 14px 32px;
     box-shadow: inset 0 -1px 0 get-color(sapphire-blue-14);
@@ -112,6 +133,29 @@
         }
       }
     }
+  }
+
+  &__version-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background-color: get-color(sapphire-blue-10);
+    z-index: 100;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 5px 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-break: break-all;
+    text-align: center;
+    border-top: 1px solid get-color(sapphire-blue-14);
   }
 }
 

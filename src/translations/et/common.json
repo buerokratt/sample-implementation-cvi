@@ -44,7 +44,9 @@
     "today": "Täna",
     "forward": "Suuna",
     "chosen": "Valitud",
-    "read": "Loetud"
+    "read": "Loetud",
+    "statusClarification": "Staatuse täpsustus",
+    "selectAll": "Vali kõik"
   },
   "mainMenu": {
     "menuLabel": "Põhinavigatsioon",
@@ -52,6 +54,12 @@
     "openMenu": "Ava menüü",
     "openMenuIcon": "Ava menüü ikoon",
     "closeMenuIcon": "Sulge menüü ikoon"
+  },
+  "multiDomains": {
+    "selectDomains": "Vali Domeenid",
+    "chooseDomain": "Vali domeen:",
+    "allDomains": "Kõik",
+    "noDomains": "Domeene ei ole saadaval. Palun võtke ühendust süsteemiadministraatoriga."
   },
   "menu": {
     "conversations": "Vestlused",
@@ -61,7 +69,7 @@
     "training": "Treening",
     "themes": "Teemad",
     "answers": "Vastused",
-    "userStories": "Kasutaja lood",
+    "rules": "Kasutaja lood",
     "configuration": "Konfiguratsioon",
     "forms": "Vormid",
     "slots": "Pilud",
@@ -209,10 +217,14 @@
       "soundNotifications": "Häälmärguanded",
       "popupNotifications": "Pop-up märguanded",
       "newUnansweredChat": "Uus vastamata vestlus",
+      "newForwardedChatTitle": "Suunatud vestlus",
+      "newForwardedChatMessage": "Sulle suunati uus vestlus!",
       "newForwardedChat": "Uus suunatud vestlus",
+      "newValidationMessage": "Uus teade kinnitamiseks",
       "useAutocorrect": "Teksti autokorrektor",
       "required": "Nõutud",
-      "invalidemail": "Kehtetu e-posti"
+      "invalidemail": "Kehtetu e-posti",
+      "statusCommentUpdated": "Staatuse täpsustus uuendatud"
     },
     "chat": {
       "chatActive": "Vestlusrobot aktiivne",

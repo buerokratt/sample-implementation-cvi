@@ -1,0 +1,46 @@
+import React,{ forwardRef, InputHTMLAttributes, PropsWithChildren, useId } from "react";
+import clsx from 'clsx';
+import './Input.scss';
+
+type InputProps = PropsWithChildren<InputHTMLAttributes<HTMLInputElement>> & {
+  label?: string;
+  name?: string;
+  hideLabel?: boolean;
+  maxLength?: number;
+  className?: string;
+};
+
+const FieldInput = forwardRef<HTMLInputElement, InputProps>(
+  (
+    { label, name, disabled, hideLabel, maxLength, className, children, ...rest },
+    ref
+  ) => {
+    const id = useId();
+
+    const inputClasses = clsx('input', disabled && 'input--disabled');
+
+    return (
+      <div className={`${inputClasses} ${className}`}>
+        {label && !hideLabel && (
+          <label htmlFor={id} className="input__title">
+            {label}
+          </label>
+        )}
+        <div className="input__wrapper">
+          <input
+            className={inputClasses}
+            name={name}
+            maxLength={maxLength ?? undefined}
+            id={id}
+            ref={ref}
+            aria-label={hideLabel ? label : undefined}
+            {...rest}
+          />
+          {children}
+        </div>
+      </div>
+    );
+  }
+);
+
+export default FieldInput;

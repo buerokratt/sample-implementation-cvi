@@ -4,12 +4,16 @@ import { useTranslation } from "react-i18next";
 import { useDing } from "./useAudio.tsx";
 import { ToastContextType } from "../context/ToastContext.tsx";
 import { useBrowserNotification } from "./useBrowserNotification";
+import { Chat as ChatType } from "../types/chat.ts";
 
-const useChatNotifyEffect = ({ toast, useStore }: { toast: ToastContextType | null, useStore: any }) => {
+const useChatNotifyEffect = ({ toast, useStore }: { toast: ToastContextType | null; useStore: any }) => {
   const { t } = useTranslation();
   const { showNotification } = useBrowserNotification();
 
   const unansweredChatsLength = useStore((state) => state.unansweredChatsLength());
+  const activeChats = useStore((state) => state.activeChats);
+  const userId = useStore((state) => state.userId);
+  const validationChatsLength = useStore((state) => state.validationChatsLength());
   const messagesMap = useStore((state) => state.messagesMap());
   const activeChatsLength = useStore((state) => state.activeChats.length);
   const newChatSoundNotifications = useStore((state) => state.userProfileSettings.newChatSoundNotifications);
@@ -17,39 +21,69 @@ const useChatNotifyEffect = ({ toast, useStore }: { toast: ToastContextType | nu
   const forwardedChatsLength = useStore((state) => state.forwordedChatsLength());
   const forwardedChatSoundNotifications = useStore((state) => state.userProfileSettings.forwardedChatSoundNotifications);
   const forwardedChatPopupNotifications = useStore((state) => state.userProfileSettings.forwardedChatPopupNotifications);
-  const csaStatus = useStore((state) => state.csaStatus);
 
   const ding = useDing();
 
   const handleNewMessage = () => {
-    if (unansweredChatsLength <= 0) return;
+    if (unansweredChatsLength <= 0 && activeChatsLength <= 0) return;
 
-    if (newMessagesDetected("byk_header_unansweredChatsMessagesMap", messagesMap)) {
-      if (newChatSoundNotifications && csaStatus != "offline") ding?.play();
-      if (newChatPopupNotifications && csaStatus != "offline") {
-        toast?.open({
-          type: "info",
-          title: t("global.notification"),
-          message: t("settings.users.newUnansweredChat"),
-        });
+    const newMessageDetected = newMessagesDetected("byk_header_chatsMessagesMap", messagesMap);
+    if (newMessageDetected.newMessages) {
+      const chat = activeChats.find((chat: ChatType) => chat.id === newMessageDetected.id);
+      if (chat?.customerSupportId === userId || chat?.customerSupportId === "") {
+        const focusedChat = localStorage.getItem("focused_chat");
+
+        if (focusedChat === null || focusedChat !== newMessageDetected.id) {
+          if (newChatSoundNotifications) ding?.play();
+          if (newChatPopupNotifications) {
+            toast?.open({
+              type: "info",
+              title: t("global.notification"),
+              message: t("settings.users.newUnansweredChat"),
+            });
+          }
+          showNotification();
+        }
       }
-      showNotification()
     }
   };
 
   const handleForwordMessage = () => {
-    if (forwardedChatsLength <= 0)
+    if (forwardedChatsLength <= 0) {
+      if (activeChats.length != 0) {
+        localStorage.setItem("byk_header_forwardedChatsLength", forwardedChatsLength);
+      }
       return;
+    };
 
-    if (samePreviousValue("byk_header_forwardedChatsLength", forwardedChatsLength))
+    if (samePreviousValue("byk_header_forwardedChatsLength", forwardedChatsLength)) return;
+
+    if (forwardedChatSoundNotifications) ding?.play();
+    if (forwardedChatPopupNotifications)
+      toast?.open({
+        type: "success",
+        title: t("settings.users.newForwardedChatTitle"),
+        message: t("settings.users.newForwardedChatMessage"),
+        duration: Infinity,
+      });
+  };
+
+  const handleValidationchats = () => {
+    if (validationChatsLength <= 0) {
+      if (activeChats.length != 0) {
+        localStorage.setItem("byk_header_validationChatsLength", validationChatsLength);
+      }
       return;
+    }
 
-    if (forwardedChatSoundNotifications && csaStatus != "offline") ding?.play();
-    if (forwardedChatPopupNotifications && csaStatus != "offline")
+    if (samePreviousValue("byk_header_validationChatsLength", validationChatsLength)) return;
+
+    if (newChatSoundNotifications) ding?.play();
+    if (newChatPopupNotifications)
       toast?.open({
         type: "info",
         title: t("global.notification"),
-        message: t("settings.users.newForwardedChat"),
+        message: t("settings.users.newValidationMessage"),
       });
   };
 
@@ -62,6 +96,10 @@ const useChatNotifyEffect = ({ toast, useStore }: { toast: ToastContextType | nu
   }, [forwardedChatsLength, activeChatsLength, messagesMap]);
 
   useEffect(() => {
+    handleValidationchats();
+  }, [validationChatsLength]);
+
+  useEffect(() => {
     const subscription = interval(2 * 60 * 1000).subscribe(() => {
       handleNewMessage();
       handleForwordMessage();
@@ -69,29 +107,29 @@ const useChatNotifyEffect = ({ toast, useStore }: { toast: ToastContextType | nu
 
     return () => subscription?.unsubscribe();
   }, []);
-}
+};
 
 const samePreviousValue = (key: string, value: number) => {
   const previousValue = parseInt(localStorage.getItem(key) || "0");
-  if (previousValue === value)
-    return true;
+  if (previousValue === value) return true;
   localStorage.setItem(key, value.toString());
   return false;
-}
+};
 
 const newMessagesDetected = (key: string, currentMessagesMap: Map<string, number>) => {
-  const previousMessagesMap = JSON.parse(localStorage.getItem(key) || "{}");
+  const previousMessagesMap = JSON.parse(localStorage.getItem(key) ?? "{}");
 
-  let newMessages = false;
+  let result = { newMessages: false, id: "" };
+
   for (const [id, value] of currentMessagesMap.entries()) {
     if (!previousMessagesMap[id] || previousMessagesMap[id] < value) {
-      newMessages = true;
+      result = { newMessages: true, id };
       break;
     }
   }
 
   localStorage.setItem(key, JSON.stringify(Object.fromEntries(currentMessagesMap)));
-  return newMessages;
+  return result;
 };
 
 export default useChatNotifyEffect;

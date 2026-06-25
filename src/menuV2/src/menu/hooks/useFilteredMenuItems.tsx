@@ -19,11 +19,11 @@ const useFilteredMenuItems = (countConf?: CountConf) => {
     
     const roles: any[] = data.response;
     const rolePermissions = {
-      ROLE_ADMINISTRATOR: ["conversations", "training", "analytics", "services", "settings", "monitoring"],
-      ROLE_SERVICE_MANAGER: ["training", "services", "monitoring"],
-      ROLE_CUSTOMER_SUPPORT_AGENT: ["conversations", "monitoring"],
-      ROLE_CHATBOT_TRAINER: ["training", "monitoring"],
-      ROLE_ANALYST: ["analytics", "monitoring"],
+      ROLE_ADMINISTRATOR: ["conversations", "training", "analytics", "services", "knowledge-center", "settings"],
+      ROLE_SERVICE_MANAGER: ["training", "services"],
+      ROLE_CUSTOMER_SUPPORT_AGENT: ["conversations"],
+      ROLE_CHATBOT_TRAINER: ["training"],
+      ROLE_ANALYST: ["analytics"],
     };
 
     let permissions = new Set();

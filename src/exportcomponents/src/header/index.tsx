@@ -104,6 +104,26 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user}) => {
   }, [userInfo]);
 
   useEffect(() => {
+    const handleBeforeUnload = () => {
+      logoutMutation.mutate();
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "F5" && event.ctrlKey && event.key === "r") {
+        handleBeforeUnload();
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  useEffect(() => {
     getMessages();
   }, [userInfo?.idCode]);
 

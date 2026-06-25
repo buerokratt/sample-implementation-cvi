@@ -34,6 +34,13 @@
           "en": "History"
         },
         "path": "/history"
+      },
+      {
+        "label": {
+          "et": "Valideerimised",
+          "en": "Validations"
+        },
+        "path": "/validations"
       }
     ]
   },
@@ -83,10 +90,10 @@
           },
           {
             "label": {
-              "et": "Kasutuslood",
-              "en": "User Stories"
+              "et": "Reeglid",
+              "en": "Rules"
             },
-            "path": "/training/stories"
+            "path": "/training/rules"
           },
           {
             "hidden": true,
@@ -146,6 +153,13 @@
       },
       {
         "label": {
+          "et": "Treeni uus mudel",
+          "en": "Train new model"
+        },
+        "path": "/train-new-model"
+      },
+      {
+        "label": {
           "et": "Mudelipank ja analüütika",
           "en": "Modelbank and analytics"
         },
@@ -174,13 +188,6 @@
             "path": "/analytics/testcases"
           }
         ]
-      },
-      {
-        "label": {
-          "et": "Treeni uus mudel",
-          "en": "Train new model"
-        },
-        "path": "/train-new-model"
       }
     ]
   },
@@ -212,13 +219,6 @@
           "en": "Feedback"
         },
         "path": "/feedback"
-      },
-      {
-        "label": {
-          "et": "Nõustajad",
-          "en": "Advisors"
-        },
-        "path": "/advisors"
       },
       {
         "label": {
@@ -254,6 +254,13 @@
       },
       {
         "label": {
+          "et": "API varamu",
+          "en": "API Registry"
+        },
+        "path": "/api-registry"
+      },
+      {
+        "label": {
           "et": "Automatic Teenused",
           "en": "Automatic Services"
         },
@@ -265,6 +272,78 @@
           "en": "Faulty Services"
         },
         "path": "/faultyServices"
+      }
+    ]
+  },
+  {
+    "id": "knowledge-center",
+    "label": {
+      "et": "Teadmuskeskus",
+      "en": "Knowledge Center"
+    },
+    "path": "/knowledge-center",
+    "children": [
+      {
+        "id": "rag-search",
+        "label": {
+          "et": "Mudelid ja seadistused",
+          "en": "Models management"
+        },
+        "path": "/rag-search",
+        "children": [
+          {
+            "label": {
+              "et": "Mudelite ühendused",
+              "en": "LLM connections"
+            },
+            "path": "/rag-search/llm-connections"
+          },
+          {
+            "label": {
+              "et": "Viiba Seaded",
+              "en": "Prompt Configurations"
+            },
+            "path": "/rag-search/prompt-configurations"
+          },
+          {
+            "label": {
+              "et": "Testi mudelit",
+              "en": "Test LLM"
+            },
+            "path": "/rag-search/test-llm"
+          }
+        ]
+      },
+      {
+        "id": "ckb",
+        "label": {
+          "et": "Teadmusbaas",
+          "en": "Knowledge Base"
+        },
+        "path": "/ckb",
+        "children": [
+          {
+            "label": {
+              "et": "Agentuur",
+              "en": "Agency"
+            },
+            "path": "/ckb/agency"
+          },
+          {
+            "label": {
+              "et": "Aruanded",
+              "en": "Reports"
+            },
+            "path": "/ckb/reports"
+          },
+          {
+            "label": {
+              "et": "API Integratsioonid",
+              "en": "API Integrations"
+            },
+            "path": "/ckb/api"
+          }
+        ]
       }
     ]
   },
@@ -317,8 +396,22 @@
               "en": "Emergency notices"
             },
             "path": "/chatbot/emergency-notices"
+          },
+          {
+            "label": {
+              "et": "Tagasiside",
+              "en": "Feedback"
+            },
+            "path": "/chatbot/feedback"
           }
         ]
+      },
+      {
+        "label": {
+          "et": "Vestluste analüüs",
+          "en": "Chat analysis"
+        },
+        "path": "/chat-analysis"
       },
       {
         "label": {
@@ -340,6 +433,28 @@
           "en": "Delete conversations"
         },
         "path": "/delete-conversations"
+      },
+      {
+        "label": {
+          "et": "SKMi konfiguratsioon",
+          "en": "SKM Configuration"
+        },
+        "path": "/skm-configuration"
+      },
+      {
+        "hidden": false,
+        "label": {
+          "et": "Multidomeenid",
+          "en": "Multi-Domains"
+        },
+        "path": "/multi-domains"
+      },
+      {
+        "label": {
+          "et": "Anonümiseerija",
+          "en": "Anonymizer"
+        },
+        "path": "/anonymizer"
       }
     ]
   },

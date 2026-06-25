@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Header } from "../../headerV2";
 import useUserInfoStore from "../../exportcomponents/src/header/store/store";
 import { MainNavigation }  from "../../menuV2";
-import {useToast} from "../../headerV2/src/header/hooks/useToast.tsx";
+import {useToast} from "../../headerV2/src/hooks/useToast.tsx";
 
 const Layout: FC = () => {
     const CACHE_NAME = 'mainmenu-cache';
