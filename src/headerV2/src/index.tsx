@@ -130,6 +130,30 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
         }
     });
 
+    const [awayStatusActive, setAwayStatusActive] = useState(true);
+    const [awayStatusTimeout, setAwayStatusTimeout] = useState(USER_IDLE_STATUS_TIMEOUT);
+
+    useQuery({
+      queryKey: ["accounts/admin/session-length", "prod"],
+      refetchOnWindowFocus: false,
+      onSuccess: (res: any) => {
+        const config = (res.response ?? []).reduce(
+          (acc: Record<string, string>, item: { key: string; value: string }) => {
+            acc[item.key] = item.value;
+            return acc;
+          },
+          {},
+        );
+
+        if (config.away_status_active !== undefined) {
+          setAwayStatusActive(config.away_status_active?.toLowerCase() === "true");
+        }
+        if (config.away_status_timeout) {
+          setAwayStatusTimeout(parseInt(config.away_status_timeout, 10) * 60000);
+        }
+      },
+    });
+
     useEffect(() => {
         const handlers = [loadActiveChats, ...(validationChats ? [validationChats] : []), pendingChats];
 
@@ -294,8 +318,9 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
         onIdle,
         onActive,
         onAction,
-        timeout: USER_IDLE_STATUS_TIMEOUT,
+        timeout: awayStatusTimeout,
         throttle: 500,
+        disabled: !awayStatusActive,
     });
 
     const handleUserProfileSettingsChange = (key: string, checked: boolean) => {
