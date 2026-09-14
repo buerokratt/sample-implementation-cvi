@@ -1,6 +1,10 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.55] - 14-09-2026
+
+- Modified user status naming
+
 ## [0.1.54] - 02-09-2026
 
 - Modified away status functionality
