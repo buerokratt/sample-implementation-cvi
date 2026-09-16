@@ -381,7 +381,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
                                         name="csaStatus"
                                         onColor="#308653"
                                         onLabel={t("global.present") || ""}
-                                        offLabel={t("global.away") || ""}
+                                        offLabel={t("global.busy") || ""}
                                     />
                                 </div>
                                 <Track direction="vertical">
