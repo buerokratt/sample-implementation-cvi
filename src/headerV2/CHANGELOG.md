@@ -1,6 +1,11 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.56] - 28-09-2026
+
+- Session is extended on any user activity, so logout happens only after the configured session length of inactivity
+- Redirect to login when the session has expired
+
 ## [0.1.55] - 14-09-2026
 
 - Modified user status naming
