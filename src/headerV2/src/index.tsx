@@ -1,4 +1,4 @@
-import React, {FC, PropsWithChildren, useEffect, useState,} from "react";
+import React, {FC, PropsWithChildren, useEffect, useRef, useState,} from "react";
 import {useTranslation} from "react-i18next";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {AxiosError} from "axios";
@@ -15,6 +15,8 @@ import {UserProfileSettings} from "./types/userProfileSettings";
 import {
     isHiddenFeaturesEnabled,
     isValidationsEnabled,
+    SESSION_EXTEND_DELAY_AFTER_LOAD,
+    SESSION_EXTEND_INTERVAL,
     STATUS_COMMENT_LENGTH,
     USER_IDLE_STATUS_TIMEOUT
 } from "./constants/config";
@@ -93,7 +95,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
           ) {
             const expirationDate = new Date(parseInt(expirationTimeStamp) ?? "");
             const currentDate = new Date(Date.now());
-            if (expirationDate < currentDate && !useStore.getState().chatCsaActive && useStore.getState().csaStatus !== 'online') {
+            if (expirationDate < currentDate) {
               sessionLogoutMutation.mutate();
             }
           } else {
@@ -207,7 +209,6 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
         onSuccess: (data, variables) => {
             useStore.getState().setCsaStatus(variables.customerSupportStatus);
             useStore.getState().setChatCsaActive(variables.customerSupportActive);
-            if (csaStatus === "online") extendUserSessionMutation.mutate();
 
             if (variables.changingStatusComment) {
                 toast?.open({
@@ -237,10 +238,10 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
     });
 
   const extendUserSessionMutation = useMutation({
-    mutationFn: async () => {
-      const {
-        data: { data },
-      } = await apiDev.post("extend", {});
+    mutationFn: () => apiDev.post("extend", {}),
+    onSuccess: () => {
+      const sessionLength = Number(userInfo?.JWTExpirationTimestamp) - Number(userInfo?.JWTCreated);
+      if (sessionLength > 0) localStorage.setItem("exp", String(Date.now() + sessionLength));
     },
     onError: (error: AxiosError) => {},
   });
@@ -267,12 +268,9 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
       mutationFn: () => {
         return apiDev.post("session/logout", { "userId": userInfo?.idCode });
       },
-      onSuccess(_: any) {
+      onSettled() {
         localStorage.removeItem("exp");
         window.location.href = import.meta.env.REACT_APP_CUSTOMER_SERVICE_LOGIN;
-      },
-      onError: async (error: AxiosError) => {
-        console.error(error.message);
       },
     });
 
@@ -287,18 +285,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
                 customerSupportStatus: "idle",
                 statusComment: ""
             });
-
-            return;
         }
-
-        extendUserSessionMutation.mutate();
-    };
-
-    const onActive = () => {
-        if (!customerSupportActivity) return;
-        if (csaStatus === "offline" || csaStatus === 'idle') return;
-
-        extendUserSessionMutation.mutate();
     };
 
     const onAction = () => {
@@ -310,17 +297,25 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
                 customerSupportStatus: "online",
                 statusComment: ""
             });
-            extendUserSessionMutation.mutate();
         }
     }
 
     useIdleTimer({
         onIdle,
-        onActive,
         onAction,
         timeout: awayStatusTimeout,
         throttle: 500,
         disabled: !awayStatusActive,
+    });
+
+    const mountedAt = useRef(Date.now());
+
+    useIdleTimer({
+        onAction: () => {
+            if (Date.now() - mountedAt.current < SESSION_EXTEND_DELAY_AFTER_LOAD) return;
+            extendUserSessionMutation.mutate();
+        },
+        throttle: SESSION_EXTEND_INTERVAL,
     });
 
     const handleUserProfileSettingsChange = (key: string, checked: boolean) => {
