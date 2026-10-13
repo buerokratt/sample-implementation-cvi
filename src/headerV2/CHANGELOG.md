@@ -1,6 +1,9 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [Unreleased]
+- Use the notifications client for chat status updates and reconnect it after extending the user session.
+
 ## [0.1.56] - 28-09-2026
 
 - Session is extended on any user activity, so logout happens only after the configured session length of inactivity
