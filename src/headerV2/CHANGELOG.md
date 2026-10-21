@@ -1,6 +1,10 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [0.1.57] - 21-10-2026
+
+- Fixed truncated and malformed toast messages
+
 ## [0.1.56] - 28-09-2026
 
 - Session is extended on any user activity, so logout happens only after the configured session length of inactivity
