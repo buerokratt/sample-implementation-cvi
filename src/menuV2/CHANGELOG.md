@@ -2,6 +2,10 @@
 
 All changes to this project will be documented in this file.
 
+## [0.2.16] - 10-11-2026
+
+- Fixed parent menu group not opening on page load for nested modules
+
 ## [0.2.15] - 09-06-2026
 
 - Fixed typo
