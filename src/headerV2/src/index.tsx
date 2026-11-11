@@ -1,8 +1,10 @@
-import React, {FC, PropsWithChildren, useEffect, useRef, useState,} from "react";
+import React, {FC, PropsWithChildren, useCallback, useEffect, useRef, useState,} from "react";
 import {useTranslation} from "react-i18next";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {AxiosError} from "axios";
 import {useIdleTimer} from "react-idle-timer";
+import {useNotificationEvent, useNotificationEvents, useNotificationsClient} from "@buerokratt-ria/notifications/react";
+import type {NotificationData} from "@buerokratt-ria/notifications";
 import {ToastContextType} from "./context/ToastContext.tsx";
 import {MdOutlineExpandMore} from "react-icons/md";
 
@@ -22,13 +24,29 @@ import {
 } from "./constants/config";
 import apiDev from "./services/api-dev";
 import {AUTHORITY} from "./types/authorities";
-import {useCookies} from "react-cookie";
 import "./Header.scss";
 import {UserInfo} from "./types/userInfo.ts";
 import useChatNotifyEffect from "./hooks/useChatNotifyEffect.tsx";
-import sse from "./services/sse-service.ts";
+import { usePlayNotificationSound } from "./hooks/usePlayNotificationSound";
 import {AiOutlineClose} from "react-icons/ai";
 import DomainSelectorBar from "./components/DomainSelectorBar";
+
+
+type ServiceWorkerNotificationMessage = {
+    readonly type: "WEB_PUSH";
+    readonly event: {
+        readonly uuid: string;
+        readonly type: SoundNotificationEventType;
+    }
+};
+
+const SOUND_NOTIFICATION_EVENT_TYPES = [
+    "MESSAGE",
+    "CHAT_FORWARDED_TO_CSA",
+] as const;
+
+type SoundNotificationEventType = typeof SOUND_NOTIFICATION_EVENT_TYPES[number];
+type ChatSoundNotificationData = NotificationData<Record<string, unknown>>;
 
 type CustomerSupportActivity = {
     idCode: string;
@@ -63,9 +81,6 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
     const userInfo = user;
     const toast = toastContext;
 
-    const loadActiveChats = useStore((state) => state.loadActiveChats);
-    const pendingChats = useStore((state) => state.loadPendingChats);
-    const validationChats = useStore((state) => (isValidationsEnabled ? state.loadValidationChats : null));
     const queryClient = useQueryClient();
     const [userDrawerOpen, setUserDrawerOpen] = useState(false);
     const [statusCommentOpen, setStatusCommentOpen] = useState(false);
@@ -74,7 +89,22 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
     const [editingStatusComment, setEditingStatusComment] = useState(statusComment);
     const chatCsaActive = useStore((state) => state.chatCsaActive);
     const userProfileSettings = useStore((state) => state.userProfileSettings);
-    const customJwtCookieKey = "customJwtCookie";
+    const playForwardedChatSound = usePlayNotificationSound(userProfileSettings.forwardedChatSoundNotifications);
+    const [webPushEnabled, setWebPushEnabled] = useState(
+        () => typeof Notification !== "undefined" && Notification.permission === "granted"
+    );
+    const playSoundForNotificationEvent = useCallback((type: SoundNotificationEventType, uuid: string) => {
+        type = type.toUpperCase() as SoundNotificationEventType;
+        if (
+            type === "MESSAGE" ||
+            type === "CHAT_FORWARDED_TO_CSA"
+        ) {
+            const isDocumentVisible = document.visibilityState === "visible";
+            const isChatWindowInUse = isDocumentVisible && useStore.getState().selectedChatId !== null;
+            if (isChatWindowInUse) return;
+            void playForwardedChatSound(uuid);
+        }
+    }, [playForwardedChatSound]);
 
     useEffect(() => {
         if (userInfo) {
@@ -83,6 +113,75 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
     }, [userInfo]);
 
     useChatNotifyEffect({toast, useStore});
+
+    useEffect(() => {
+        if (typeof navigator === "undefined" || !("serviceWorker" in navigator)) return;
+
+        const handleMessage = (event: MessageEvent<ServiceWorkerNotificationMessage>) => {
+            const message = event.data;
+            if (message.type !== "WEB_PUSH") return;
+            const eventType = message.event.type.toUpperCase() as ServiceWorkerNotificationMessage['event']['type'];
+            if (
+                eventType !== "MESSAGE" &&
+                eventType !== "CHAT_FORWARDED_TO_CSA"
+            ) return;
+
+            playSoundForNotificationEvent(eventType, message.event.uuid);
+        };
+
+        navigator.serviceWorker.addEventListener("message", handleMessage);
+
+        return () => {
+            navigator.serviceWorker.removeEventListener("message", handleMessage);
+        };
+    }, [playSoundForNotificationEvent]);
+
+    useNotificationEvents<ChatSoundNotificationData>({
+        // Convert 'MESSAGE' event type to lowercase to match the expected format for the listener.
+        // BE sends message event in lowercase, so we need to convert 'MESSAGE' to lowercase to match it.
+        eventTypes: SOUND_NOTIFICATION_EVENT_TYPES.map((type) => type === 'MESSAGE' ? type.toLowerCase() : type),
+        listener: ({type, data}) => {
+            // Skip playing sound for chat recipient events.
+            if (data.recipient === 'CHAT') {
+                return;
+            }
+            playSoundForNotificationEvent(type as SoundNotificationEventType, data.eventUuid);
+        },
+    });
+
+    const { reconnect, enableWebPush } = useNotificationsClient();
+
+    useEffect(() => {
+        if (typeof Notification === "undefined" || Notification.permission !== "granted") return;
+
+        void enableWebPush()
+            .then((result) => {
+                setWebPushEnabled(result.status === "enabled");
+                if (result.status === "enabled") reconnect();
+            })
+            .catch((error) => {
+                console.error("Unable to restore Web Push subscription", error);
+                setWebPushEnabled(false);
+            });
+    }, [enableWebPush, reconnect]);
+
+    const handleEnableWebPush = async (checked: boolean) => {
+        if (!checked) return;
+
+        try {
+            const result = await enableWebPush();
+            setWebPushEnabled(result.status === "enabled");
+            if (result.status === "enabled") reconnect();
+        } catch (error) {
+            setWebPushEnabled(false);
+            console.error("Unable to enable Web Push notifications", error);
+            toast?.open({
+                type: "error",
+                title: t("settings.users.webNotificationsEnableError"),
+                message: t("settings.users.webNotificationsEnableErrorMsg"),
+            });
+        }
+    };
 
     useEffect(() => {
       if(import.meta.env.REACT_APP_LOCAL !== 'true') {
@@ -113,8 +212,15 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
     const getMessages = async () => {
         const {data: res} = await apiDev.get("accounts/settings");
 
-        if (res.response && res.response != "error: not found")
-            useStore.getState().setUserProfileSettings(res.response[0]);
+        if (res.response && res.response != "error: not found") {
+            useStore.getState().setUserProfileSettings({
+                userId: res.response[0].userId,
+                forwardedChatPopupNotifications: res.response[0].forwardedChatPopupNotifications,
+                forwardedChatSoundNotifications: res.response[0].forwardedChatSoundNotifications,
+                forwardedChatEmailNotifications: res.response[0].forwardedChatEmailNotifications,
+                useAutocorrect: res.response[0].useAutocorrect,
+            });
+        }
     };
     const {data: customerSupportActivity, refetch: getCsaActiveStatus} = useQuery<CustomerSupportActivity>({
         queryKey: ["accounts/customer-support-activity", "prod"],
@@ -156,17 +262,14 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
       },
     });
 
-    useEffect(() => {
-        const handlers = [loadActiveChats, ...(validationChats ? [validationChats] : []), pendingChats];
+    useNotificationEvent('chat_status_changed', async () => {
+        const store = useStore.getState();
+        const reloads = [store.loadActiveChats(), store.loadPendingChats()];
 
-        const connections = handlers.map((handler) => sse(`/chat-list`, handler));
+        if (isValidationsEnabled) reloads.push(store.loadValidationChats());
+        await Promise.allSettled(reloads);
+    });
 
-        return () => {
-            connections.forEach((conn) => conn.close());
-        };
-    }, []);
-
-    const [_, setCookie] = useCookies([customJwtCookieKey]);
     const unansweredChatsLength = useStore((state) => state.unansweredChatsLength());
     const forwardedChatsLength = useStore((state) => state.forwordedChatsLength());
     const pendingChatsLength = useStore((state) => state.pendingChatsLength());
@@ -176,10 +279,7 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
             await apiDev.post("accounts/settings", {
                 forwardedChatPopupNotifications: data.forwardedChatPopupNotifications,
                 forwardedChatSoundNotifications: data.forwardedChatSoundNotifications,
-                forwardedChatEmailNotifications: data.newChatEmailNotifications,
-                newChatPopupNotifications: data.newChatPopupNotifications,
-                newChatSoundNotifications: data.newChatSoundNotifications,
-                newChatEmailNotifications: data.newChatEmailNotifications,
+                forwardedChatEmailNotifications: data.forwardedChatEmailNotifications,
                 useAutocorrect: data.useAutocorrect,
             });
             useStore.getState().setUserProfileSettings(data);
@@ -237,14 +337,15 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
         },
     });
 
-  const extendUserSessionMutation = useMutation({
-    mutationFn: () => apiDev.post("extend", {}),
-    onSuccess: () => {
-      const sessionLength = Number(userInfo?.JWTExpirationTimestamp) - Number(userInfo?.JWTCreated);
-      if (sessionLength > 0) localStorage.setItem("exp", String(Date.now() + sessionLength));
-    },
-    onError: (error: AxiosError) => {},
-  });
+    const extendUserSessionMutation = useMutation({
+        mutationFn: () => apiDev.post("extend", {}),
+        onSuccess: () => {
+            reconnect()
+
+            const sessionLength = Number(userInfo?.JWTExpirationTimestamp) - Number(userInfo?.JWTCreated);
+            if (sessionLength > 0) localStorage.setItem("exp", String(Date.now() + sessionLength));
+        },
+    });
 
     const logoutMutation = useMutation({
         mutationFn: () => {
@@ -556,10 +657,10 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
                             {isHiddenFeaturesEnabled && (
                                 <Section>
                                     <Track gap={8} direction="vertical" align="left">
-                                        <p className="h6">{t("settings.users.autoCorrector")}</p>
                                         <SwitchBox
                                             name="useAutocorrect"
-                                            label={t("settings.users.useAutocorrect")}
+                                            label={t("settings.users.autoCorrector")}
+                                            labelClassName="switchbox__label--bold h6"
                                             checked={userProfileSettings.useAutocorrect}
                                             onCheckedChange={(checked) =>
                                                 handleUserProfileSettingsChange(
@@ -574,12 +675,10 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
                             {isHiddenFeaturesEnabled && (
                                 <Section>
                                     <Track gap={8} direction="vertical" align="left">
-                                        <p className="h6">
-                                            {t("settings.users.emailNotifications")}
-                                        </p>
                                         <SwitchBox
                                             name="forwardedChatEmailNotifications"
-                                            label={t("settings.users.newForwardedChat")}
+                                            label={t("settings.users.emailNotifications")}
+                                            labelClassName="switchbox__label--bold h6"
                                             checked={
                                                 userProfileSettings.forwardedChatEmailNotifications
                                             }
@@ -590,26 +689,15 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
                                                 )
                                             }
                                         />
-                                        <SwitchBox
-                                            name="newChatEmailNotifications"
-                                            label={t("settings.users.newUnansweredChat")}
-                                            checked={userProfileSettings.newChatEmailNotifications}
-                                            onCheckedChange={(checked) =>
-                                                handleUserProfileSettingsChange(
-                                                    "newChatEmailNotifications",
-                                                    checked
-                                                )
-                                            }
-                                        />
                                     </Track>
                                 </Section>
                             )}
                             <Section>
                                 <Track gap={8} direction="vertical" align="left">
-                                    <p className="h6">{t("settings.users.soundNotifications")}</p>
                                     <SwitchBox
                                         name="forwardedChatSoundNotifications"
-                                        label={t("settings.users.newForwardedChat")}
+                                        label={t("settings.users.soundNotifications")}
+                                        labelClassName="switchbox__label--bold h6"
                                         checked={
                                             userProfileSettings.forwardedChatSoundNotifications
                                         }
@@ -620,25 +708,14 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
                                             )
                                         }
                                     />
-                                    <SwitchBox
-                                        name="newChatSoundNotifications"
-                                        label={t("settings.users.newUnansweredChat")}
-                                        checked={userProfileSettings.newChatSoundNotifications}
-                                        onCheckedChange={(checked) =>
-                                            handleUserProfileSettingsChange(
-                                                "newChatSoundNotifications",
-                                                checked
-                                            )
-                                        }
-                                    />
                                 </Track>
                             </Section>
                             <Section>
                                 <Track gap={8} direction="vertical" align="left">
-                                    <p className="h6">{t("settings.users.popupNotifications")}</p>
                                     <SwitchBox
                                         name="forwardedChatPopupNotifications"
-                                        label={t("settings.users.newForwardedChat")}
+                                        label={t("settings.users.popupNotifications")}
+                                        labelClassName="switchbox__label--bold h6"
                                         checked={
                                             userProfileSettings.forwardedChatPopupNotifications
                                         }
@@ -649,17 +726,19 @@ const Header: FC<PropsWithChildren<UserStoreStateProps>> = ({user, toastContext,
                                             )
                                         }
                                     />
+                                </Track>
+                            </Section>
+                            <Section>
+                                <Track gap={8} direction="vertical" align="left">
                                     <SwitchBox
-                                        name="newChatPopupNotifications"
-                                        label={t("settings.users.newUnansweredChat")}
-                                        checked={userProfileSettings.newChatPopupNotifications}
-                                        onCheckedChange={(checked) =>
-                                            handleUserProfileSettingsChange(
-                                                "newChatPopupNotifications",
-                                                checked
-                                            )
-                                        }
+                                        name="webPushNotifications"
+                                        label={t("settings.users.webNotifications")}
+                                        labelClassName="switchbox__label--bold h6"
+                                        checked={webPushEnabled}
+                                        disabled={webPushEnabled}
+                                        onCheckedChange={handleEnableWebPush}
                                     />
+                                    <p>{t("settings.users.webNotificationsHelp")}</p>
                                 </Track>
                             </Section>
                         </>
