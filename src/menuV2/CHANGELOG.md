@@ -2,6 +2,10 @@
 
 All changes to this project will be documented in this file.
 
+## [0.2.17] - 19-11-2026
+
+- Add knowledge center permission to service manager
+
 ## [0.2.16] - 10-11-2026
 
 - Fixed parent menu group not opening on page load for nested modules
